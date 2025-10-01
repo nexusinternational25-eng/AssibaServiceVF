@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Hors Ligne — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .offline-container {
+            text-align: center;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .offline-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .offline-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .offline-features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .offline-features h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .offline-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .offline-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            opacity: 0.9;
+        }
+
+        .offline-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .retry-btn {
+            background: #fff;
+            color: #006B3F;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 150px;
+        }
+
+        .retry-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .home-btn {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .home-btn:hover {
+            background: #fff;
+            color: #006B3F;
+        }
+
+        .connection-status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .status-offline {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+
+        .status-online {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            color: #006B3F;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .offline-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .offline-title {
+                font-size: 1.5rem;
+            }
+
+            .offline-message {
+                font-size: 1rem;
+            }
+
+            .retry-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="logo">AS</div>
+        <div class="offline-icon">📡</div>
+        <h1 class="offline-title">Mode Hors Ligne</h1>
+        <p class="offline-message">
+            Vous n'êtes pas connecté à Internet, mais vous pouvez toujours utiliser certaines fonctionnalités d'AssibaService.
+        </p>
+
+        <div class="offline-features">
+            <h3>Fonctionnalités disponibles hors ligne :</h3>
+            <ul>
+                <li>Consulter les pages principales</li>
+                <li>Voir les informations sur nos services</li>
+                <li>Lire les conditions d'utilisation</li>
+                <li>Accéder à la page À propos</li>
+                <li>Préparer vos demandes de service</li>
+            </ul>
+        </div>
+
+        <div class="connection-status" id="connection-status">
+            <span id="status-text">Vérification de la connexion...</span>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Tentative de reconnexion...</p>
+        </div>
+
+        <button class="retry-btn" id="retry-btn" onclick="retryConnection()">
+            Réessayer
+        </button>
+        
+        <button class="retry-btn home-btn" onclick="goHome()">
+            Accueil
+        </button>
+    </div>
+
+    <script>
+        // Vérification automatique de la connexion
+        function checkConnection() {
+            const statusElement = document.getElementById('connection-status');
+            const statusText = document.getElementById('status-text');
+            
+            if (navigator.onLine) {
+                statusElement.className = 'connection-status status-online';
+                statusText.textContent = '✅ Connexion rétablie ! Vous pouvez maintenant utiliser toutes les fonctionnalités.';
+                
+                // Auto-reload après 2 secondes si en ligne
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                statusElement.className = 'connection-status status-offline';
+                statusText.textContent = '❌ Aucune connexion Internet détectée.';
+            }
+        }
+
+        // Fonction de retry
+        function retryConnection() {
+            const loading = document.getElementById('loading');
+            const retryBtn = document.getElementById('retry-btn');
+            
+            loading.style.display = 'block';
+            retryBtn.disabled = true;
+            retryBtn.textContent = 'Vérification...';
+            
+            setTimeout(() => {
+                checkConnection();
+                loading.style.display = 'none';
+                retryBtn.disabled = false;
+                retryBtn.textContent = 'Réessayer';
+                
+                if (navigator.onLine) {
+                    window.location.reload();
+                }
+            }, 2000);
+        }
+
+        // Retour à l'accueil
+        function goHome() {
+            window.location.href = '/index.html';
+        }
+
+        // Écoute des changements de connexion
+        window.addEventListener('online', () => {
+            checkConnection();
+        });
+
+        window.addEventListener('offline', () => {
+            checkConnection();
+        });
+
+        // Vérification initiale
+        document.addEventListener('DOMContentLoaded', () => {
+            checkConnection();
+            
+            // Vérification périodique toutes les 10 secondes
+            setInterval(checkConnection, 10000);
+        });
+
+        // Gestion du service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data && event.data.type === 'SW_UPDATED') {
+                    const statusElement = document.getElementById('connection-status');
+                    statusElement.innerHTML = `
+                        <div style="background: rgba(33, 150, 243, 0.2); border: 1px solid rgba(33, 150, 243, 0.5); padding: 10px; border-radius: 10px; margin-top: 10px;">
+                            🔄 ${event.data.message}
+                            <button onclick="window.location.reload()" style="margin-left: 10px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                Actualiser
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abonnements Prestataires — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/images/pattern-bg.png') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .subscription-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #006B3F, #FFD700);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+            border-color: #006B3F;
+        }
+
+        .plan-card.featured {
+            border-color: #FFD700;
+            transform: scale(1.05);
+            position: relative;
+        }
+
+        .plan-card.featured::after {
+            content: '⭐ POPULAIRE';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .plan-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 25px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,107,63,0.3);
+        }
+
+        .plan-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #006B3F;
+            margin-bottom: 8px;
+        }
+
+        .plan-period {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .plan-description {
+            color: #888;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .plan-features {
+            margin-bottom: 40px;
+        }
+
+        .plan-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .plan-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✅';
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .plan-features .premium-feature::before {
+            content: '⭐';
+        }
+
+        .btn-subscribe {
+            width: 100%;
+            padding: 18px 35px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-subscribe:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,107,63,0.4);
+        }
+
+        .btn-subscribe.featured {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+        }
+
+        .btn-subscribe.featured:hover {
+            box-shadow: 0 15px 40px rgba(255,215,0,0.4);
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 80px 0;
+            margin: 80px 0;
+            border-radius: 30px;
+        }
+
+        .comparison-table {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .comparison-header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .comparison-header h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .comparison-body {
+            padding: 0;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comparison-cell {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .comparison-cell:first-child {
+            justify-content: flex-start;
+            font-weight: 600;
+            background: #f8f9fa;
+        }
+
+        .comparison-cell .check {
+            color: #28a745;
+            font-size: 1.5rem;
+        }
+
+        .comparison-cell .cross {
+            color: #dc3545;
+            font-size: 1.5rem;
+        }
+
+        .testimonials-section {
+            padding: 80px 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            color: #006B3F;
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-role {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 30px;
+            margin: 80px 0;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.4);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            padding: 50px 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #006B3F;
+            box-shadow: 0 0 0 3px rgba(0,107,63,0.1);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .subscription-plans {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card {
+                padding: 40px 30px;
+            }
+
+            .plan-card.featured {
+                transform: none;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .comparison-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .comparison-cell {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation (identique à index.html) -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos.html" class="nav-link">À propos</a>
+                    <a href="assurance-optimized.html" class="nav-link">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="abonnements.html" class="nav-link active">Abonnements</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login">Connexion</button>
+                    <button class="btn-register">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Abonnements Prestataires</h1>
+            <p class="hero-subtitle">Choisissez l'abonnement qui correspond à vos ambitions professionnelles</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="subscription-container">
+        <!-- Section des plans d'abonnement -->
+        <section class="subscription-section">
+            <h2 class="section-title">Nos Formules d'Abonnement</h2>
+            <p class="section-subtitle">
+                Des solutions adaptées à tous les profils : du prestataire individuel aux grandes entreprises
+            </p>
+
+            <div class="subscription-plans">
+                <!-- Inscription Standard -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-icon">🚀</div>
+                        <h3 class="plan-title">Inscription Standard</h3>
+                        <div class="plan-price">3,000 FCFA</div>
+                        <div class="plan-period">frais d'inscription unique</div>
+                        <p class="plan-description">Parfait pour débuter sur la plateforme</p>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>Création de profil prestataire</li>
+                            <li>Réception de missions</li>
+                            <li>Système de notation client</li>
+                            <li>Support client de base</li>
+                            <li>Formation sécurité obligatoire</li>
+                            <li>Certification niveau 1</li>
+                            <li>Paiements sécurisés</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe" onclick="subscribeToplan('standard')">
+                        S'inscrire Maintenant
+                    </button>
+                </div>
+
+                <!-- Abonnement Basic -->
+                <div class="plan-card featured">
+                    <div class="plan-header">
+                        <div class="plan-icon">⭐</div>
+                        <h3 class="plan-title">Abonnement Basic</h3>
+                        <div class="plan-price">8,000 FCFA</div>
+                        <div class="plan-period">par mois</div>
+                        <p class="plan-description">Boostez votre visibilité avec nos outils marketing</p>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>Tous les avantages Standard</li>
+                            <li class="premium-feature">Publicité ciblée sur la plateforme</li>
+                            <li class="premium-feature">Profil mis en avant</li>
+                            <li class="premium-feature">Badge "Prestataire Certifié"</li>
+                            <li class="premium-feature">Statistiques détaillées</li>
+                            <li class="premium-feature">Support prioritaire</li>
+                            <li class="premium-feature">Formations avancées incluses</li>
+                            <li class="premium-feature">Réduction 10% sur assurances</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe featured" onclick="subscribeToplan('basic')">
+                        Choisir Basic
+                    </button>
+                </div>
+
+                <!-- Abonnement Pro -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-icon">👑</div>
+                        <h3 class="plan-title">Abonnement Pro</h3>
+                        <div class="plan-price">30,000 FCFA</div>
+                        <div class="plan-period">par mois + 1 mois gratuit</div>
+                        <p class="plan-description">Pour les entreprises qui visent l'excellence</p>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>Tous les avantages Basic</li>
+                            <li class="premium-feature">Priorité sur contrats grande envergure</li>
+                            <li class="premium-feature">Publicité premium (bannières, spots)</li>
+                            <li class="premium-feature">Tarifs préférentiels négociés</li>
+                            <li class="premium-feature">Gestionnaire de compte dédié</li>
+                            <li class="premium-feature">API d'intégration entreprise</li>
+                            <li class="premium-feature">Rapports analytiques avancés</li>
+                            <li class="premium-feature">Formation équipe incluse</li>
+                            <li class="premium-feature">Assurance entreprise négociée</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe" onclick="subscribeToplan('pro')">
+                        Choisir Pro
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section de comparaison -->
+        <section class="comparison-section">
+            <div class="comparison-table">
+                <div class="comparison-header">
+                    <h3>Comparaison Détaillée</h3>
+                    <p>Trouvez l'abonnement qui vous correspond</p>
+                </div>
+                <div class="comparison-body">
+                    <div class="comparison-row">
+                        <div class="comparison-cell"><strong>Fonctionnalités</strong></div>
+                        <div class="comparison-cell"><strong>Standard</strong></div>
+                        <div class="comparison-cell"><strong>Basic</strong></div>
+                        <div class="comparison-cell"><strong>Pro</strong></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Profil prestataire</div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Réception missions</div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Publicité sur plateforme</div>
+                        <div class="comparison-cell"><span class="cross">✗</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓ Premium</span></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Badge certification</div>
+                        <div class="comparison-cell"><span class="cross">✗</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                        <div class="comparison-cell"><span class="check">✓ Premium</span></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Priorité contrats</div>
+                        <div class="comparison-cell"><span class="cross">✗</span></div>
+                        <div class="comparison-cell"><span class="cross">✗</span></div>
+                        <div class="comparison-cell"><span class="check">✓</span></div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Support dédié</div>
+                        <div class="comparison-cell">Standard</div>
+                        <div class="comparison-cell">Prioritaire</div>
+                        <div class="comparison-cell">Gestionnaire dédié</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-cell">Formations incluses</div>
+                        <div class="comparison-cell">Sécurité</div>
+                        <div class="comparison-cell">Avancées</div>
+                        <div class="comparison-cell">Équipe complète</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section témoignages -->
+        <section class="testimonials-section">
+            <h2 class="section-title">Ce que disent nos prestataires</h2>
+            <p class="section-subtitle">
+                Découvrez les retours d'expérience de nos prestataires abonnés
+            </p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        Depuis que j'ai souscrit à l'abonnement Basic, mes revenus ont augmenté de 40%. 
+                        La publicité ciblée m'apporte vraiment plus de clients !
+                    </p>
+                    <div class="testimonial-author">Kofi Mensah</div>
+                    <div class="testimonial-role">Électricien - Lomé</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        L'abonnement Pro nous a permis de décrocher des contrats avec de grandes entreprises. 
+                        Le retour sur investissement est exceptionnel !
+                    </p>
+                    <div class="testimonial-author">Ama Kpodzi</div>
+                    <div class="testimonial-role">Directrice - BTP Solutions</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        Même avec l'inscription standard, j'arrive à bien vivre de mes prestations. 
+                        La plateforme est vraiment bien conçue !
+                    </p>
+                    <div class="testimonial-author">Yao Tetteh</div>
+                    <div class="testimonial-role">Plombier - Kara</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section CTA -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Prêt à Booster Votre Activité ?</h2>
+                <p class="cta-subtitle">
+                    Rejoignez plus de 5,000 prestataires qui font confiance à AssibaService
+                </p>
+                <button class="btn-cta" onclick="subscribeToplan('basic')">
+                    Commencer Maintenant
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de souscription -->
+    <div id="subscription-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" onclick="closeSubscriptionModal()">&times;</button>
+                <h2 class="modal-title">Souscription d'Abonnement</h2>
+                <p>Complétez vos informations pour finaliser votre abonnement</p>
+            </div>
+            <div class="modal-body">
+                <form id="subscription-form">
+                    <input type="hidden" id="plan-type" name="plan_type">
+                    
+                    <div class="form-group">
+                        <label for="provider-name">Nom complet / Raison sociale *</label>
+                        <input type="text" id="provider-name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="provider-phone">Téléphone *</label>
+                        <input type="tel" id="provider-phone" name="phone" required placeholder="+228 XX XX XX XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="provider-email">Email *</label>
+                        <input type="email" id="provider-email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-category">Catégorie d'activité *</label>
+                        <select id="business-category" name="business_category" required>
+                            <option value="">Sélectionnez votre activité principale</option>
+                            <option value="plomberie">Plomberie</option>
+                            <option value="electricite">Électricité</option>
+                            <option value="menuiserie">Menuiserie</option>
+                            <option value="peinture">Peinture</option>
+                            <option value="jardinage">Jardinage</option>
+                            <option value="menage">Ménage</option>
+                            <option value="climatisation">Climatisation</option>
+                            <option value="informatique">Informatique</option>
+                            <option value="construction">Construction</option>
+                            <option value="transport">Transport</option>
+                            <option value="commerce">Commerce</option>
+                            <option value="artisanat">Artisanat</option>
+                            <option value="evenement_traditionnel">Événements traditionnels</option>
+                            <option value="agriculture">Services agricoles</option>
+                            <option value="soins_domicile">Soins à domicile</option>
+                            <option value="education">Éducation/Tutorat</option>
+                            <option value="tourisme">Tourisme local</option>
+                            <option value="vitrerie">Vitrerie</option>
+                            <option value="aluminium">Aluminium</option>
+                            <option value="autres">Autres</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="other-category-group" style="display: none;">
+                        <label for="other-category">Précisez votre activité *</label>
+                        <input type="text" id="other-category" name="other_category" placeholder="Décrivez votre activité...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience-years">Années d'expérience *</label>
+                        <select id="experience-years" name="experience_years" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="0-1">Moins d'1 an</option>
+                            <option value="1-3">1 à 3 ans</option>
+                            <option value="3-5">3 à 5 ans</option>
+                            <option value="5-10">5 à 10 ans</option>
+                            <option value="10+">Plus de 10 ans</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-size">Taille de votre entreprise</label>
+                        <select id="business-size" name="business_size">
+                            <option value="individual">Prestataire individuel</option>
+                            <option value="micro">Micro-entreprise (1-5 employés)</option>
+                            <option value="small">Petite entreprise (6-20 employés)</option>
+                            <option value="medium">Moyenne entreprise (21-100 employés)</option>
+                            <option value="large">Grande entreprise (100+ employés)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Mode de paiement *</label>
+                        <select id="payment-method" name="payment_method" required>
+                            <option value="">Choisissez votre mode de paiement</option>
+                            <option value="tmoney">T-Money</option>
+                            <option value="flooz">Flooz</option>
+                            <option value="bank_transfer">Virement bancaire</option>
+                            <option value="cash">Espèces (en agence)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms-accepted" name="terms" required>
+                            J'accepte les <a href="#" onclick="showTerms()">conditions générales</a> 
+                            et les <a href="#" onclick="showPrivacy()">conditions d'utilisation</a>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="marketing-consent" name="marketing_consent">
+                            J'accepte de recevoir des communications marketing d'AssibaService
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-subscribe">
+                        Finaliser l'Abonnement
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (identique à index.html) -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">💼</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="index.html#services">Tous les services</a></li>
+                    <li><a href="assurance-optimized.html">Assurance</a></li>
+                    <li><a href="formation.html">Formation</a></li>
+                    <li><a href="abonnements.html">Abonnements</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#help">Centre d'aide</a></li>
+                    <li><a href="#legal">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion des abonnements
+        class SubscriptionManager {
+            constructor() {
+                this.currentPlan = null;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Gestion du formulaire de souscription
+                document.getElementById('subscription-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSubscription(e);
+                });
+
+                // Gestion du champ "Autres" pour la catégorie
+                document.getElementById('business-category').addEventListener('change', (e) => {
+                    const otherGroup = document.getElementById('other-category-group');
+                    const otherInput = document.getElementById('other-category');
+                    
+                    if (e.target.value === 'autres') {
+                        otherGroup.style.display = 'block';
+                        otherInput.required = true;
+                    } else {
+                        otherGroup.style.display = 'none';
+                        otherInput.required = false;
+                        otherInput.value = '';
+                    }
+                });
+            }
+
+            async handleSubscription(event) {
+                const formData = new FormData(event.target);
+                const subscriptionData = {
+                    plan_type: formData.get('plan_type'),
+                    name: formData.get('name'),
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    business_category: formData.get('business_category'),
+                    other_category: formData.get('other_category'),
+                    experience_years: formData.get('experience_years'),
+                    business_size: formData.get('business_size'),
+                    payment_method: formData.get('payment_method'),
+                    terms_accepted: formData.get('terms') === 'on',
+                    marketing_consent: formData.get('marketing_consent') === 'on'
+                };
+
+                try {
+                    const response = await fetch('/api/subscriptions/subscribe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(subscriptionData)
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showSuccessMessage('Abonnement initié avec succès !');
+                        this.closeSubscriptionModal();
+                        
+                        // Rediriger vers le paiement
+                        if (result.payment_url) {
+                            window.location.href = result.payment_url;
+                        }
+                    } else {
+                        this.showErrorMessage(result.error || 'Erreur lors de l\'abonnement');
+                    }
+                } catch (error) {
+                    console.error('Erreur abonnement:', error);
+                    this.showErrorMessage('Erreur de connexion. Veuillez réessayer.');
+                }
+            }
+
+            showSuccessMessage(message) {
+                this.showNotification(message, 'success');
+            }
+
+            showErrorMessage(message) {
+                this.showNotification(message, 'error');
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 2000;
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                    ${type === 'success' ? 'background: linear-gradient(135deg, #28a745, #20c997);' : 'background: linear-gradient(135deg, #dc3545, #c82333);'}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+
+            closeSubscriptionModal() {
+                document.getElementById('subscription-modal').style.display = 'none';
+                document.getElementById('subscription-form').reset();
+                document.getElementById('other-category-group').style.display = 'none';
+            }
+        }
+
+        // Fonctions globales
+        function subscribeToplan(planType) {
+            const modal = document.getElementById('subscription-modal');
+            const planInput = document.getElementById('plan-type');
+            
+            planInput.value = planType;
+            modal.style.display = 'block';
+            
+            // Mettre à jour le titre du modal selon le plan
+            const modalTitle = document.querySelector('.modal-title');
+            const planNames = {
+                'standard': 'Inscription Standard',
+                'basic': 'Abonnement Basic',
+                'pro': 'Abonnement Pro'
+            };
+            modalTitle.textContent = `Souscription - ${planNames[planType]}`;
+        }
+
+        function closeSubscriptionModal() {
+            subscriptionManager.closeSubscriptionModal();
+        }
+
+        function showTerms() {
+            alert('Les conditions générales seront affichées dans une nouvelle fenêtre.');
+            // Implémenter l'affichage des CGV
+        }
+
+        function showPrivacy() {
+            alert('Les conditions d\'utilisation seront affichées dans une nouvelle fenêtre.');
+            // Implémenter l'affichage des conditions d'utilisation
+        }
+
+        // Initialisation
+        const subscriptionManager = new SubscriptionManager();
+
+        // Navigation mobile (identique à index.html)
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+

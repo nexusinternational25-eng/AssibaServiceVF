@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assurance Professionnelle — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/images/pattern-bg.png') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .insurance-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .insurance-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #006B3F, #FFD700);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border-color: #006B3F;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .plan-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            color: white;
+        }
+
+        .plan-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #006B3F;
+            margin-bottom: 5px;
+        }
+
+        .plan-period {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .plan-features {
+            margin-bottom: 30px;
+        }
+
+        .plan-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✅';
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .btn-subscribe {
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,107,63,0.3);
+        }
+
+        .facilitator-notice {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 5px solid #006B3F;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .facilitator-notice::before {
+            content: '🤝';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+        }
+
+        .facilitator-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #006B3F;
+            margin-bottom: 15px;
+        }
+
+        .facilitator-text {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .partners-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+            margin: 60px 0;
+            border-radius: 20px;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .partner-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .partner-logo {
+            width: 80px;
+            height: 80px;
+            background: #006B3F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .admin-section {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 60px 0;
+            border-radius: 20px;
+            margin: 60px 0;
+        }
+
+        .admin-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .admin-description {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #006B3F;
+            box-shadow: 0 0 0 3px rgba(0,107,63,0.1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .insurance-plans {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation (identique à index.html) -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos.html" class="nav-link">À propos</a>
+                    <a href="assurance-optimized.html" class="nav-link active">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login">Connexion</button>
+                    <button class="btn-register">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Assurance Professionnelle</h1>
+            <p class="hero-subtitle">Protégez votre activité avec nos partenaires assureurs agréés CIMA</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="insurance-container">
+        <!-- Notice de facilitation -->
+        <div class="facilitator-notice">
+            <h3 class="facilitator-title">AssibaService - Facilitateur Agréé</h3>
+            <p class="facilitator-text">
+                <strong>Important :</strong> AssibaService agit en tant que <strong>facilitateur de services marketing</strong> 
+                en partenariat avec des assureurs agréés CIMA. Nous ne gérons pas directement les sinistres - 
+                cette responsabilité incombe exclusivement à nos partenaires assureurs certifiés. 
+                Notre rôle consiste à faciliter la souscription et à vous accompagner dans vos démarches.
+            </p>
+        </div>
+
+        <!-- Section des plans d'assurance -->
+        <section class="insurance-section">
+            <h2 class="section-title">Choisissez Votre Protection</h2>
+            <p class="section-subtitle">
+                Des solutions d'assurance adaptées à votre activité professionnelle, 
+                en partenariat avec des assureurs agréés CIMA
+            </p>
+
+            <div class="insurance-plans">
+                <!-- Responsabilité Civile Professionnelle -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-icon">🛡️</div>
+                        <h3 class="plan-title">Responsabilité Civile Professionnelle</h3>
+                        <div class="plan-price">9,650 FCFA</div>
+                        <div class="plan-period">par an</div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>Dommages matériels : 2,000,000 FCFA</li>
+                            <li>Dommages corporels : 5,000,000 FCFA</li>
+                            <li>Responsabilité civile : 10,000,000 FCFA</li>
+                            <li>Défense et recours : 500,000 FCFA</li>
+                            <li>Franchise : 25,000 FCFA</li>
+                            <li>Couverture territoriale : Togo</li>
+                            <li>Assistance juridique incluse</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe" onclick="subscribeInsurance('rc_professionnelle')">
+                        Souscrire Maintenant
+                    </button>
+                </div>
+
+                <!-- Accident de Travail -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-icon">🏥</div>
+                        <h3 class="plan-title">Accident de Travail</h3>
+                        <div class="plan-price">3,000 FCFA</div>
+                        <div class="plan-period">par an</div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>Frais médicaux : 1,000,000 FCFA</li>
+                            <li>Incapacité temporaire : 200,000 FCFA</li>
+                            <li>Incapacité permanente : 2,000,000 FCFA</li>
+                            <li>Décès accidentel : 3,000,000 FCFA</li>
+                            <li>Rapatriement sanitaire inclus</li>
+                            <li>Assistance 24h/7j</li>
+                            <li>Franchise : 10,000 FCFA</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe" onclick="subscribeInsurance('accident_travail')">
+                        Souscrire Maintenant
+                    </button>
+                </div>
+
+                <!-- Pack Complet -->
+                <div class="plan-card" style="border-color: #FFD700; position: relative;">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FFA500); color: #1a1a2e; padding: 8px 20px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                        RECOMMANDÉ
+                    </div>
+                    <div class="plan-header">
+                        <div class="plan-icon">⭐</div>
+                        <h3 class="plan-title">Pack Complet</h3>
+                        <div class="plan-price">11,500 FCFA</div>
+                        <div class="plan-period">par an</div>
+                        <div style="color: #28a745; font-weight: 600; margin-top: 10px;">
+                            Économie de 1,150 FCFA
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>RC Professionnelle complète</li>
+                            <li>Accident de Travail inclus</li>
+                            <li>Protection juridique renforcée</li>
+                            <li>Assistance prioritaire</li>
+                            <li>Couverture étendue</li>
+                            <li>Franchise réduite : 15,000 FCFA</li>
+                            <li>Support dédié</li>
+                        </ul>
+                    </div>
+                    <button class="btn-subscribe" onclick="subscribeInsurance('pack_complet')">
+                        Souscrire le Pack
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section partenaires assureurs -->
+        <section class="partners-section">
+            <h2 class="section-title" style="color: #1a1a2e;">Nos Partenaires Assureurs</h2>
+            <p class="section-subtitle" style="color: #666;">
+                Assureurs agréés CIMA pour votre sécurité et tranquillité d'esprit
+            </p>
+            <div class="partners-grid" id="partners-grid">
+                <!-- Partenaires chargés dynamiquement -->
+            </div>
+        </section>
+
+        <!-- Section administration -->
+        <section class="admin-section">
+            <div class="admin-content">
+                <h2 class="admin-title">🛠️ Gestion Administrative</h2>
+                <p class="admin-description">
+                    Interface dédiée aux administrateurs pour la gestion des assureurs partenaires, 
+                    des tarifs et des paramètres d'assurance.
+                </p>
+                <button class="btn-admin" onclick="openAdminPanel()">
+                    Accéder à l'Administration
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de souscription -->
+    <div id="subscription-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" onclick="closeSubscriptionModal()">&times;</button>
+                <h2 class="modal-title">Souscription d'Assurance</h2>
+                <p>Complétez vos informations pour finaliser votre souscription</p>
+            </div>
+            <div class="modal-body">
+                <form id="subscription-form">
+                    <input type="hidden" id="insurance-type" name="insurance_type">
+                    
+                    <div class="form-group">
+                        <label for="subscriber-name">Nom complet *</label>
+                        <input type="text" id="subscriber-name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subscriber-phone">Téléphone *</label>
+                        <input type="tel" id="subscriber-phone" name="phone" required placeholder="+228 XX XX XX XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subscriber-email">Email</label>
+                        <input type="email" id="subscriber-email" name="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-type">Type d'activité *</label>
+                        <select id="business-type" name="business_type" required>
+                            <option value="">Sélectionnez votre activité</option>
+                            <option value="plomberie">Plomberie</option>
+                            <option value="electricite">Électricité</option>
+                            <option value="menuiserie">Menuiserie</option>
+                            <option value="peinture">Peinture</option>
+                            <option value="jardinage">Jardinage</option>
+                            <option value="menage">Ménage</option>
+                            <option value="climatisation">Climatisation</option>
+                            <option value="informatique">Informatique</option>
+                            <option value="construction">Construction</option>
+                            <option value="transport">Transport</option>
+                            <option value="commerce">Commerce</option>
+                            <option value="artisanat">Artisanat</option>
+                            <option value="autres">Autres</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="other-activity-group" style="display: none;">
+                        <label for="other-activity">Précisez votre activité *</label>
+                        <input type="text" id="other-activity" name="other_activity" placeholder="Décrivez votre activité...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Mode de paiement *</label>
+                        <select id="payment-method" name="payment_method" required>
+                            <option value="">Choisissez votre mode de paiement</option>
+                            <option value="tmoney">T-Money</option>
+                            <option value="flooz">Flooz</option>
+                            <option value="bank_transfer">Virement bancaire</option>
+                            <option value="cash">Espèces (en agence)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms-accepted" name="terms" required>
+                            J'accepte les <a href="#" onclick="showTerms()">conditions générales</a> 
+                            et autorise le traitement de mes données personnelles
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-subscribe">
+                        Finaliser la Souscription
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (identique à index.html) -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">💼</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#services">Tous les services</a></li>
+                    <li><a href="assurance-optimized.html">Assurance</a></li>
+                    <li><a href="formation.html">Formation</a></li>
+                    <li><a href="#marketplace">Marketplace</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#help">Centre d'aide</a></li>
+                    <li><a href="#legal">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion des assurances optimisée
+        class InsuranceManager {
+            constructor() {
+                this.partners = [];
+                this.currentSubscription = null;
+                this.init();
+            }
+
+            async init() {
+                await this.loadPartners();
+                this.setupEventListeners();
+                this.renderPartners();
+            }
+
+            setupEventListeners() {
+                // Gestion du formulaire de souscription
+                document.getElementById('subscription-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSubscription(e);
+                });
+
+                // Gestion du champ "Autres" pour l'activité
+                document.getElementById('business-type').addEventListener('change', (e) => {
+                    const otherGroup = document.getElementById('other-activity-group');
+                    const otherInput = document.getElementById('other-activity');
+                    
+                    if (e.target.value === 'autres') {
+                        otherGroup.style.display = 'block';
+                        otherInput.required = true;
+                    } else {
+                        otherGroup.style.display = 'none';
+                        otherInput.required = false;
+                        otherInput.value = '';
+                    }
+                });
+            }
+
+            async loadPartners() {
+                try {
+                    const response = await fetch('/api/insurance/partners');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.partners = data.partners;
+                    } else {
+                        // Données par défaut si API non disponible
+                        this.partners = [
+                            {
+                                id: 'nsia_togo',
+                                name: 'NSIA Assurances Togo',
+                                logo: 'NSIA',
+                                active: true,
+                                description: 'Leader de l\'assurance au Togo'
+                            },
+                            {
+                                id: 'saham_togo',
+                                name: 'Saham Assurance Togo',
+                                logo: 'SAHAM',
+                                active: true,
+                                description: 'Assurance de confiance'
+                            },
+                            {
+                                id: 'colina_togo',
+                                name: 'Colina Assurance',
+                                logo: 'COLINA',
+                                active: true,
+                                description: 'Votre partenaire assurance'
+                            }
+                        ];
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement partenaires:', error);
+                    // Utiliser les données par défaut
+                    this.partners = [
+                        {
+                            id: 'nsia_togo',
+                            name: 'NSIA Assurances Togo',
+                            logo: 'NSIA',
+                            active: true,
+                            description: 'Leader de l\'assurance au Togo'
+                        }
+                    ];
+                }
+            }
+
+            renderPartners() {
+                const partnersGrid = document.getElementById('partners-grid');
+                
+                partnersGrid.innerHTML = this.partners
+                    .filter(partner => partner.active)
+                    .map(partner => `
+                        <div class="partner-card">
+                            <div class="partner-logo">${partner.logo}</div>
+                            <h4>${partner.name}</h4>
+                            <p>${partner.description}</p>
+                        </div>
+                    `).join('');
+            }
+
+            async handleSubscription(event) {
+                const formData = new FormData(event.target);
+                const subscriptionData = {
+                    insurance_type: formData.get('insurance_type'),
+                    name: formData.get('name'),
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    business_type: formData.get('business_type'),
+                    other_activity: formData.get('other_activity'),
+                    payment_method: formData.get('payment_method'),
+                    terms_accepted: formData.get('terms') === 'on'
+                };
+
+                try {
+                    const response = await fetch('/api/insurance/subscribe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(subscriptionData)
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showSuccessMessage('Souscription initiée avec succès !');
+                        this.closeSubscriptionModal();
+                        
+                        // Rediriger vers le paiement
+                        if (result.payment_url) {
+                            window.location.href = result.payment_url;
+                        }
+                    } else {
+                        this.showErrorMessage(result.error || 'Erreur lors de la souscription');
+                    }
+                } catch (error) {
+                    console.error('Erreur souscription:', error);
+                    this.showErrorMessage('Erreur de connexion. Veuillez réessayer.');
+                }
+            }
+
+            showSuccessMessage(message) {
+                this.showNotification(message, 'success');
+            }
+
+            showErrorMessage(message) {
+                this.showNotification(message, 'error');
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 2000;
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                    ${type === 'success' ? 'background: linear-gradient(135deg, #28a745, #20c997);' : 'background: linear-gradient(135deg, #dc3545, #c82333);'}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+
+            closeSubscriptionModal() {
+                document.getElementById('subscription-modal').style.display = 'none';
+                document.getElementById('subscription-form').reset();
+                document.getElementById('other-activity-group').style.display = 'none';
+            }
+        }
+
+        // Fonctions globales
+        function subscribeInsurance(type) {
+            const modal = document.getElementById('subscription-modal');
+            const typeInput = document.getElementById('insurance-type');
+            
+            typeInput.value = type;
+            modal.style.display = 'block';
+        }
+
+        function closeSubscriptionModal() {
+            insuranceManager.closeSubscriptionModal();
+        }
+
+        function openAdminPanel() {
+            // Vérifier les droits d'administration
+            const token = localStorage.getItem('admin_token');
+            if (token) {
+                window.location.href = '/admin-advanced.html';
+            } else {
+                window.location.href = '/admin-login.html';
+            }
+        }
+
+        function showTerms() {
+            alert('Les conditions générales seront affichées dans une nouvelle fenêtre.');
+            // Implémenter l'affichage des CGV
+        }
+
+        // Initialisation
+        const insuranceManager = new InsuranceManager();
+
+        // Navigation mobile (identique à index.html)
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+

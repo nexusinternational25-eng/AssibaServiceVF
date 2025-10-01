@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Client — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/images/pattern-bg.png') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: -40px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,107,63,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #006B3F;
+            box-shadow: 0 0 0 3px rgba(0,107,63,0.1);
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 18px;
+            border: 2px dashed #006B3F;
+            border-radius: 12px;
+            background: #f8f9fa;
+            color: #006B3F;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background: #e8f5e8;
+            border-color: #004d2e;
+        }
+
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,107,63,0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .login-link a {
+            color: #006B3F;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #006B3F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+                margin: -20px auto 60px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation (identique à index.html) -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos.html" class="nav-link">À propos</a>
+                    <a href="assurance.html" class="nav-link">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="abonnements.html" class="nav-link">Abonnements</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login" onclick="window.location.href='login.html'">Connexion</button>
+                    <button class="btn-register active">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Inscription Client</h1>
+            <p class="hero-subtitle">Rejoignez AssibaService et accédez aux meilleurs prestataires du Togo</p>
+        </div>
+    </section>
+
+    <!-- Formulaire d'inscription -->
+    <div class="form-container">
+        <div class="form-card">
+            <div class="success-message" id="success-message"></div>
+            
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Prénom *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <div class="error-message">Veuillez saisir votre prénom</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Nom *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <div class="error-message">Veuillez saisir votre nom</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message">Veuillez saisir un email valide</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Téléphone *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+228 XX XX XX XX">
+                    <div class="error-message">Veuillez saisir votre numéro de téléphone</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Adresse complète *</label>
+                    <input type="text" id="address" name="address" required placeholder="Quartier, rue, ville">
+                    <div class="error-message">Veuillez saisir votre adresse</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Mot de passe *</label>
+                        <input type="password" id="password" name="password" required minlength="6">
+                        <div class="error-message">Le mot de passe doit contenir au moins 6 caractères</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmer le mot de passe *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        <div class="error-message">Les mots de passe ne correspondent pas</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Photo de profil (optionnelle)</label>
+                    <div class="file-upload">
+                        <input type="file" id="photo" name="photo" accept="image/*">
+                        <div class="file-upload-label">
+                            <span>📷</span>
+                            <span>Choisir une photo</span>
+                        </div>
+                    </div>
+                    <div class="file-preview" id="photo-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms" name="terms" required style="width: auto; margin-right: 10px;">
+                        J'accepte les <a href="#" onclick="showTerms()">conditions d'utilisation</a> et la <a href="#" onclick="showPrivacy()">politique de confidentialité</a> *
+                    </label>
+                    <div class="error-message">Veuillez accepter les conditions d'utilisation</div>
+                </div>
+
+                <div class="loading" id="loading">Création de votre compte...</div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    🚀 Créer mon compte client
+                </button>
+            </form>
+
+            <div class="login-link">
+                <p>Vous avez déjà un compte ? <a href="login.html">Se connecter</a></p>
+                <p>Vous êtes un prestataire ? <a href="register_prestataire.html">S'inscrire comme prestataire</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (identique à index.html) -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">💼</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="index.html#services">Tous les services</a></li>
+                    <li><a href="assurance.html">Assurance</a></li>
+                    <li><a href="formation.html">Formation</a></li>
+                    <li><a href="abonnements.html">Abonnements</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#help">Centre d'aide</a></li>
+                    <li><a href="#legal">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestionnaire d'inscription client
+        class ClientRegistration {
+            constructor() {
+                this.apiBase = window.API_BASE || 'http://localhost:8080';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupFileUpload();
+            }
+
+            setupEventListeners() {
+                document.getElementById('register-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSubmit();
+                });
+
+                // Validation en temps réel
+                document.getElementById('confirmPassword').addEventListener('input', () => {
+                    this.validatePasswordMatch();
+                });
+
+                document.getElementById('email').addEventListener('blur', () => {
+                    this.validateEmail();
+                });
+
+                document.getElementById('phone').addEventListener('blur', () => {
+                    this.validatePhone();
+                });
+            }
+
+            setupFileUpload() {
+                const fileInput = document.getElementById('photo');
+                const fileLabel = document.querySelector('.file-upload-label');
+                const preview = document.getElementById('photo-preview');
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Validation du fichier
+                        if (!file.type.startsWith('image/')) {
+                            this.showError('Veuillez sélectionner une image valide');
+                            return;
+                        }
+
+                        if (file.size > 5 * 1024 * 1024) { // 5MB max
+                            this.showError('L\'image ne doit pas dépasser 5MB');
+                            return;
+                        }
+
+                        // Prévisualisation
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            preview.innerHTML = `
+                                <img src="${e.target.result}" alt="Prévisualisation">
+                                <p>📷 ${file.name}</p>
+                            `;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+
+                        fileLabel.innerHTML = '<span>✅</span><span>Photo sélectionnée</span>';
+                    }
+                });
+            }
+
+            validatePasswordMatch() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const confirmGroup = document.getElementById('confirmPassword').closest('.form-group');
+
+                if (confirmPassword && password !== confirmPassword) {
+                    confirmGroup.classList.add('error');
+                    return false;
+                } else {
+                    confirmGroup.classList.remove('error');
+                    return true;
+                }
+            }
+
+            validateEmail() {
+                const email = document.getElementById('email').value;
+                const emailGroup = document.getElementById('email').closest('.form-group');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (email && !emailRegex.test(email)) {
+                    emailGroup.classList.add('error');
+                    return false;
+                } else {
+                    emailGroup.classList.remove('error');
+                    return true;
+                }
+            }
+
+            validatePhone() {
+                const phone = document.getElementById('phone').value;
+                const phoneGroup = document.getElementById('phone').closest('.form-group');
+                const phoneRegex = /^\+228\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/;
+
+                if (phone && !phoneRegex.test(phone)) {
+                    phoneGroup.classList.add('error');
+                    return false;
+                } else {
+                    phoneGroup.classList.remove('error');
+                    return true;
+                }
+            }
+
+            validateForm() {
+                const requiredFields = document.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    const formGroup = field.closest('.form-group');
+                    
+                    if (!field.value.trim()) {
+                        formGroup.classList.add('error');
+                        isValid = false;
+                    } else {
+                        formGroup.classList.remove('error');
+                    }
+                });
+
+                // Validations spécifiques
+                if (!this.validateEmail()) isValid = false;
+                if (!this.validatePhone()) isValid = false;
+                if (!this.validatePasswordMatch()) isValid = false;
+
+                // Vérification des conditions
+                const terms = document.getElementById('terms');
+                if (!terms.checked) {
+                    terms.closest('.form-group').classList.add('error');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            async handleSubmit() {
+                if (!this.validateForm()) {
+                    this.showError('Veuillez corriger les erreurs dans le formulaire');
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submit-btn');
+                const loading = document.getElementById('loading');
+                
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+
+                try {
+                    // Étape 1: Inscription
+                    const formData = new FormData(document.getElementById('register-form'));
+                    const registrationData = {
+                        role: 'client',
+                        firstName: formData.get('firstName'),
+                        lastName: formData.get('lastName'),
+                        name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        address: formData.get('address'),
+                        password: formData.get('password')
+                    };
+
+                    const response = await fetch(`${this.apiBase}/api/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(registrationData)
+                    });
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.error || 'Erreur lors de l\'inscription');
+                    }
+
+                    // Étape 2: Upload de la photo si fournie
+                    const photoFile = formData.get('photo');
+                    if (photoFile && photoFile.size > 0) {
+                        await this.uploadPhoto(result.user_id, photoFile);
+                    }
+
+                    // Succès
+                    this.showSuccess('Compte créé avec succès ! Vous allez être redirigé vers la page de connexion.');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'login.html?registered=true';
+                    }, 2000);
+
+                } catch (error) {
+                    this.showError(error.message);
+                } finally {
+                    submitBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            }
+
+            async uploadPhoto(userId, photoFile) {
+                const formData = new FormData();
+                formData.append('photo', photoFile);
+                formData.append('user_id', userId);
+
+                const response = await fetch(`${this.apiBase}/api/users/upload-photo`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.warn('Erreur lors de l\'upload de la photo');
+                }
+            }
+
+            showError(message) {
+                this.showNotification(message, 'error');
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('success-message');
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                
+                // Scroll vers le haut
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 2000;
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                    ${type === 'success' ? 'background: linear-gradient(135deg, #28a745, #20c997);' : 'background: linear-gradient(135deg, #dc3545, #c82333);'}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+        }
+
+        // Fonctions globales
+        function showTerms() {
+            alert('Les conditions d\'utilisation seront affichées dans une nouvelle fenêtre.');
+        }
+
+        function showPrivacy() {
+            alert('La politique de confidentialité sera affichée dans une nouvelle fenêtre.');
+        }
+
+        // Initialisation
+        const clientRegistration = new ClientRegistration();
+
+        // Navigation mobile
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions Générales d'Utilisation — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .legal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #006B3F;
+        }
+
+        .legal-title {
+            font-size: 2.5rem;
+            color: #006B3F;
+            margin-bottom: 10px;
+        }
+
+        .legal-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .legal-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #006B3F;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section-content {
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        .section-content ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section-content li {
+            margin-bottom: 8px;
+        }
+
+        .download-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .download-btn {
+            background: #006B3F;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #004d2e;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .contact-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-container">
+        <button class="back-btn" onclick="history.back()">← Retour</button>
+        
+        <div class="legal-header">
+            <h1 class="legal-title">Conditions Générales d'Utilisation</h1>
+            <p class="legal-subtitle">AssibaService - Plateforme de mise en relation</p>
+            <p class="legal-subtitle">Dernière mise à jour : Septembre 2025</p>
+        </div>
+
+        <div class="download-section">
+            <p><strong>💾 Télécharger ce document :</strong></p>
+            <a href="#" class="download-btn" onclick="downloadPDF()">📄 Télécharger PDF</a>
+            <a href="#" class="download-btn" onclick="printDocument()">🖨️ Imprimer</a>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">1. Objet et Champ d'Application</h2>
+            <div class="section-content">
+                <p>Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de la plateforme AssibaService, accessible via le site web assibaservice.com et l'application mobile.</p>
+                
+                <p>AssibaService est une plateforme numérique de mise en relation entre clients particuliers ou professionnels et prestataires de services au Togo. La plateforme facilite la recherche, la sélection et la mise en contact avec des prestataires qualifiés dans divers domaines.</p>
+
+                <div class="highlight">
+                    <strong>⚠️ Important :</strong> L'utilisation de la plateforme implique l'acceptation pleine et entière des présentes CGU. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">2. Définitions</h2>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Plateforme :</strong> Le site web et l'application mobile AssibaService</li>
+                    <li><strong>Utilisateur :</strong> Toute personne utilisant la plateforme</li>
+                    <li><strong>Client :</strong> Utilisateur recherchant un service</li>
+                    <li><strong>Prestataire :</strong> Professionnel proposant ses services via la plateforme</li>
+                    <li><strong>Service :</strong> Prestation proposée par un prestataire</li>
+                    <li><strong>Mission :</strong> Contrat de service entre un client et un prestataire</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">3. Inscription et Compte Utilisateur</h2>
+            <div class="section-content">
+                <p><strong>3.1 Conditions d'inscription :</strong></p>
+                <ul>
+                    <li>Être âgé de 18 ans minimum ou avoir l'autorisation parentale</li>
+                    <li>Fournir des informations exactes et complètes</li>
+                    <li>Accepter les présentes CGU et la Politique de Confidentialité</li>
+                </ul>
+
+                <p><strong>3.2 Compte prestataire :</strong></p>
+                <ul>
+                    <li>Justifier de ses compétences professionnelles</li>
+                    <li>Fournir une pièce d'identité valide</li>
+                    <li>Souscrire à un abonnement (Standard, Basic ou Pro)</li>
+                    <li>Respecter les standards de qualité de la plateforme</li>
+                </ul>
+
+                <p><strong>3.3 Responsabilités :</strong></p>
+                <p>L'utilisateur est responsable de la confidentialité de ses identifiants et de toutes les activités effectuées sous son compte.</p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">4. Services Proposés</h2>
+            <div class="section-content">
+                <p><strong>4.1 Services de mise en relation :</strong></p>
+                <ul>
+                    <li>Recherche et sélection de prestataires</li>
+                    <li>Système de matching intelligent</li>
+                    <li>Gestion des demandes de service</li>
+                    <li>Suivi des missions en cours</li>
+                    <li>Système d'évaluation et de notation</li>
+                </ul>
+
+                <p><strong>4.2 Services additionnels :</strong></p>
+                <ul>
+                    <li>Assurance responsabilité civile professionnelle (optionnelle)</li>
+                    <li>Assurance accident de travail (optionnelle)</li>
+                    <li>Formation et certification des prestataires</li>
+                    <li>Support client et médiation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">5. Tarification et Paiements</h2>
+            <div class="section-content">
+                <p><strong>5.1 Frais de mise en relation :</strong></p>
+                <p>Chaque demande de service est soumise à des frais de mise en relation de <strong>2,000 FCFA</strong>, payables par le client avant la mise en contact avec le prestataire. Ces frais s'appliquent à tous les types de services.</p>
+
+                <p><strong>5.2 Commissions AssibaService :</strong></p>
+                <p>En plus des frais de mise en relation, AssibaService perçoit une commission sur certains types de services :</p>
+                
+                <table class="tariff-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Type de Service</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Commission AssibaService</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Payée par</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Dépannage</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #28a745; font-weight: 600;">Aucune commission</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Contrat Salarié</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #856404; font-weight: 600;">2% à 5% du montant total</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Client</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Chantier</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #856404; font-weight: 600;">2% à 5% du montant total</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Client</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Consultance</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #856404; font-weight: 600;">2% à 5% du montant total</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Client</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>5.3 Modalités des commissions :</strong></p>
+                <ul>
+                    <li>Le taux de commission (2% à 5%) est déterminé automatiquement selon l'envergure du projet</li>
+                    <li>La commission est calculée sur le montant total du contrat ou de la consultance</li>
+                    <li>La commission est payée par le client directement à AssibaService</li>
+                    <li>Le prestataire reçoit l'intégralité du montant convenu, hors commission AssibaService</li>
+                    <li>Les commissions garantissent la sécurité des transactions et le suivi qualité</li>
+                </ul>
+
+                <p><strong>5.4 Abonnements prestataires :</strong></p>
+                <ul>
+                    <li><strong>Standard :</strong> 3,000 FCFA/an - Inscription de base</li>
+                    <li><strong>Basic :</strong> 8,000 FCFA/an - Avec publicité et avantages</li>
+                    <li><strong>Pro :</strong> 30,000 FCFA/an - Pour entreprises, avec 1 mois gratuit</li>
+                </ul>
+
+                <p><strong>5.5 Assurances (optionnelles) :</strong></p>
+                <ul>
+                    <li>Responsabilité civile professionnelle : 9,650 FCFA/an</li>
+                    <li>Accident de travail : 3,000 FCFA/an</li>
+                </ul>
+
+                <p><strong>5.6 Moyens de paiement :</strong></p>
+                <p>T-Money, Flooz, PayGate Global Togo, ou paiement au bureau AssibaService à Lomé.</p>
+
+                <div class="warning">
+                    <strong>⚠️ Interdiction de contournement :</strong> Tout contournement de la plateforme AssibaService pour éviter le paiement des commissions est strictement interdit et peut entraîner la suspension définitive des comptes concernés.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">6. Obligations des Utilisateurs</h2>
+            <div class="section-content">
+                <p><strong>6.1 Obligations générales :</strong></p>
+                <ul>
+                    <li>Utiliser la plateforme de manière loyale et conforme à sa destination</li>
+                    <li>Respecter les lois et règlements en vigueur au Togo</li>
+                    <li>Ne pas porter atteinte aux droits des autres utilisateurs</li>
+                    <li>Maintenir la confidentialité des informations personnelles</li>
+                </ul>
+
+                <p><strong>6.2 Obligations des prestataires :</strong></p>
+                <ul>
+                    <li>Fournir des services de qualité professionnelle</li>
+                    <li>Respecter les délais convenus</li>
+                    <li>Maintenir leurs certifications à jour</li>
+                    <li>Souscrire aux assurances recommandées</li>
+                </ul>
+
+                <p><strong>6.3 Obligations des clients :</strong></p>
+                <ul>
+                    <li>Fournir des informations précises sur leurs besoins</li>
+                    <li>Respecter les conditions convenues avec le prestataire</li>
+                    <li>Effectuer les paiements dans les délais</li>
+                    <li>Évaluer objectivement les services reçus</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">7. Responsabilité et Assurances</h2>
+            <div class="section-content">
+                <p><strong>7.1 Rôle d'AssibaService :</strong></p>
+                <p>AssibaService agit uniquement comme facilitateur de mise en relation. La plateforme n'est pas partie aux contrats conclus entre clients et prestataires.</p>
+
+                <p><strong>7.2 Assurances :</strong></p>
+                <p>AssibaService facilite l'accès aux assurances via des partenariats avec des assureurs agréés CIMA. AssibaService n'est pas gestionnaire de sinistres mais simple facilitateur.</p>
+
+                <div class="highlight">
+                    <strong>⚠️ Limitation de responsabilité :</strong> AssibaService ne peut être tenue responsable des dommages résultant de l'exécution des services entre clients et prestataires.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">8. Protection des Données</h2>
+            <div class="section-content">
+                <p>AssibaService s'engage à protéger les données personnelles conformément à la réglementation togolaise et aux standards internationaux. Pour plus de détails, consultez notre Politique de Confidentialité.</p>
+                
+                <p><strong>Droits des utilisateurs :</strong></p>
+                <ul>
+                    <li>Droit d'accès à leurs données</li>
+                    <li>Droit de rectification</li>
+                    <li>Droit de suppression</li>
+                    <li>Droit à la portabilité</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">9. Résolution des Litiges</h2>
+            <div class="section-content">
+                <p><strong>9.1 Médiation :</strong></p>
+                <p>En cas de litige entre utilisateurs, AssibaService propose un service de médiation pour faciliter la résolution amiable.</p>
+
+                <p><strong>9.2 Juridiction compétente :</strong></p>
+                <p>Tout litige sera soumis aux tribunaux compétents de Lomé, Togo, selon le droit togolais.</p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">10. Modification des CGU</h2>
+            <div class="section-content">
+                <p>AssibaService se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications par notification sur la plateforme.</p>
+                
+                <p>La poursuite de l'utilisation après modification vaut acceptation des nouvelles conditions.</p>
+            </div>
+        </div>
+
+        <div class="contact-info">
+            <h3 style="color: #006B3F; margin-bottom: 15px;">📞 Contact</h3>
+            <p><strong>AssibaService</strong></p>
+            <p>📍 Adresse : Lomé, Togo</p>
+            <p>📧 Email : nexusinternational25@gmail.com</p>
+            <p>📱 Téléphone : +228 91 97 80 80</p>
+            <p><strong>Lancement prévu :</strong> Octobre 2025</p>
+        </div>
+
+        <div class="download-section">
+            <p><strong>💾 Télécharger ce document :</strong></p>
+            <a href="#" class="download-btn" onclick="downloadPDF()">📄 Télécharger PDF</a>
+            <a href="#" class="download-btn" onclick="printDocument()">🖨️ Imprimer</a>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            // Génération PDF côté client
+            window.print();
+        }
+
+        function printDocument() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
+

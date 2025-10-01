@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/images/pattern-bg.png') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mission-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+
+        .mission-content h3 {
+            font-size: 1.8rem;
+            color: #006B3F;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .mission-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .mission-image {
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            border-radius: 20px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            box-shadow: 0 20px 60px rgba(0,107,63,0.3);
+        }
+
+        .values-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 80px 0;
+            border-radius: 30px;
+            margin: 80px 0;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-top: 5px solid #006B3F;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .value-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+
+        .value-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #006B3F;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .team-section {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 80px 0;
+            border-radius: 30px;
+            margin: 80px 0;
+        }
+
+        .team-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .team-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .team-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+            opacity: 0.9;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .team-member {
+            background: rgba(255,255,255,0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        .member-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .member-role {
+            color: #FFD700;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+        }
+
+        .history-section {
+            margin: 80px 0;
+        }
+
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #006B3F, #FFD700);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 45%;
+            position: relative;
+        }
+
+        .timeline-date {
+            background: #006B3F;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .timeline-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px #006B3F;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .mission-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .mission-image {
+                height: 250px;
+                font-size: 3rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                margin-left: 40px;
+            }
+
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-marker {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation (identique à index.html) -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos-harmonized.html" class="nav-link active">À propos</a>
+                    <a href="assurance-optimized.html" class="nav-link">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="abonnements.html" class="nav-link">Abonnements</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login">Connexion</button>
+                    <button class="btn-register">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">À propos d'AssibaService</h1>
+            <p class="hero-subtitle">Découvrez notre mission, notre vision et notre engagement envers l'excellence des services au Togo</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="about-container">
+        <!-- Section Mission -->
+        <section class="mission-section">
+            <div class="mission-content">
+                <h3>🎯 Notre Mission</h3>
+                <p>
+                    AssibaService révolutionne l'accès aux services de qualité au Togo en connectant 
+                    les clients avec les meilleurs prestataires locaux. Notre plateforme digitale 
+                    facilite les échanges, garantit la qualité et sécurise les transactions pour 
+                    créer un écosystème de confiance.
+                </p>
+                <p>
+                    Nous nous engageons à valoriser le savoir-faire togolais, à promouvoir 
+                    l'entrepreneuriat local et à contribuer au développement économique 
+                    de notre pays à travers l'innovation technologique.
+                </p>
+            </div>
+            <div class="mission-image">
+                🇹🇬
+            </div>
+        </section>
+
+        <!-- Section Valeurs -->
+        <section class="values-section">
+            <h2 class="section-title">Nos Valeurs Fondamentales</h2>
+            <p class="section-subtitle">
+                Les principes qui guident chacune de nos actions et décisions
+            </p>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">⭐</div>
+                    <h4 class="value-title">Excellence</h4>
+                    <p class="value-description">
+                        Nous nous engageons à fournir des services de la plus haute qualité, 
+                        en sélectionnant rigoureusement nos prestataires et en maintenant 
+                        des standards élevés.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h4 class="value-title">Confiance</h4>
+                    <p class="value-description">
+                        La transparence et la fiabilité sont au cœur de nos relations. 
+                        Nous créons un environnement sécurisé où clients et prestataires 
+                        peuvent collaborer en toute sérénité.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🚀</div>
+                    <h4 class="value-title">Innovation</h4>
+                    <p class="value-description">
+                        Nous adoptons les dernières technologies pour améliorer constamment 
+                        l'expérience utilisateur et proposer des solutions toujours plus 
+                        performantes et intuitives.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🌍</div>
+                    <h4 class="value-title">Communauté</h4>
+                    <p class="value-description">
+                        Nous soutenons le développement économique local en créant des 
+                        opportunités pour les entrepreneurs togolais et en favorisant 
+                        l'économie circulaire.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Statistiques -->
+        <section class="stats-section">
+            <h2 class="section-title">AssibaService en Chiffres</h2>
+            <p class="section-subtitle">
+                Des résultats qui témoignent de notre impact sur l'économie togolaise
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="5000">0</div>
+                    <div class="stat-label">Prestataires Actifs</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number" data-target="15000">0</div>
+                    <div class="stat-label">Missions Réalisées</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">% Satisfaction Client</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support Disponible</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Histoire -->
+        <section class="history-section">
+            <h2 class="section-title">Notre Histoire</h2>
+            <p class="section-subtitle">
+                Le parcours d'AssibaService depuis sa création
+            </p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Octobre 2025</div>
+                        <h4 class="timeline-title">Lancement Officiel</h4>
+                        <p class="timeline-description">
+                            Lancement officiel de la plateforme AssibaService avec 
+                            50 prestataires pionniers dans 12 secteurs d'activité à Lomé.
+                        </p>
+                    </div>
+                    <div class="timeline-marker"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2026</div>
+                        <h4 class="timeline-title">Expansion Nationale</h4>
+                        <p class="timeline-description">
+                            Extension des services à Kara, Sokodé et Kpalimé. 
+                            Intégration complète des paiements mobile money.
+                        </p>
+                    </div>
+                    <div class="timeline-marker"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2027</div>
+                        <h4 class="timeline-title">Innovation & IA</h4>
+                        <p class="timeline-description">
+                            Déploiement du système de matching intelligent avancé et des 
+                            services d'assurance et formation professionnelle.
+                        </p>
+                    </div>
+                    <div class="timeline-marker"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2028</div>
+                        <h4 class="timeline-title">Vision Régionale</h4>
+                        <p class="timeline-description">
+                            Expansion vers le Bénin et le Ghana. 
+                            Objectif : devenir la référence ouest-africaine.
+                        </p>
+                    </div>
+                    <div class="timeline-marker"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer (identique à index.html) -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">💼</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="index.html#services">Tous les services</a></li>
+                    <li><a href="assurance-optimized.html">Assurance</a></li>
+                    <li><a href="formation.html">Formation</a></li>
+                    <li><a href="abonnements.html">Abonnements</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#help">Centre d'aide</a></li>
+                    <li><a href="#legal">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AssibaService. Tous droits réservés. Lancement prévu : Octobre 2025.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation mobile (identique à index.html)
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+
+        // Animation des statistiques
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+            
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 100;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target.toLocaleString() + '+';
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 20);
+            });
+        }
+
+        // Observer pour déclencher l'animation des stats
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observer pour les animations d'apparition
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Initialisation des observers
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsSection = document.querySelector('.stats-grid');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+
+            // Animation d'apparition pour les sections
+            const animatedElements = document.querySelectorAll('.value-card, .team-member, .timeline-item');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                fadeObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation & Certification — AssibaService</title>
+    <link rel="stylesheet" href="assets/common.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <style>
+        .training-hero {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .training-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+            transform: rotate(-45deg);
+        }
+
+        .training-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .training-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .certification-level {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #006B3F;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #006B3F;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .level-progress {
+            background: rgba(0, 107, 63, 0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .level-progress-bar {
+            background: #006B3F;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .courses-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .courses-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #006B3F;
+            background: white;
+            color: #006B3F;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #006B3F;
+            color: white;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .course-card.enrolled {
+            border: 3px solid #FFD700;
+        }
+
+        .course-card.completed {
+            border: 3px solid #28a745;
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+
+        .course-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-right: 80px;
+        }
+
+        .course-duration {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .course-body {
+            padding: 25px;
+        }
+
+        .course-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .course-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #006B3F;
+        }
+
+        .course-points {
+            background: #FFD700;
+            color: #006B3F;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .course-progress {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .course-progress-bar {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .course-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #000;
+        }
+
+        .btn-completed {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-certificate {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #006B3F;
+        }
+
+        .course-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .achievements-section {
+            background: #f8f9fa;
+            padding: 60px 20px;
+        }
+
+        .achievements-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .achievement-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-card.unlocked {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #006B3F;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .achievement-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            z-index: 1001;
+        }
+
+        .course-content {
+            margin-bottom: 30px;
+        }
+
+        .course-module {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .module-header {
+            background: #f8f9fa;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-header:hover {
+            background: #e9ecef;
+        }
+
+        .module-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .module-content.active {
+            display: block;
+        }
+
+        .quiz-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quiz-options li {
+            margin-bottom: 10px;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .training-hero h1 {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .courses-filters {
+                justify-content: flex-start;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as other pages) -->
+    <div class="top-notice">
+        En utilisant cette plateforme, vous acceptez nos <a href="legal/cgu.html">CGU</a> et notre <a href="legal/confidentialite.html">Politique de Confidentialité</a>. 
+        <a href="assets/docs/CGU_AssibaService.pdf">Télécharger les CGU (PDF)</a> 
+        <a href="assets/docs/Politique_Confidentialite_AssibaService.pdf">Politique (PDF)</a>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="assets/logo/logo_officiel.jpeg" alt="Logo AssibaService" class="logo-img">
+                    <a href="index.html" class="logo-text">AssibaService</a>
+                </div>
+                <nav class="nav">
+                    <a href="index.html">Accueil</a>
+                    <a href="apropos.html">À propos</a>
+                    <a href="#comment-ca-marche">Comment ça marche</a>
+                    <a href="legal/cgu.html">CGU</a>
+                    <a href="legal/confidentialite.html">Confidentialité</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="training-hero">
+        <div class="container">
+            <h1>🎓 Formation & Certification</h1>
+            <p>Développez vos compétences et obtenez des certifications reconnues pour améliorer votre profil professionnel sur AssibaService.</p>
+        </div>
+    </section>
+
+    <!-- Certification Level -->
+    <div class="container">
+        <div class="certification-level" id="certification-level">
+            <div class="level-badge" id="level-badge">Niveau Débutant</div>
+            <h3 id="level-title">Votre Progression</h3>
+            <div class="level-progress">
+                <div class="level-progress-bar" id="level-progress-bar" style="width: 0%"></div>
+            </div>
+            <p id="level-description">Complétez des formations pour augmenter votre niveau de certification</p>
+        </div>
+    </div>
+
+    <!-- Courses Section -->
+    <section class="courses-container">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #006B3F;">Formations Disponibles</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 40px;">
+                Formations spécialement conçues pour les prestataires AssibaService
+            </p>
+            
+            <div class="courses-filters">
+                <button class="filter-btn active" data-category="all">Toutes</button>
+                <button class="filter-btn" data-category="general">Général</button>
+                <button class="filter-btn" data-category="construction">Construction</button>
+                <button class="filter-btn" data-category="artisanat">Artisanat</button>
+                <button class="filter-btn" data-category="service_client">Service Client</button>
+                <button class="filter-btn" data-category="securite">Sécurité</button>
+            </div>
+            
+            <div class="courses-grid" id="courses-grid">
+                <!-- Courses will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="achievements-section">
+        <div class="achievements-container">
+            <h2 style="text-align: center; color: #006B3F; margin-bottom: 20px;">Badges & Récompenses</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 40px;">
+                Débloquez des badges en complétant des formations et atteignez de nouveaux niveaux
+            </p>
+            
+            <div class="achievements-grid" id="achievements-grid">
+                <!-- Achievements will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Modal -->
+    <div id="course-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 id="modal-course-title">Formation</h2>
+                <p id="modal-course-description">Description de la formation</p>
+            </div>
+            <div class="modal-body">
+                <div class="course-content" id="course-content">
+                    <!-- Course content will be loaded here -->
+                </div>
+                
+                <div class="quiz-container" id="quiz-container" style="display: none;">
+                    <h3>Quiz de Validation</h3>
+                    <div id="quiz-content">
+                        <!-- Quiz questions will be loaded here -->
+                    </div>
+                    <button class="course-button btn-enroll" onclick="submitQuiz()">
+                        ✅ Valider le Quiz
+                    </button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="course-button btn-continue" onclick="completeModule()" id="complete-module-btn">
+                        ▶️ Terminer ce Module
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (same as other pages) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AssibaService</h3>
+                    <p>Votre satisfaction, notre priorité</p>
+                    <div class="contact-info">
+                        <p><strong>Téléphone</strong><br>+228 91 97 80 80</p>
+                        <p><strong>Email</strong><br>support@assibaservice.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AssibaService — <a href="#" onclick="showInstallPrompt()">📲 Installer</a></p>
+                <p><a href="mailto:nexusinternational25@gmail.com">Développé par NEXUS International</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/pwa-install.js"></script>
+    <script>
+        let currentUser = null;
+        let availableCourses = [];
+        let userCourses = [];
+        let currentCourse = null;
+        let currentModule = 0;
+
+        // Sample course data (would come from API)
+        const sampleCourses = [
+            {
+                id: 1,
+                title: 'Sécurité sur les Chantiers',
+                category: 'securite',
+                description: 'Formation aux règles de sécurité essentielles pour tous les métiers du bâtiment.',
+                duration_hours: 4,
+                price: 0,
+                certification_points: 10,
+                modules: [
+                    {
+                        title: 'Introduction à la sécurité',
+                        content: 'La sécurité sur les chantiers est primordiale...',
+                        video_url: null
+                    },
+                    {
+                        title: 'Équipements de protection',
+                        content: 'Les EPI (Équipements de Protection Individuelle)...',
+                        video_url: null
+                    }
+                ],
+                quiz: [
+                    {
+                        question: 'Quel est l\'équipement de protection le plus important ?',
+                        options: ['Casque', 'Gants', 'Chaussures de sécurité', 'Tous sont importants'],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Service Client Excellence',
+                category: 'service_client',
+                description: 'Apprenez à offrir un service client exceptionnel et fidéliser vos clients.',
+                duration_hours: 3,
+                price: 0,
+                certification_points: 8,
+                modules: [
+                    {
+                        title: 'Accueil et première impression',
+                        content: 'La première impression est cruciale...',
+                        video_url: null
+                    }
+                ],
+                quiz: [
+                    {
+                        question: 'Combien de temps avez-vous pour faire une bonne première impression ?',
+                        options: ['30 secondes', '2 minutes', '5 minutes', '10 minutes'],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Artisanat Traditionnel Togolais',
+                category: 'artisanat',
+                description: 'Découvrez et maîtrisez les techniques traditionnelles de l\'artisanat togolais.',
+                duration_hours: 8,
+                price: 15000,
+                certification_points: 20,
+                modules: [
+                    {
+                        title: 'Histoire de l\'artisanat togolais',
+                        content: 'L\'artisanat au Togo a une riche histoire...',
+                        video_url: null
+                    }
+                ],
+                quiz: [
+                    {
+                        question: 'Quelle est la matière première principale du tissage traditionnel ?',
+                        options: ['Coton', 'Soie', 'Lin', 'Raphia'],
+                        correct: 0
+                    }
+                ]
+            }
+        ];
+
+        const achievements = [
+            { id: 1, title: 'Premier Pas', description: 'Première formation complétée', icon: '🎯', unlocked: false },
+            { id: 2, title: 'Étudiant Assidu', description: '5 formations complétées', icon: '📚', unlocked: false },
+            { id: 3, title: 'Expert Sécurité', description: 'Toutes les formations sécurité', icon: '🛡️', unlocked: false },
+            { id: 4, title: 'Maître Artisan', description: 'Formations artisanat complétées', icon: '🎨', unlocked: false },
+            { id: 5, title: 'Service d\'Or', description: 'Excellence en service client', icon: '⭐', unlocked: false },
+            { id: 6, title: 'Mentor', description: '10 formations complétées', icon: '👨‍🏫', unlocked: false }
+        ];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUserAuth();
+            loadCourses();
+            loadUserProgress();
+            initializeEventListeners();
+        });
+
+        function checkUserAuth() {
+            const token = localStorage.getItem('auth_token');
+            const user = JSON.parse(localStorage.getItem('user_data') || '{}');
+            
+            if (!token) {
+                alert('Vous devez être connecté pour accéder aux formations.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = user;
+        }
+
+        async function loadCourses() {
+            try {
+                // In real app, this would be an API call
+                // const response = await fetch('/api/training/courses');
+                // const data = await response.json();
+                
+                availableCourses = sampleCourses;
+                renderCourses(availableCourses);
+            } catch (error) {
+                console.error('Erreur chargement formations:', error);
+                availableCourses = sampleCourses;
+                renderCourses(availableCourses);
+            }
+        }
+
+        async function loadUserProgress() {
+            try {
+                // Simulate user progress
+                const progress = {
+                    certification_level: 1,
+                    total_points: 18,
+                    completed_courses: [1, 2],
+                    in_progress_courses: [3]
+                };
+                
+                updateCertificationLevel(progress);
+                updateAchievements(progress);
+            } catch (error) {
+                console.error('Erreur chargement progression:', error);
+            }
+        }
+
+        function updateCertificationLevel(progress) {
+            const levels = [
+                { name: 'Débutant', min_points: 0, max_points: 20 },
+                { name: 'Intermédiaire', min_points: 21, max_points: 50 },
+                { name: 'Avancé', min_points: 51, max_points: 100 },
+                { name: 'Expert', min_points: 101, max_points: 200 },
+                { name: 'Maître', min_points: 201, max_points: 999 }
+            ];
+            
+            const currentLevel = levels.find(level => 
+                progress.total_points >= level.min_points && progress.total_points <= level.max_points
+            ) || levels[0];
+            
+            const progressPercent = ((progress.total_points - currentLevel.min_points) / 
+                                   (currentLevel.max_points - currentLevel.min_points)) * 100;
+            
+            document.getElementById('level-badge').textContent = `Niveau ${currentLevel.name}`;
+            document.getElementById('level-title').textContent = `${progress.total_points} points de certification`;
+            document.getElementById('level-progress-bar').style.width = `${Math.min(progressPercent, 100)}%`;
+            document.getElementById('level-description').textContent = 
+                `${currentLevel.max_points - progress.total_points} points pour le niveau suivant`;
+        }
+
+        function updateAchievements(progress) {
+            const updatedAchievements = achievements.map(achievement => {
+                let unlocked = false;
+                
+                switch(achievement.id) {
+                    case 1: unlocked = progress.completed_courses.length >= 1; break;
+                    case 2: unlocked = progress.completed_courses.length >= 5; break;
+                    case 6: unlocked = progress.completed_courses.length >= 10; break;
+                    default: unlocked = false;
+                }
+                
+                return { ...achievement, unlocked };
+            });
+            
+            renderAchievements(updatedAchievements);
+        }
+
+        function renderCourses(courses) {
+            const grid = document.getElementById('courses-grid');
+            
+            grid.innerHTML = courses.map(course => {
+                const isEnrolled = userCourses.some(uc => uc.course_id === course.id);
+                const isCompleted = userCourses.some(uc => uc.course_id === course.id && uc.status === 'completed');
+                const progress = userCourses.find(uc => uc.course_id === course.id)?.progress_percentage || 0;
+                
+                let cardClass = 'course-card';
+                let buttonClass = 'btn-enroll';
+                let buttonText = '📚 S\'inscrire';
+                
+                if (isCompleted) {
+                    cardClass += ' completed';
+                    buttonClass = 'btn-certificate';
+                    buttonText = '🏆 Certificat';
+                } else if (isEnrolled) {
+                    cardClass += ' enrolled';
+                    buttonClass = 'btn-continue';
+                    buttonText = '▶️ Continuer';
+                }
+                
+                return `
+                    <div class="${cardClass}">
+                        <div class="course-header">
+                            <div class="course-category">${course.category}</div>
+                            <div class="course-title">${course.title}</div>
+                            <div class="course-duration">⏱️ ${course.duration_hours}h</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-description">${course.description}</div>
+                            <div class="course-meta">
+                                <div class="course-price">
+                                    ${course.price === 0 ? 'Gratuit' : formatCurrency(course.price) + ' FCFA'}
+                                </div>
+                                <div class="course-points">+${course.certification_points} pts</div>
+                            </div>
+                            ${isEnrolled ? `
+                                <div class="course-progress">
+                                    <div class="course-progress-bar" style="width: ${progress}%"></div>
+                                </div>
+                                <div style="text-align: center; margin-bottom: 15px; color: #666;">
+                                    Progression: ${progress}%
+                                </div>
+                            ` : ''}
+                            <button class="course-button ${buttonClass}" onclick="handleCourseAction(${course.id})">
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAchievements(achievements) {
+            const grid = document.getElementById('achievements-grid');
+            
+            grid.innerHTML = achievements.map(achievement => `
+                <div class="achievement-card ${achievement.unlocked ? 'unlocked' : ''}">
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-description">${achievement.description}</div>
+                    ${achievement.unlocked ? '<div style="margin-top: 10px; font-weight: bold;">✅ Débloqué</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function initializeEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    filterCourses(category);
+                });
+            });
+
+            // Modal close
+            document.querySelector('.close').addEventListener('click', function() {
+                document.getElementById('course-modal').style.display = 'none';
+            });
+
+            // Module headers
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('module-header')) {
+                    const content = e.target.nextElementSibling;
+                    content.classList.toggle('active');
+                }
+            });
+        }
+
+        function filterCourses(category) {
+            const filteredCourses = category === 'all' ? 
+                availableCourses : 
+                availableCourses.filter(course => course.category === category);
+            
+            renderCourses(filteredCourses);
+        }
+
+        async function handleCourseAction(courseId) {
+            const course = availableCourses.find(c => c.id === courseId);
+            const userCourse = userCourses.find(uc => uc.course_id === courseId);
+            
+            if (userCourse && userCourse.status === 'completed') {
+                // Download certificate
+                downloadCertificate(courseId);
+            } else if (userCourse) {
+                // Continue course
+                openCourse(course);
+            } else {
+                // Enroll in course
+                await enrollInCourse(courseId);
+            }
+        }
+
+        async function enrollInCourse(courseId) {
+            try {
+                // In real app, this would be an API call
+                // const response = await fetch('/api/training/enroll', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                //     },
+                //     body: JSON.stringify({ course_id: courseId })
+                // });
+
+                // Simulate enrollment
+                userCourses.push({
+                    course_id: courseId,
+                    status: 'enrolled',
+                    progress_percentage: 0
+                });
+
+                showNotification('Inscription réussie ! Vous pouvez maintenant commencer la formation.', 'success');
+                renderCourses(availableCourses);
+                
+                // Open course immediately
+                const course = availableCourses.find(c => c.id === courseId);
+                openCourse(course);
+                
+            } catch (error) {
+                console.error('Erreur inscription:', error);
+                showNotification('Erreur lors de l\'inscription', 'error');
+            }
+        }
+
+        function openCourse(course) {
+            currentCourse = course;
+            currentModule = 0;
+            
+            document.getElementById('modal-course-title').textContent = course.title;
+            document.getElementById('modal-course-description').textContent = course.description;
+            
+            renderCourseContent(course);
+            document.getElementById('course-modal').style.display = 'block';
+        }
+
+        function renderCourseContent(course) {
+            const content = document.getElementById('course-content');
+            
+            content.innerHTML = `
+                <h3>Modules de Formation</h3>
+                ${course.modules.map((module, index) => `
+                    <div class="course-module">
+                        <div class="module-header">
+                            <strong>Module ${index + 1}: ${module.title}</strong>
+                            <span>▼</span>
+                        </div>
+                        <div class="module-content">
+                            <p>${module.content}</p>
+                            ${module.video_url ? `<video controls width="100%"><source src="${module.video_url}" type="video/mp4"></video>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function completeModule() {
+            if (currentModule < currentCourse.modules.length - 1) {
+                currentModule++;
+                showNotification(`Module ${currentModule} terminé !`, 'success');
+            } else {
+                // Show quiz
+                document.getElementById('quiz-container').style.display = 'block';
+                document.getElementById('complete-module-btn').style.display = 'none';
+                renderQuiz(currentCourse.quiz);
+            }
+        }
+
+        function renderQuiz(quiz) {
+            const content = document.getElementById('quiz-content');
+            
+            content.innerHTML = quiz.map((question, index) => `
+                <div class="quiz-question">
+                    <h4>Question ${index + 1}: ${question.question}</h4>
+                    <ul class="quiz-options">
+                        ${question.options.map((option, optIndex) => `
+                            <li>
+                                <input type="radio" name="question_${index}" value="${optIndex}" id="q${index}_${optIndex}">
+                                <label for="q${index}_${optIndex}">${option}</label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function submitQuiz() {
+            const quiz = currentCourse.quiz;
+            let score = 0;
+            
+            quiz.forEach((question, index) => {
+                const selected = document.querySelector(`input[name="question_${index}"]:checked`);
+                if (selected && parseInt(selected.value) === question.correct) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / quiz.length) * 100;
+            
+            if (percentage >= 70) {
+                // Course completed
+                const userCourseIndex = userCourses.findIndex(uc => uc.course_id === currentCourse.id);
+                if (userCourseIndex !== -1) {
+                    userCourses[userCourseIndex].status = 'completed';
+                    userCourses[userCourseIndex].progress_percentage = 100;
+                    userCourses[userCourseIndex].score = percentage;
+                }
+                
+                showNotification(`Félicitations ! Formation terminée avec ${percentage.toFixed(0)}% de réussite.`, 'success');
+                document.getElementById('course-modal').style.display = 'none';
+                renderCourses(availableCourses);
+                loadUserProgress(); // Refresh progress
+            } else {
+                showNotification(`Score insuffisant (${percentage.toFixed(0)}%). Minimum requis: 70%. Réessayez !`, 'warning');
+            }
+        }
+
+        function downloadCertificate(courseId) {
+            // Implementation would generate and download PDF certificate
+            showNotification('Téléchargement du certificat...', 'info');
+        }
+
+        // Utility functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('fr-FR').format(amount);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                z-index: 1001;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            
+            if (type === 'success') notification.style.background = '#28a745';
+            else if (type === 'error') notification.style.background = '#dc3545';
+            else if (type === 'warning') notification.style.background = '#ffc107';
+            else notification.style.background = '#17a2b8';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+

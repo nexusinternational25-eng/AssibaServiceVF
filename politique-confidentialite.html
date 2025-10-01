@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de Confidentialité — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .legal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #006B3F;
+        }
+
+        .legal-title {
+            font-size: 2.5rem;
+            color: #006B3F;
+            margin-bottom: 10px;
+        }
+
+        .legal-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .legal-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #006B3F;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section-content {
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        .section-content ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section-content li {
+            margin-bottom: 8px;
+        }
+
+        .download-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .download-btn {
+            background: #006B3F;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #004d2e;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .highlight {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .contact-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-container">
+        <button class="back-btn" onclick="history.back()">← Retour</button>
+        
+        <div class="legal-header">
+            <h1 class="legal-title">Politique de Confidentialité</h1>
+            <p class="legal-subtitle">AssibaService - Protection des données personnelles</p>
+            <p class="legal-subtitle">Dernière mise à jour : Septembre 2025</p>
+        </div>
+
+        <div class="download-section">
+            <p><strong>💾 Télécharger ce document :</strong></p>
+            <a href="#" class="download-btn" onclick="downloadPDF()">📄 Télécharger PDF</a>
+            <a href="#" class="download-btn" onclick="printDocument()">🖨️ Imprimer</a>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">1. Introduction</h2>
+            <div class="section-content">
+                <p>AssibaService s'engage à protéger la confidentialité et la sécurité des données personnelles de ses utilisateurs. Cette politique explique comment nous collectons, utilisons, stockons et protégeons vos informations personnelles.</p>
+                
+                <div class="highlight">
+                    <strong>🔒 Notre engagement :</strong> Vos données personnelles sont traitées avec le plus grand soin et dans le strict respect de la réglementation togolaise et des standards internationaux de protection des données.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">2. Responsable du Traitement</h2>
+            <div class="section-content">
+                <p><strong>AssibaService</strong></p>
+                <p>📍 Adresse : Lomé, Togo</p>
+                <p>📧 Email : nexusinternational25@gmail.com</p>
+                <p>📱 Téléphone : +228 91 97 80 80</p>
+                <p><strong>Délégué à la Protection des Données :</strong> dpo@assibaservice.com</p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">3. Données Collectées</h2>
+            <div class="section-content">
+                <p><strong>3.1 Données d'identification :</strong></p>
+                <ul>
+                    <li>Nom et prénoms</li>
+                    <li>Adresse email</li>
+                    <li>Numéro de téléphone</li>
+                    <li>Adresse postale</li>
+                    <li>Date de naissance</li>
+                    <li>Pièce d'identité (pour les prestataires)</li>
+                </ul>
+
+                <p><strong>3.2 Données professionnelles (prestataires) :</strong></p>
+                <ul>
+                    <li>Spécialités et compétences</li>
+                    <li>Expérience professionnelle</li>
+                    <li>Certifications et diplômes</li>
+                    <li>Portfolio et références</li>
+                    <li>Tarifs et disponibilités</li>
+                </ul>
+
+                <p><strong>3.3 Données de navigation :</strong></p>
+                <ul>
+                    <li>Adresse IP</li>
+                    <li>Type de navigateur</li>
+                    <li>Pages visitées</li>
+                    <li>Durée de visite</li>
+                    <li>Géolocalisation (avec consentement)</li>
+                </ul>
+
+                <p><strong>3.4 Données transactionnelles :</strong></p>
+                <ul>
+                    <li>Historique des paiements</li>
+                    <li>Méthodes de paiement</li>
+                    <li>Factures et reçus</li>
+                    <li>Évaluations et commentaires</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">4. Finalités du Traitement</h2>
+            <div class="section-content">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Finalité</th>
+                            <th>Base légale</th>
+                            <th>Durée de conservation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Création et gestion du compte</td>
+                            <td>Exécution du contrat</td>
+                            <td>Durée du compte + 3 ans</td>
+                        </tr>
+                        <tr>
+                            <td>Mise en relation client-prestataire</td>
+                            <td>Exécution du contrat</td>
+                            <td>5 ans après la mission</td>
+                        </tr>
+                        <tr>
+                            <td>Traitement des paiements</td>
+                            <td>Exécution du contrat</td>
+                            <td>10 ans (obligations comptables)</td>
+                        </tr>
+                        <tr>
+                            <td>Support client</td>
+                            <td>Intérêt légitime</td>
+                            <td>3 ans après résolution</td>
+                        </tr>
+                        <tr>
+                            <td>Marketing et communication</td>
+                            <td>Consentement</td>
+                            <td>Jusqu'au retrait du consentement</td>
+                        </tr>
+                        <tr>
+                            <td>Amélioration des services</td>
+                            <td>Intérêt légitime</td>
+                            <td>2 ans</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">5. Partage des Données</h2>
+            <div class="section-content">
+                <p><strong>5.1 Partage nécessaire au service :</strong></p>
+                <ul>
+                    <li><strong>Entre utilisateurs :</strong> Informations de contact pour la mise en relation</li>
+                    <li><strong>Prestataires de paiement :</strong> T-Money, Flooz, PayGate Global Togo</li>
+                    <li><strong>Partenaires assurance :</strong> Pour la souscription d'assurances</li>
+                </ul>
+
+                <p><strong>5.2 Prestataires techniques :</strong></p>
+                <ul>
+                    <li>Hébergement web (LWS)</li>
+                    <li>Services de notification</li>
+                    <li>Outils d'analyse (anonymisés)</li>
+                </ul>
+
+                <div class="warning">
+                    <strong>⚠️ Aucune vente de données :</strong> AssibaService ne vend jamais les données personnelles à des tiers à des fins commerciales.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">6. Sécurité des Données</h2>
+            <div class="section-content">
+                <p><strong>6.1 Mesures techniques :</strong></p>
+                <ul>
+                    <li>Chiffrement SSL/TLS pour toutes les communications</li>
+                    <li>Chiffrement des données sensibles en base</li>
+                    <li>Authentification à deux facteurs (2FA)</li>
+                    <li>Surveillance continue des accès</li>
+                    <li>Sauvegardes sécurisées régulières</li>
+                </ul>
+
+                <p><strong>6.2 Mesures organisationnelles :</strong></p>
+                <ul>
+                    <li>Accès limité aux données selon le principe du moindre privilège</li>
+                    <li>Formation du personnel à la protection des données</li>
+                    <li>Procédures de gestion des incidents</li>
+                    <li>Audits de sécurité réguliers</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">7. Vos Droits</h2>
+            <div class="section-content">
+                <p>Conformément à la réglementation, vous disposez des droits suivants :</p>
+
+                <p><strong>7.1 Droit d'accès :</strong></p>
+                <p>Vous pouvez demander l'accès à toutes vos données personnelles que nous détenons.</p>
+
+                <p><strong>7.2 Droit de rectification :</strong></p>
+                <p>Vous pouvez demander la correction de données inexactes ou incomplètes.</p>
+
+                <p><strong>7.3 Droit à l'effacement :</strong></p>
+                <p>Vous pouvez demander la suppression de vos données dans certaines conditions.</p>
+
+                <p><strong>7.4 Droit à la portabilité :</strong></p>
+                <p>Vous pouvez récupérer vos données dans un format structuré et lisible.</p>
+
+                <p><strong>7.5 Droit d'opposition :</strong></p>
+                <p>Vous pouvez vous opposer au traitement de vos données pour des raisons légitimes.</p>
+
+                <p><strong>7.6 Droit de limitation :</strong></p>
+                <p>Vous pouvez demander la limitation du traitement dans certains cas.</p>
+
+                <div class="highlight">
+                    <strong>📧 Exercer vos droits :</strong> Contactez-nous à dpo@assibaservice.com avec une copie de votre pièce d'identité. Nous répondrons dans un délai de 30 jours maximum.
+                </div>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">8. Cookies et Technologies Similaires</h2>
+            <div class="section-content">
+                <p><strong>8.1 Types de cookies utilisés :</strong></p>
+                <ul>
+                    <li><strong>Cookies essentiels :</strong> Nécessaires au fonctionnement du site</li>
+                    <li><strong>Cookies de performance :</strong> Analyse de l'utilisation (anonymisés)</li>
+                    <li><strong>Cookies de préférence :</strong> Mémorisation de vos choix</li>
+                    <li><strong>Cookies marketing :</strong> Avec votre consentement uniquement</li>
+                </ul>
+
+                <p><strong>8.2 Gestion des cookies :</strong></p>
+                <p>Vous pouvez gérer vos préférences de cookies via les paramètres de votre navigateur ou notre centre de préférences.</p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">9. Transferts Internationaux</h2>
+            <div class="section-content">
+                <p>Vos données sont principalement traitées au Togo. En cas de transfert vers d'autres pays, nous nous assurons que des garanties appropriées sont en place pour protéger vos données.</p>
+
+                <p><strong>Garanties appliquées :</strong></p>
+                <ul>
+                    <li>Clauses contractuelles types</li>
+                    <li>Certification de sécurité des prestataires</li>
+                    <li>Évaluation des niveaux de protection</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">10. Mineurs</h2>
+            <div class="section-content">
+                <p>AssibaService ne collecte pas sciemment de données personnelles d'enfants de moins de 16 ans sans le consentement parental. Si vous êtes parent et découvrez que votre enfant nous a fourni des données personnelles, contactez-nous immédiatement.</p>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">11. Modifications de la Politique</h2>
+            <div class="section-content">
+                <p>Cette politique peut être modifiée pour refléter les changements dans nos pratiques ou la réglementation. Nous vous informerons de toute modification importante par :</p>
+                <ul>
+                    <li>Notification sur la plateforme</li>
+                    <li>Email aux utilisateurs enregistrés</li>
+                    <li>Mise à jour de la date de dernière modification</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <h2 class="section-title">12. Réclamations</h2>
+            <div class="section-content">
+                <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez :</p>
+                <ul>
+                    <li>Nous contacter directement à dpo@assibaservice.com</li>
+                    <li>Saisir l'autorité de protection des données compétente au Togo</li>
+                    <li>Exercer un recours devant les tribunaux compétents</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="contact-info">
+            <h3 style="color: #006B3F; margin-bottom: 15px;">📞 Contact - Protection des Données</h3>
+            <p><strong>Délégué à la Protection des Données</strong></p>
+            <p>📧 Email : dpo@assibaservice.com</p>
+            <p>📱 Téléphone : +228 91 97 80 80</p>
+            <p>📍 Adresse : AssibaService, Lomé, Togo</p>
+            <p><strong>Lancement prévu :</strong> Octobre 2025</p>
+        </div>
+
+        <div class="download-section">
+            <p><strong>💾 Télécharger ce document :</strong></p>
+            <a href="#" class="download-btn" onclick="downloadPDF()">📄 Télécharger PDF</a>
+            <a href="#" class="download-btn" onclick="printDocument()">🖨️ Imprimer</a>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            // Génération PDF côté client
+            window.print();
+        }
+
+        function printDocument() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
+

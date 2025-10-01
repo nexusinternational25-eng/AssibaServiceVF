@@ -1,0 +1,208 @@
+<!doctype html><html lang='fr'><head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'>
+<meta name='theme-color' content='#006B3F'>
+<title>AssibaService — Accueil</title>
+<link rel='manifest' href='/manifest.webmanifest'>
+
+<style>
+:root{
+  --primary:#006B3F; /* Togo green */
+  --accent:#FFD700;  /* Togo yellow */
+  --alert:#D21034;   /* Togo red */
+  --bg:#F7FAF8;
+  --text:#0A1E12;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{font-size:16px}
+@media (max-width:380px){ html{font-size:15px} }
+@media (min-width:1280px){ html{font-size:17px} }
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.container{max-width:1200px;margin-inline:auto;padding:clamp(.75rem,2vw,1.25rem)}
+.header{position:sticky;top:0;background:rgba(0,107,63,.98);backdrop-filter:saturate(120%) blur(6px);color:#fff;z-index:50;box-shadow:0 8px 26px rgba(0,0,0,.12)}
+.header .row{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.header .brand{display:flex;align-items:center;gap:12px}
+.header img{height:48px;width:48px;object-fit:cover;border-radius:10px}
+nav a{color:#fff;margin:0 clamp(6px,1vw,12px);text-decoration:none;font-weight:700;letter-spacing:.2px}
+nav a:focus, nav a:hover{text-decoration:underline}
+/* HERO */
+.hero{
+  min-height:72vh;display:grid;place-items:center;position:relative;isolation:isolate;overflow:hidden;
+  background: #0a1e12;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:url('/apps/web/public/assets/hero_home.jpg') center/cover no-repeat;
+  opacity:.85;z-index:-2;transform:scale(1.02);
+}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background: radial-gradient(1000px 600px at 20% 10%, rgba(255,215,0,.35), transparent 60%),
+              radial-gradient(800px 600px at 90% 80%, rgba(210,16,52,.22), transparent 60%),
+              linear-gradient(to bottom, rgba(0,0,0,.20), rgba(0,0,0,.35));
+}
+.hero .inner{ text-align:center; color:#fff; padding-inline:clamp(.8rem,3vw,1.4rem); animation:fadeUp .8s ease both }
+.hero .kicker{
+  display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);
+  padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)
+}
+.hero h1{margin:.6rem 0 .4rem 0;font-size:clamp(1.8rem,4.2vw,3rem);letter-spacing:.2px;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.hero p{max-width:900px;margin:0 auto 1rem auto;font-size:clamp(1rem,2.2vw,1.15rem);opacity:.95}
+.cta-wrap{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:.4rem}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 20px;border-radius:14px;border:0;cursor:pointer;
+  font-weight:800;letter-spacing:.2px;transition:transform .06s ease, box-shadow .2s, filter .2s;
+  box-shadow:0 10px 24px rgba(0,0,0,.18); text-decoration:none
+}
+.btn:active{transform:translateY(1px)}
+.btn-install{background:var(--accent);color:#09210F;box-shadow:0 10px 24px rgba(255,215,0,.25)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 10px 24px rgba(0,107,63,.35)}
+.btn-danger{background:var(--alert);color:#fff;box-shadow:0 10px 24px rgba(210,16,52,.28)}
+.btn:hover{filter:brightness(1.04)}
+/* Floating install */
+.install-fab{position:fixed;right:14px;bottom:14px;z-index:60}
+.install-fab .btn{padding:12px 16px;border-radius:999px}
+/* Ads carousel */
+.adbar{background:#fff}
+.adbar .track{display:flex;gap:14px;overflow:auto;scroll-snap-type:x mandatory;padding:.8rem .2rem}
+.adbar img{height:72px;border-radius:12px;scroll-snap-align:center;flex:0 0 auto;box-shadow:0 8px 18px rgba(0,0,0,.10)}
+/* Services grid */
+section h2{color:#063A19}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (min-width:640px){ .grid{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:900px){ .grid{grid-template-columns:repeat(4,1fr)} }
+.card{
+  background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.10);padding:12px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform .15s ease, box-shadow .2s
+}
+.card:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.14) }
+.card img{width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:10px}
+.card h3{margin:.3rem 0 .6rem 0;font-size:1rem}
+/* Contact */
+.contact{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+@media (min-width:640px){ .contact{grid-template-columns:1fr 1fr} }
+.contact .box{background:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 26px rgba(0,0,0,.08)}
+/* Footer with gradient */
+.footer{
+  background: linear-gradient(135deg, #006B3F, #0a5c36 55%, #0d4f2f);
+  color:#fff;padding:22px;text-align:center;margin-top:30px
+}
+.footer a{color:#FFD700;text-decoration:none}
+.small{font-size:.95rem;opacity:.95}
+/* Accessibility */
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* Animations */
+@keyframes fadeUp{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+</style>
+
+<link rel="stylesheet" href="/assets/styles.css">
+<script defer src="/assets/pwa-install.js"></script>
+</head><body onload="">
+
+<!-- Injected by ChatGPT: legal header bar -->
+<div class="asb-legal-topbar" style="background:#f6f7f9;border-bottom:1px solid #e6e7eb;padding:.5rem 1rem;font-size:.9rem;text-align:center;">
+  En utilisant cette plateforme, vous acceptez nos 
+  <a href="/legal/cgu.html" target="_blank" rel="noopener">CGU</a> et notre 
+  <a href="/legal/confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a>. 
+  <a href="/assets/docs/CGU_AssibaService.pdf" download style="margin-left:.75rem;">Télécharger les CGU (PDF)</a>
+  <a href="/assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Politique (PDF)</a>
+</div>
+
+<header class='header' role='banner'>
+  <div class='container row'>
+    <div class='brand' aria-label='AssibaService'>
+      <img src='/apps/web/public/assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+    </div>
+    <nav aria-label='Navigation principale'>
+      <a href='index.html'>Accueil</a>
+      <a href='apropos.html'>À propos</a>
+      <a href='fonctionnement.html'>Comment ça marche</a>
+      <a href='conditions.html'>CGU</a>
+      <a href='confidentialite.html'>Confidentialité</a>
+    </nav>
+  </div>
+</header>
+<div id="pwaInstallBar" style="display:none;position:sticky;top:0;z-index:999;background:#0e5f0e;color:#fff;padding:10px 14px;align-items:center;gap:12px;justify-content:space-between">
+  <div style="font-weight:700">Installer AssibaService</div>
+  <div style="font-size:14px;opacity:.9">Ajoutez la plateforme sur votre écran d’accueil pour un accès rapide (PWA).</div>
+  <button onclick="installPWA()" class="btn btn-primary">Installer</button>
+</div>
+
+
+
+<section class='hero' aria-label='AssibaService Hero'>
+  <div class='container inner'>
+    <div class='kicker'>🇹🇬 Plateforme 100% togolaise</div>
+    <h1>AssibaService — Votre satisfaction, notre priorité</h1>
+    <p>Paiement sécurisé (en attente jusqu’à validation du service), prestataires vérifiés, géolocalisation intelligente.</p>
+    <div class='cta-wrap'>
+      <a class='btn btn-primary' href='#services' role='button'>🛠️ Demander un service</a>
+      <a class='btn btn-danger' href='fonctionnement.html#prestataire' role='button'>🤝 Devenir prestataire</a>
+      <button class='btn btn-install' onclick='alert("PWA: Installer AssibaService (démo)")' aria-label='Installer AssibaService'>📲 Installer AssibaService</button>
+    </div>
+  </div>
+</section>
+<div class='install-fab'><button class='btn btn-install' onclick='alert("PWA: Installer AssibaService (démo)")' aria-label='Installer AssibaService'>📲 Installer</button></div>
+
+<section class='adbar'>
+  <div class='container track' aria-label='Publicités internes'>
+    <img src='/apps/web/public/assets/ads/ad1.jpg' alt='Annonce 1'>
+    <img src='/apps/web/public/assets/ads/ad2.jpg' alt='Annonce 2'>
+    <img src='/apps/web/public/assets/ads/ad3.jpg' alt='Annonce 3'>
+    <img src='/apps/web/public/assets/ads/ad4.jpg' alt='Annonce 4'>
+  </div>
+</section>
+<section class='container' id='services' aria-label='Services populaires'>
+  <h2 style='text-align:center'>Services populaires</h2>
+  <div class='grid'><div class='card'><img src='/apps/web/public/assets/services/service_1.jpg' alt='Plomberie'><h3>Plomberie</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_2.jpg' alt='Électricité'><h3>Électricité</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_3.jpg' alt='Menuiserie'><h3>Menuiserie</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_4.jpg' alt='Peinture'><h3>Peinture</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_5.jpg' alt='Coiffure'><h3>Coiffure</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_6.jpg' alt='Maquillage'><h3>Maquillage</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_7.jpg' alt='Taxi / Transport'><h3>Taxi / Transport</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_8.jpg' alt='Réparation Téléphone'><h3>Réparation Téléphone</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_9.jpg' alt='Réparation PC'><h3>Réparation PC</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_10.jpg' alt='Consultance'><h3>Consultance</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_11.jpg' alt='Services Administratifs'><h3>Services Administratifs</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_12.jpg' alt='Jardinage'><h3>Jardinage</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_13.jpg' alt='Ménage'><h3>Ménage</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_14.jpg' alt='Couture'><h3>Couture</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_15.jpg' alt='Événementiel'><h3>Événementiel</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_16.jpg' alt='Sécurité'><h3>Sécurité</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_17.jpg' alt='Informatique'><h3>Informatique</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_18.jpg' alt='Formation'><h3>Formation</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_19.jpg' alt='Construction'><h3>Construction</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_20.jpg' alt='Carrelage'><h3>Carrelage</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_21.jpg' alt='Climatisation'><h3>Climatisation</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_22.jpg' alt='Dépannage Auto'><h3>Dépannage Auto</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_23.jpg' alt='Graphisme'><h3>Graphisme</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_24.jpg' alt='Marketing'><h3>Marketing</h3></div>
+<div class='card'><img src='/apps/web/public/assets/services/service_25.jpg' alt='Autre (Précisez)'><h3>Autre (Précisez)</h3></div></div>
+  <div class='contact' aria-label='Contact'>
+    <div class='box'><strong>Téléphone</strong><br>+228 91 97 80 80</div>
+    <div class='box'><strong>Email</strong><br>support@assibaservice.com</div>
+  </div>
+</section>
+
+<footer class='footer' role='contentinfo'>
+  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
+  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
+</footer>
+
+<!-- Injected by ChatGPT: legal footer links -->
+<footer class="asb-footer-legal" style="border-top:1px solid #e6e7eb;margin-top:2rem;padding-top:1rem;">
+  <nav>
+    <a href="/legal/cgu.html" target="_blank" rel="noopener">CGU</a> • 
+    <a href="/legal/confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a> • 
+    <a href="/assets/docs/CGU_AssibaService.pdf" download>Télécharger les CGU (PDF)</a> • 
+    <a href="/assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Télécharger la Politique (PDF)</a>
+  </nav>
+</footer>
+
+</body></html>

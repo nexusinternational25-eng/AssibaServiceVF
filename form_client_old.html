@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demander un Service — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/images/pattern-bg.png') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: -40px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,107,63,0.1);
+        }
+
+        .form-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: #006B3F;
+            color: white;
+        }
+
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #006B3F;
+            box-shadow: 0 0 0 3px rgba(0,107,63,0.1);
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .service-option {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .service-option:hover {
+            border-color: #006B3F;
+            background: #f8fff8;
+        }
+
+        .service-option.selected {
+            border-color: #006B3F;
+            background: #e8f5e8;
+            color: #006B3F;
+        }
+
+        .service-option .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .service-option .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .other-service-input {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .other-service-input.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .photo-upload-section {
+            border: 2px dashed #006B3F;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            background: #f8fff8;
+            margin: 20px 0;
+        }
+
+        .photo-upload-section.dragover {
+            border-color: #004d2e;
+            background: #e8f5e8;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #006B3F;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #006B3F;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #006B3F;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: #004d2e;
+            transform: translateY(-2px);
+        }
+
+        .photo-preview {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .photo-preview.show {
+            display: block;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .budget-slider {
+            margin: 20px 0;
+        }
+
+        .slider-container {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #006B3F;
+            cursor: pointer;
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #006B3F;
+            cursor: pointer;
+            border: none;
+        }
+
+        .budget-display {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #006B3F;
+        }
+
+        .ai-suggestion {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #006B3F;
+        }
+
+        .ai-suggestion .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .ai-suggestion .title {
+            font-weight: 600;
+            color: #006B3F;
+            margin-bottom: 10px;
+        }
+
+        .ai-suggestion .content {
+            color: #495057;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,107,63,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #006B3F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+                margin: -20px auto 60px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .form-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation (identique à index.html) -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos.html" class="nav-link">À propos</a>
+                    <a href="assurance.html" class="nav-link">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="abonnements.html" class="nav-link">Abonnements</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login" onclick="window.location.href='login.html'">Connexion</button>
+                    <button class="btn-register" onclick="window.location.href='register_client.html'">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Demander un Service</h1>
+            <p class="hero-subtitle">Décrivez votre besoin et trouvez le prestataire idéal en quelques clics</p>
+        </div>
+    </section>
+
+    <!-- Formulaire de demande de service -->
+    <div class="form-container">
+        <div class="form-card">
+            <!-- Indicateur d'étapes -->
+            <div class="form-steps">
+                <div class="step active" data-step="1">
+                    <span>1️⃣</span>
+                    <span>Service</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span>2️⃣</span>
+                    <span>Détails</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span>3️⃣</span>
+                    <span>Photos</span>
+                </div>
+                <div class="step" data-step="4">
+                    <span>4️⃣</span>
+                    <span>Budget</span>
+                </div>
+                <div class="step" data-step="5">
+                    <span>5️⃣</span>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+
+            <div class="success-message" id="success-message"></div>
+            <div class="error-message" id="error-message"></div>
+
+            <form id="service-request-form">
+                <!-- Étape 1: Choix du service -->
+                <div class="form-step active" data-step="1">
+                    <h3>Quel service recherchez-vous ?</h3>
+                    
+                    <div class="service-grid" id="service-grid">
+                        <!-- Services générés dynamiquement -->
+                    </div>
+
+                    <div class="other-service-input" id="other-service-input">
+                        <div class="form-group">
+                            <label for="other-service-detail">Précisez le service souhaité *</label>
+                            <input type="text" id="other-service-detail" name="other_service_detail" 
+                                   placeholder="Décrivez le service que vous recherchez...">
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="selected-category" name="category">
+                </div>
+
+                <!-- Étape 2: Détails du service -->
+                <div class="form-step" data-step="2">
+                    <h3>Détails de votre demande</h3>
+
+                    <div class="form-group">
+                        <label for="title">Titre de votre demande *</label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="Ex: Réparation fuite d'eau dans la cuisine">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description détaillée *</label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Décrivez précisément le problème, les travaux à effectuer, vos attentes..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Adresse du service *</label>
+                        <input type="text" id="address" name="address" required 
+                               placeholder="Adresse complète où le service doit être effectué">
+                        <button type="button" class="btn-secondary" onclick="getLocation()" style="margin-top: 10px;">
+                            📍 Utiliser ma position actuelle
+                        </button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="preferred-date">Date souhaitée</label>
+                            <input type="date" id="preferred-date" name="preferred_date" 
+                                   min="<?php echo date('Y-m-d'); ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferred-time">Heure souhaitée</label>
+                            <select id="preferred-time" name="preferred_time">
+                                <option value="">Flexible</option>
+                                <option value="matin">Matin (8h-12h)</option>
+                                <option value="apres-midi">Après-midi (12h-17h)</option>
+                                <option value="soir">Soir (17h-20h)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="is-urgent" name="is_urgent" style="width: auto; margin-right: 10px;">
+                            C'est urgent (intervention dans les 24h)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Étape 3: Photos (optionnelles) -->
+                <div class="form-step" data-step="3">
+                    <h3>Photos du problème (optionnel)</h3>
+                    <p>Ajoutez des photos pour aider les prestataires à mieux comprendre votre besoin</p>
+
+                    <div class="photo-upload-section" id="photo-upload-section">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Glissez vos photos ici</div>
+                        <div class="upload-subtext">ou</div>
+                        <label for="photo-input" class="upload-btn">Choisir des photos</label>
+                        <input type="file" id="photo-input" class="file-input" multiple accept="image/*">
+                        <div class="upload-subtext" style="margin-top: 10px;">
+                            Formats acceptés: JPG, PNG, GIF (max 5MB par photo)
+                        </div>
+                    </div>
+
+                    <div class="photo-preview" id="photo-preview">
+                        <h4>Photos sélectionnées:</h4>
+                        <div class="preview-grid" id="preview-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Étape 4: Budget -->
+                <div class="form-step" data-step="4">
+                    <h3>Budget estimé</h3>
+
+                    <div class="ai-suggestion" id="ai-suggestion" style="display: none;">
+                        <div class="title">
+                            <span class="icon">🤖</span>
+                            Suggestion IA
+                        </div>
+                        <div class="content" id="ai-suggestion-content"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="budget-min">Budget minimum (FCFA)</label>
+                            <input type="number" id="budget-min" name="budget_min" min="0" step="1000" 
+                                   placeholder="Ex: 10000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget-max">Budget maximum (FCFA)</label>
+                            <input type="number" id="budget-max" name="budget_max" min="0" step="1000" 
+                                   placeholder="Ex: 25000">
+                        </div>
+                    </div>
+
+                    <div class="budget-slider">
+                        <label>Ou utilisez le curseur pour définir votre budget:</label>
+                        <div class="slider-container">
+                            <input type="range" id="budget-range" class="range-slider" 
+                                   min="5000" max="100000" step="5000" value="25000">
+                            <div class="budget-display" id="budget-display">25,000 FCFA</div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-secondary" onclick="getAISuggestion()">
+                        🤖 Obtenir une suggestion IA
+                    </button>
+                </div>
+
+                <!-- Étape 5: Confirmation -->
+                <div class="form-step" data-step="5">
+                    <h3>Récapitulatif de votre demande</h3>
+
+                    <div class="summary-card" id="summary-card">
+                        <!-- Récapitulatif généré dynamiquement -->
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms-accept" required style="width: auto; margin-right: 10px;">
+                            J'accepte les <a href="#" onclick="showTerms()">conditions d'utilisation</a> 
+                            et je confirme que les informations fournies sont exactes *
+                        </label>
+                    </div>
+
+                    <div class="loading" id="loading">Création de votre demande...</div>
+                </div>
+
+                <!-- Boutons de navigation -->
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" id="prev-btn" onclick="previousStep()" style="display: none;">
+                        ← Précédent
+                    </button>
+                    <button type="button" class="btn btn-primary" id="next-btn" onclick="nextStep()">
+                        Suivant →
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn" style="display: none;">
+                        🚀 Publier ma demande
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer (identique à index.html) -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestionnaire de demande de service avec upload photo
+        class ServiceRequestManager {
+            constructor() {
+                this.apiBase = window.API_BASE || 'http://localhost:8080';
+                this.currentStep = 1;
+                this.maxStep = 5;
+                this.selectedPhotos = [];
+                this.categories = [];
+                this.init();
+            }
+
+            async init() {
+                await this.loadCategories();
+                this.setupEventListeners();
+                this.setupPhotoUpload();
+                this.updateStepDisplay();
+                
+                // Définir la date minimum à aujourd'hui
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('preferred-date').min = today;
+            }
+
+            async loadCategories() {
+                try {
+                    const response = await fetch(`${this.apiBase}/api/categories`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.categories = result.categories;
+                        this.renderServiceGrid();
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement catégories:', error);
+                    this.renderDefaultServices();
+                }
+            }
+
+            renderServiceGrid() {
+                const grid = document.getElementById('service-grid');
+                grid.innerHTML = '';
+
+                this.categories.forEach(category => {
+                    const option = document.createElement('div');
+                    option.className = 'service-option';
+                    option.dataset.category = category.id;
+                    option.innerHTML = `
+                        <span class="icon">${category.icon}</span>
+                        <span class="name">${category.name}</span>
+                    `;
+                    
+                    option.addEventListener('click', () => this.selectService(category.id, option));
+                    grid.appendChild(option);
+                });
+            }
+
+            renderDefaultServices() {
+                const defaultServices = [
+                    { id: 'plomberie', name: 'Plomberie', icon: '🔧' },
+                    { id: 'electricite', name: 'Électricité', icon: '⚡' },
+                    { id: 'menage', name: 'Ménage', icon: '🧹' },
+                    { id: 'jardinage', name: 'Jardinage', icon: '🌱' },
+                    { id: 'peinture', name: 'Peinture', icon: '🎨' },
+                    { id: 'menuiserie', name: 'Menuiserie', icon: '🪚' },
+                    { id: 'informatique', name: 'Informatique', icon: '💻' },
+                    { id: 'autres', name: 'Autres', icon: '🔧' }
+                ];
+
+                this.categories = defaultServices;
+                this.renderServiceGrid();
+            }
+
+            selectService(categoryId, element) {
+                // Désélectionner tous les autres
+                document.querySelectorAll('.service-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                // Sélectionner le service cliqué
+                element.classList.add('selected');
+                document.getElementById('selected-category').value = categoryId;
+
+                // Afficher/masquer le champ "Autres"
+                const otherInput = document.getElementById('other-service-input');
+                if (categoryId === 'autres') {
+                    otherInput.classList.add('show');
+                    document.getElementById('other-service-detail').required = true;
+                } else {
+                    otherInput.classList.remove('show');
+                    document.getElementById('other-service-detail').required = false;
+                }
+            }
+
+            setupEventListeners() {
+                // Gestion du formulaire
+                document.getElementById('service-request-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSubmit();
+                });
+
+                // Gestion du slider de budget
+                const budgetRange = document.getElementById('budget-range');
+                const budgetDisplay = document.getElementById('budget-display');
+                
+                budgetRange.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    budgetDisplay.textContent = `${value.toLocaleString()} FCFA`;
+                    
+                    // Synchroniser avec les champs min/max
+                    document.getElementById('budget-min').value = Math.round(value * 0.8);
+                    document.getElementById('budget-max').value = Math.round(value * 1.2);
+                });
+
+                // Synchronisation des champs budget
+                document.getElementById('budget-min').addEventListener('input', this.updateBudgetRange.bind(this));
+                document.getElementById('budget-max').addEventListener('input', this.updateBudgetRange.bind(this));
+            }
+
+            setupPhotoUpload() {
+                const uploadSection = document.getElementById('photo-upload-section');
+                const fileInput = document.getElementById('photo-input');
+
+                // Drag & Drop
+                uploadSection.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadSection.classList.add('dragover');
+                });
+
+                uploadSection.addEventListener('dragleave', () => {
+                    uploadSection.classList.remove('dragover');
+                });
+
+                uploadSection.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadSection.classList.remove('dragover');
+                    
+                    const files = Array.from(e.dataTransfer.files);
+                    this.handlePhotoSelection(files);
+                });
+
+                // File input
+                fileInput.addEventListener('change', (e) => {
+                    const files = Array.from(e.target.files);
+                    this.handlePhotoSelection(files);
+                });
+            }
+
+            handlePhotoSelection(files) {
+                const validFiles = files.filter(file => {
+                    // Vérifier le type
+                    if (!file.type.startsWith('image/')) {
+                        this.showError(`${file.name} n'est pas une image valide`);
+                        return false;
+                    }
+
+                    // Vérifier la taille (5MB max)
+                    if (file.size > 5 * 1024 * 1024) {
+                        this.showError(`${file.name} est trop volumineux (max 5MB)`);
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Limiter à 5 photos max
+                const totalPhotos = this.selectedPhotos.length + validFiles.length;
+                if (totalPhotos > 5) {
+                    this.showError('Maximum 5 photos autorisées');
+                    return;
+                }
+
+                // Ajouter les photos valides
+                validFiles.forEach(file => {
+                    this.selectedPhotos.push(file);
+                    this.addPhotoPreview(file);
+                });
+
+                // Afficher la section de prévisualisation
+                if (this.selectedPhotos.length > 0) {
+                    document.getElementById('photo-preview').classList.add('show');
+                }
+            }
+
+            addPhotoPreview(file) {
+                const previewGrid = document.getElementById('preview-grid');
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Prévisualisation">
+                        <button type="button" class="remove-btn" onclick="serviceManager.removePhoto(${this.selectedPhotos.length - 1})">×</button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+
+                previewGrid.appendChild(previewItem);
+            }
+
+            removePhoto(index) {
+                this.selectedPhotos.splice(index, 1);
+                this.updatePhotoPreview();
+            }
+
+            updatePhotoPreview() {
+                const previewGrid = document.getElementById('preview-grid');
+                previewGrid.innerHTML = '';
+
+                this.selectedPhotos.forEach((file, index) => {
+                    this.addPhotoPreview(file);
+                });
+
+                if (this.selectedPhotos.length === 0) {
+                    document.getElementById('photo-preview').classList.remove('show');
+                }
+            }
+
+            updateBudgetRange() {
+                const minBudget = parseInt(document.getElementById('budget-min').value) || 0;
+                const maxBudget = parseInt(document.getElementById('budget-max').value) || 0;
+                
+                if (minBudget && maxBudget) {
+                    const avgBudget = Math.round((minBudget + maxBudget) / 2);
+                    document.getElementById('budget-range').value = avgBudget;
+                    document.getElementById('budget-display').textContent = `${avgBudget.toLocaleString()} FCFA`;
+                }
+            }
+
+            async getAISuggestion() {
+                try {
+                    const category = document.getElementById('selected-category').value;
+                    const description = document.getElementById('description').value;
+                    const isUrgent = document.getElementById('is-urgent').checked;
+
+                    if (!category || !description) {
+                        this.showError('Veuillez d\'abord sélectionner un service et ajouter une description');
+                        return;
+                    }
+
+                    const response = await fetch(`${this.apiBase}/api/ai/budget-suggestion`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            category,
+                            description,
+                            is_urgent: isUrgent
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const suggestion = result.suggestion;
+                        
+                        // Afficher la suggestion
+                        const suggestionDiv = document.getElementById('ai-suggestion');
+                        const contentDiv = document.getElementById('ai-suggestion-content');
+                        
+                        contentDiv.innerHTML = `
+                            <p><strong>Budget suggéré:</strong> ${suggestion.min_budget.toLocaleString()} - ${suggestion.max_budget.toLocaleString()} FCFA</p>
+                            <p><strong>Confiance:</strong> ${Math.round(suggestion.confidence * 100)}%</p>
+                            <p><strong>Facteurs pris en compte:</strong> ${suggestion.factors.join(', ')}</p>
+                        `;
+                        
+                        suggestionDiv.style.display = 'block';
+
+                        // Remplir les champs
+                        document.getElementById('budget-min').value = suggestion.min_budget;
+                        document.getElementById('budget-max').value = suggestion.max_budget;
+                        this.updateBudgetRange();
+
+                    } else {
+                        this.showError('Erreur lors de la suggestion IA');
+                    }
+
+                } catch (error) {
+                    console.error('Erreur suggestion IA:', error);
+                    this.showError('Erreur lors de la suggestion IA');
+                }
+            }
+
+            nextStep() {
+                if (this.validateCurrentStep()) {
+                    if (this.currentStep < this.maxStep) {
+                        this.currentStep++;
+                        this.updateStepDisplay();
+                        
+                        // Actions spéciales selon l'étape
+                        if (this.currentStep === 5) {
+                            this.generateSummary();
+                        }
+                    }
+                }
+            }
+
+            previousStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateStepDisplay();
+                }
+            }
+
+            validateCurrentStep() {
+                switch (this.currentStep) {
+                    case 1:
+                        const category = document.getElementById('selected-category').value;
+                        if (!category) {
+                            this.showError('Veuillez sélectionner un service');
+                            return false;
+                        }
+                        
+                        if (category === 'autres') {
+                            const otherDetail = document.getElementById('other-service-detail').value;
+                            if (!otherDetail.trim()) {
+                                this.showError('Veuillez préciser le service souhaité');
+                                return false;
+                            }
+                        }
+                        return true;
+
+                    case 2:
+                        const title = document.getElementById('title').value;
+                        const description = document.getElementById('description').value;
+                        const address = document.getElementById('address').value;
+
+                        if (!title.trim() || !description.trim() || !address.trim()) {
+                            this.showError('Veuillez remplir tous les champs obligatoires');
+                            return false;
+                        }
+                        return true;
+
+                    case 3:
+                        // Photos optionnelles, toujours valide
+                        return true;
+
+                    case 4:
+                        // Budget optionnel, toujours valide
+                        return true;
+
+                    case 5:
+                        const termsAccepted = document.getElementById('terms-accept').checked;
+                        if (!termsAccepted) {
+                            this.showError('Veuillez accepter les conditions d\'utilisation');
+                            return false;
+                        }
+                        return true;
+
+                    default:
+                        return true;
+                }
+            }
+
+            updateStepDisplay() {
+                // Mettre à jour les indicateurs d'étapes
+                document.querySelectorAll('.step').forEach((step, index) => {
+                    const stepNumber = index + 1;
+                    step.classList.remove('active', 'completed');
+                    
+                    if (stepNumber < this.currentStep) {
+                        step.classList.add('completed');
+                    } else if (stepNumber === this.currentStep) {
+                        step.classList.add('active');
+                    }
+                });
+
+                // Afficher/masquer les étapes
+                document.querySelectorAll('.form-step').forEach((step, index) => {
+                    const stepNumber = index + 1;
+                    step.classList.remove('active');
+                    
+                    if (stepNumber === this.currentStep) {
+                        step.classList.add('active');
+                    }
+                });
+
+                // Gérer les boutons de navigation
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+
+                prevBtn.style.display = this.currentStep > 1 ? 'block' : 'none';
+                
+                if (this.currentStep === this.maxStep) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+
+                // Scroll vers le haut
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            generateSummary() {
+                const summaryCard = document.getElementById('summary-card');
+                const category = document.getElementById('selected-category').value;
+                const categoryName = this.categories.find(c => c.id === category)?.name || category;
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const address = document.getElementById('address').value;
+                const preferredDate = document.getElementById('preferred-date').value;
+                const preferredTime = document.getElementById('preferred-time').value;
+                const isUrgent = document.getElementById('is-urgent').checked;
+                const budgetMin = document.getElementById('budget-min').value;
+                const budgetMax = document.getElementById('budget-max').value;
+
+                let summaryHTML = `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #006B3F; margin-bottom: 15px;">📋 Récapitulatif</h4>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>Service:</strong> ${categoryName}
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>Titre:</strong> ${title}
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>Description:</strong><br>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px;">
+                                ${description}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>Adresse:</strong> ${address}
+                        </div>
+                `;
+
+                if (preferredDate) {
+                    summaryHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Date souhaitée:</strong> ${new Date(preferredDate).toLocaleDateString('fr-FR')}
+                        </div>
+                    `;
+                }
+
+                if (preferredTime) {
+                    summaryHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Heure souhaitée:</strong> ${preferredTime}
+                        </div>
+                    `;
+                }
+
+                if (isUrgent) {
+                    summaryHTML += `
+                        <div style="margin-bottom: 15px; color: #dc3545;">
+                            <strong>⚡ Service urgent</strong> (intervention dans les 24h)
+                        </div>
+                    `;
+                }
+
+                if (budgetMin || budgetMax) {
+                    summaryHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Budget:</strong> ${budgetMin ? parseInt(budgetMin).toLocaleString() : '?'} - ${budgetMax ? parseInt(budgetMax).toLocaleString() : '?'} FCFA
+                        </div>
+                    `;
+                }
+
+                if (this.selectedPhotos.length > 0) {
+                    summaryHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>Photos:</strong> ${this.selectedPhotos.length} photo(s) jointe(s)
+                        </div>
+                    `;
+                }
+
+                summaryHTML += `</div>`;
+                summaryCard.innerHTML = summaryHTML;
+            }
+
+            async handleSubmit() {
+                if (!this.validateCurrentStep()) {
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submit-btn');
+                const loading = document.getElementById('loading');
+                
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+
+                try {
+                    // Préparer les données du formulaire
+                    const formData = new FormData();
+                    
+                    // Données de base
+                    formData.append('category', document.getElementById('selected-category').value);
+                    formData.append('title', document.getElementById('title').value);
+                    formData.append('description', document.getElementById('description').value);
+                    formData.append('address', document.getElementById('address').value);
+                    formData.append('preferred_date', document.getElementById('preferred-date').value);
+                    formData.append('preferred_time', document.getElementById('preferred-time').value);
+                    formData.append('is_urgent', document.getElementById('is-urgent').checked);
+                    formData.append('budget_min', document.getElementById('budget-min').value);
+                    formData.append('budget_max', document.getElementById('budget-max').value);
+
+                    // Service "Autres"
+                    const otherDetail = document.getElementById('other-service-detail').value;
+                    if (otherDetail) {
+                        formData.append('other_service_detail', otherDetail);
+                    }
+
+                    // Photos
+                    this.selectedPhotos.forEach((photo, index) => {
+                        formData.append('photos', photo);
+                    });
+
+                    // Géolocalisation (si disponible)
+                    if (navigator.geolocation) {
+                        try {
+                            const position = await this.getCurrentPosition();
+                            formData.append('latitude', position.coords.latitude);
+                            formData.append('longitude', position.coords.longitude);
+                        } catch (error) {
+                            console.log('Géolocalisation non disponible');
+                        }
+                    }
+
+                    // Envoyer la demande
+                    const token = localStorage.getItem('auth_token');
+                    const response = await fetch(`${this.apiBase}/api/service-requests`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.showSuccess('Votre demande a été publiée avec succès ! Les prestataires vont pouvoir vous proposer leurs services.');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'dashboard-client.html';
+                        }, 3000);
+                    } else {
+                        throw new Error(result.error || 'Erreur lors de la publication');
+                    }
+
+                } catch (error) {
+                    console.error('Erreur soumission:', error);
+                    this.showError(error.message || 'Erreur lors de la publication de votre demande');
+                } finally {
+                    submitBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            }
+
+            getCurrentPosition() {
+                return new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        timeout: 10000,
+                        enableHighAccuracy: true
+                    });
+                });
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+
+                // Scroll vers le message
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('success-message');
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                
+                // Scroll vers le haut
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Fonctions globales
+        function nextStep() {
+            serviceManager.nextStep();
+        }
+
+        function previousStep() {
+            serviceManager.previousStep();
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Ici on pourrait utiliser une API de géocodage inverse
+                        // Pour l'instant, on demande à l'utilisateur de confirmer
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        const address = prompt(`Position détectée (${lat.toFixed(6)}, ${lng.toFixed(6)}). Veuillez saisir l'adresse complète:`);
+                        if (address) {
+                            document.getElementById('address').value = address;
+                        }
+                    },
+                    (error) => {
+                        alert('Impossible d\'obtenir votre position. Veuillez saisir l\'adresse manuellement.');
+                    }
+                );
+            } else {
+                alert('La géolocalisation n\'est pas supportée par votre navigateur.');
+            }
+        }
+
+        function getAISuggestion() {
+            serviceManager.getAISuggestion();
+        }
+
+        function showTerms() {
+            alert('Les conditions d\'utilisation seront affichées dans une nouvelle fenêtre.');
+        }
+
+        // Initialisation
+        const serviceManager = new ServiceRequestManager();
+
+        // Navigation mobile
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inscription Client</title></head>
+<body>
+<header class='header' role='banner'>
+  <div class='container row'>
+    <div class='brand' aria-label='AssibaService'>
+      <img src='/apps/web/public/assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+    </div>
+    <nav aria-label='Navigation principale'>
+      <a href='index.html'>Accueil</a>
+      <a href='apropos.html'>À propos</a>
+      <a href='fonctionnement.html'>Comment ça marche</a>
+      <a href='conditions.html'>CGU</a>
+      <a href='confidentialite.html'>Confidentialité</a>
+    </nav>
+  </div>
+</header>
+<main>
+<h1>Inscription Client</h1>
+  <label>Nom <input id="name"></label><br>
+  <label>Email <input id="email"></label><br>
+  <label>Téléphone <input id="phone"></label><br>
+  <label>Adresse <input id="address"></label><br>
+  <label>Mot de passe <input id="pwd" type="password"></label><br>
+  <label>Photo ID (optionnelle) <input id="photo" type="file" accept="image/*"></label><br>
+  <button id="btn">Créer mon compte</button>
+
+  <script>
+    const API=(window.API_BASE||'http://localhost:8080');
+    document.getElementById('btn').onclick=async function(){
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const password = document.getElementById('pwd').value;
+      // Step 1: register
+      const reg = await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({role:'client',name,email,phone,address,password})}).then(r=>r.json());
+      if(!reg.ok){ alert(reg.error||'Erreur'); return; }
+      // Step 2: if photo provided, upload with token (login first)
+      const login = await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({emailOrPhone:email||phone,password})}).then(r=>r.json());
+      if(!login.ok){ alert('Compte créé. Connectez-vous.'); location.href='/apps/web/public/login.html'; return; }
+      const token = login.token;
+      const file = document.getElementById('photo').files[0];
+      if(file){
+        const fd = new FormData(); fd.append('photo', file);
+        await fetch(API+'/upload/photo-id',{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+      }
+      alert('Compte client créé. Vous êtes connecté.');
+      localStorage.setItem('TOKEN', token);
+      localStorage.setItem('ME', JSON.stringify(login.user));
+      location.href='/apps/web/public/client_dashboard.html';
+    };
+  </script>
+</main>
+<footer class='footer' role='contentinfo'>
+  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
+  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
+</footer>
+</body>
+</html>

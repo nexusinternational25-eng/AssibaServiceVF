@@ -1,0 +1,154 @@
+<!doctype html><html lang='fr'><head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'>
+<meta name='theme-color' content='#006B3F'>
+<title>CGU — AssibaService</title>
+<link rel='manifest' href='/apps/web/public/manifest.webmanifest'>
+<style>
+:root{
+  --primary:#006B3F; /* Togo green */
+  --accent:#FFD700;  /* Togo yellow */
+  --alert:#D21034;   /* Togo red */
+  --bg:#F7FAF8;
+  --text:#0B1F12;
+}
+*{box-sizing:border-box}
+html{font-size:16px}
+@media (max-width:380px){ html{font-size:15px} }
+@media (min-width:1280px){ html{font-size:17px} }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.container{max-width:1200px;margin-inline:auto;padding:clamp(.75rem,2vw,1.25rem)}
+.header{
+  position:sticky;top:0;inset-inline:0;background:var(--primary);color:#fff;
+  box-shadow:0 6px 20px rgba(0,0,0,.12);z-index:20
+}
+.header .row{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.header .brand{display:flex;align-items:center;gap:12px}
+.header img{height:48px;width:48px;object-fit:cover;border-radius:8px}
+nav a{color:#fff;margin:0 clamp(6px,1vw,12px);text-decoration:none;font-weight:700;letter-spacing:.2px}
+nav a:focus, nav a:hover{outline:none;text-decoration:underline}
+.hero{
+  background:#fff;border-bottom:4px solid var(--accent);
+  display:flex;align-items:center
+}
+.hero .inner{
+  text-align:center;
+}
+.hero h1{margin:.2rem 0 0.6rem 0;font-size:clamp(1.6rem,3vw,2.2rem);color:#063A19}
+.hero p{max-width:800px;margin:0 auto 1rem auto}
+.cta-wrap{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{
+  display:inline-block;padding:14px 20px;border-radius:12px;border:0;cursor:pointer;
+  font-weight:800;letter-spacing:.2px;transition:transform .05s ease, box-shadow .2s;
+  box-shadow:0 8px 18px rgba(0,0,0,.08)
+}
+.btn:active{transform:translateY(1px)}
+.btn-install{background:var(--accent)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-danger{background:var(--alert);color:#fff}
+/* Ads scroller */
+.adbar{background:#fff}
+.adbar .track{display:flex;gap:14px;overflow:auto;scroll-snap-type:x mandatory;padding:.6rem 0}
+.adbar img{height:64px;width:auto;border-radius:10px;scroll-snap-align:center;flex:0 0 auto}
+/* Services grid */
+section h2{color:#063A19}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (min-width:640px){ .grid{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:900px){ .grid{grid-template-columns:repeat(4,1fr)} }
+.card{
+  background:#fff;border-radius:14px;box-shadow:0 8px 26px rgba(0,0,0,.08);padding:12px;
+  display:flex;flex-direction:column;align-items:center;text-align:center
+}
+.card img{width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:10px}
+.card h3{margin:.3rem 0 .6rem 0;font-size:1rem}
+/* Contact */
+.contact{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+@media (min-width:640px){ .contact{grid-template-columns:1fr 1fr} }
+.contact .box{background:#fff;border-radius:12px;padding:14px;box-shadow:0 8px 26px rgba(0,0,0,.06)}
+/* Footer */
+.footer{background:var(--primary);color:#fff;padding:20px;text-align:center;margin-top:30px}
+.footer a{color:var(--accent);text-decoration:none}
+.small{font-size:.95rem;opacity:.95}
+/* Accessibility */
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* Better color contrast for buttons on yellow */
+.btn-install{color:#09210F}
+/* Ensure images never overflow */
+img{max-width:100%}
+</style>
+</head><body>
+<header class='header' role='banner'>
+  <div class='container row'>
+    <div class='brand' aria-label='AssibaService'>
+      <img src='/apps/web/public/assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+    </div>
+    <nav aria-label='Navigation principale'>
+      <a href='index.html'>Accueil</a>
+      <a href='apropos.html'>À propos</a>
+      <a href='fonctionnement.html'>Comment ça marche</a>
+      <a href='conditions.html'>CGU</a>
+      <a href='confidentialite.html'>Confidentialité</a>
+    </nav>
+  </div>
+</header>
+<main>
+<!-- Injected by ChatGPT: legal header bar -->
+<div class="asb-legal-topbar" style="background:#f6f7f9;border-bottom:1px solid #e6e7eb;padding:.5rem 1rem;font-size:.9rem;text-align:center;">
+  En utilisant cette plateforme, vous acceptez nos 
+  <a href="/legal/cgu.html" target="_blank" rel="noopener">CGU</a> et notre 
+  <a href="/legal/confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a>. 
+  <a href="/assets/docs/CGU_AssibaService.pdf" download style="margin-left:.75rem;">Télécharger les CGU (PDF)</a>
+  <a href="/assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Politique (PDF)</a>
+</div>
+
+<header class='header' role='banner'>
+  <div class='container row'>
+    <div class='brand' aria-label='AssibaService'>
+      <img src='/apps/web/public/assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+    </div>
+    <nav aria-label='Navigation principale'>
+      <a href='index.html'>Accueil</a>
+      <a href='apropos.html'>À propos</a>
+      <a href='fonctionnement.html'>Comment ça marche</a>
+      <a href='conditions.html'>CGU</a>
+      <a href='confidentialite.html'>Confidentialité</a>
+    </nav>
+  </div>
+</header>
+
+<section class='container'>
+  <h1 style='text-align:center'>Conditions Générales d'Utilisation</h1>
+  <p style='max-width:900px;margin-inline:auto;text-align:center'>
+    Version synthétique intégrée (texte complet en PDF dans /docs). L'utilisation de la plateforme implique l'acceptation des CGU.
+  </p>
+</section>
+
+<footer class='footer' role='contentinfo'>
+  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
+  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
+</footer>
+
+<!-- Injected by ChatGPT: legal footer links -->
+<footer class="asb-footer-legal" style="border-top:1px solid #e6e7eb;margin-top:2rem;padding-top:1rem;">
+  <nav>
+    <a href="/legal/cgu.html" target="_blank" rel="noopener">CGU</a> • 
+    <a href="/legal/confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a> • 
+    <a href="/assets/docs/CGU_AssibaService.pdf" download>Télécharger les CGU (PDF)</a> • 
+    <a href="/assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Télécharger la Politique (PDF)</a>
+  </nav>
+</footer>
+</main>
+<footer class='footer' role='contentinfo'>
+  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
+  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
+</footer>
+</body></html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — AssibaService</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#006B3F">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        /* Styles harmonisés avec index.html */
+        .hero-section {
+            background: linear-gradient(135deg, #006B3F 0%, #004d2e 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: -40px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,107,63,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #006B3F;
+            box-shadow: 0 0 0 3px rgba(0,107,63,0.1);
+            background: white;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #006B3F, #004d2e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,107,63,0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .register-links a {
+            color: #006B3F;
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .register-links a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #006B3F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+                margin: -20px auto 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
+                    <span class="logo-text">AssibaService</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="apropos.html" class="nav-link">À propos</a>
+                    <a href="assurance.html" class="nav-link">Assurance</a>
+                    <a href="formation.html" class="nav-link">Formation</a>
+                    <a href="abonnements.html" class="nav-link">Abonnements</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-login active">Connexion</button>
+                    <button class="btn-register" onclick="window.location.href='register_client.html'">Inscription</button>
+                </div>
+                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Connexion</h1>
+            <p class="hero-subtitle">Accédez à votre compte AssibaService</p>
+        </div>
+    </section>
+
+    <!-- Formulaire de connexion -->
+    <div class="form-container">
+        <div class="form-card">
+            <div class="success-message" id="success-message"></div>
+            <div class="error-message" id="error-message"></div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="emailOrPhone">Email ou Téléphone *</label>
+                    <input type="text" id="emailOrPhone" name="emailOrPhone" required 
+                           placeholder="votre@email.com ou +228 XX XX XX XX">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe *</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Votre mot de passe">
+                </div>
+
+                <div class="loading" id="loading">Connexion en cours...</div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    🔐 Se connecter
+                </button>
+            </form>
+
+            <div class="register-links">
+                <p>Pas encore de compte ?</p>
+                <a href="register_client.html">S'inscrire comme client</a>
+                <a href="register_prestataire.html">S'inscrire comme prestataire</a>
+                <a href="#" onclick="showForgotPassword()">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AssibaService</h3>
+                <p>La plateforme togolaise de référence pour tous vos besoins de services professionnels.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 +228 91 97 80 80</p>
+                <p>✉️ contact@assibaservice.com</p>
+                <p>📍 Lomé, Togo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestionnaire de connexion
+        class LoginManager {
+            constructor() {
+                this.apiBase = window.API_BASE || 'http://localhost:8081';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkRegistrationSuccess();
+            }
+
+            setupEventListeners() {
+                document.getElementById('login-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+            }
+
+            checkRegistrationSuccess() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('registered') === 'true') {
+                    this.showSuccess('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                }
+            }
+
+            async handleLogin() {
+                const submitBtn = document.getElementById('submit-btn');
+                const loading = document.getElementById('loading');
+                
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+
+                try {
+                    const formData = new FormData(document.getElementById('login-form'));
+                    const loginData = {
+                        emailOrPhone: formData.get('emailOrPhone'),
+                        password: formData.get('password')
+                    };
+
+                    const response = await fetch(`${this.apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(loginData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Sauvegarder le token
+                        localStorage.setItem('auth_token', result.token);
+                        localStorage.setItem('user_data', JSON.stringify(result.user));
+
+                        this.showSuccess('Connexion réussie ! Redirection en cours...');
+
+                        // Redirection selon le rôle
+                        setTimeout(() => {
+                            switch (result.user.role) {
+                                case 'client':
+                                    window.location.href = 'dashboard-client.html';
+                                    break;
+                                case 'prestataire':
+                                    window.location.href = 'dashboard-prestataire.html';
+                                    break;
+                                case 'admin':
+                                    window.location.href = 'admin-advanced.html';
+                                    break;
+                                default:
+                                    window.location.href = 'index.html';
+                            }
+                        }, 1500);
+
+                    } else {
+                        throw new Error(result.error || 'Erreur de connexion');
+                    }
+
+                } catch (error) {
+                    console.error('Erreur connexion:', error);
+                    this.showError(error.message || 'Erreur lors de la connexion');
+                } finally {
+                    submitBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('success-message');
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+            }
+        }
+
+        // Fonctions globales
+        function showForgotPassword() {
+            alert('La fonctionnalité de récupération de mot de passe sera bientôt disponible. Contactez le support : +228 91 97 80 80');
+        }
+
+        // Initialisation
+        const loginManager = new LoginManager();
+
+        // Navigation mobile
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+
