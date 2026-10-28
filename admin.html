@@ -147,8 +147,8 @@
         ${['awaiting_payment', 'open', 'accepted', 'in_progress', 'done', 'completed', 'dispute', 'refunded', 'cancelled'].map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>` +
         table(['N°', 'Demande', 'Client', 'Prestataire', 'Montant', 'Statut', ''], out.requests.map(r => `<tr>
           <td>${r.id}</td><td><strong>${esc(r.title)}</strong><div class="meta">${esc(r.category_label)} · ${esc(r.city || '')} · ${date(r.created_at)} · ${r.offers_count} offre(s)</div></td>
-          <td>${esc(r.client_name)}<div class=\"meta\">${esc(ASB.tel(r.client_phone))}</div></td>
-          <td>${esc(r.provider_name || '')}<div class=\"meta\">${esc(ASB.tel(r.provider_phone || ''))}</div></td>
+          <td>${esc(r.client_name)}<div class="meta">${esc(ASB.tel(r.client_phone))}</div></td>
+          <td>${esc(r.provider_name || '')}<div class="meta">${esc(ASB.tel(r.provider_phone || ''))}</div></td>
           <td class="money nowrap">${r.agreed_amount ? fcfa(r.agreed_amount) : ''}</td><td>${badge(r.status)}</td>
           <td>${r.status === 'done' ? `<button class="btn btn-ghost btn-sm" data-release="${r.id}">Libérer le paiement</button>` : ''}</td></tr>`));
       panel.querySelector('#rs').onchange = e => { panel.dataset.reqStatus = e.target.value; go('requests'); };
@@ -165,7 +165,7 @@
           <div class="meta">Ouvert par ${esc(d.opened_by_name)} le ${dateTime(d.created_at)} · Montant en jeu : ${fcfa(d.agreed_amount)}</div></div>
           <div>${badge(d.status === 'open' ? 'open_dispute' : 'resolved')}</div></div>
         <p style="white-space:pre-line">${esc(d.reason)}</p>
-        <p class="meta">Client : ${esc(d.client_name)} (${esc(ASB.tel(d.client_phone))}) · Prestataire : ${esc(d.provider_name || '')} (${esc(d.provider_phone || '')})</p>
+        <p class="meta">Client : ${esc(d.client_name)} (${esc(ASB.tel(d.client_phone))}) · Prestataire : ${esc(d.provider_name || '')} (${esc(ASB.tel(d.provider_phone || ''))})</p>
         ${d.status === 'resolved' ? `<p><strong>Décision :</strong> ${d.decision === 'release' ? 'payé au prestataire' : 'remboursement du client'}. ${esc(d.resolution)}</p>` :
           `<div class="actions"><button class="btn btn-primary btn-sm" data-resolve="${d.id}" data-d="release">Payer le prestataire</button>
            <button class="btn btn-danger btn-sm" data-resolve="${d.id}" data-d="refund">Rembourser le client</button></div>`}
