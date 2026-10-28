@@ -1,5 +1,5 @@
 // AssibaService PWA Service Worker - Mode Offline Avancé
-const CACHE_NAME = 'assibaservice-v1.2.0';
+const CACHE_NAME = 'assibaservice-v1.3.0';
 const OFFLINE_URL = '/offline.html';
 
 // Ressources essentielles à mettre en cache
@@ -14,7 +14,7 @@ const ESSENTIAL_RESOURCES = [
   '/reset-password.html',
   '/assets/common.css',
   '/assets/pwa-install.js',
-  '/assets/logo/logo-officiel.png',
+  '/assets/logo/logo_officiel.jpeg',
   '/assets/icons/icon-192x192.png',
   '/assets/icons/icon-512x512.png',
   '/manifest.webmanifest',
@@ -36,9 +36,10 @@ const AD_IMAGES = [
 ];
 
 // APIs critiques à mettre en cache
+// Ne jamais mettre en cache les données personnelles (profil, jeton) :
+// sur un téléphone partagé, elles resteraient lisibles après déconnexion.
 const CACHEABLE_APIS = [
-  '/api/categories',
-  '/api/auth/me'
+  '/api/categories'
 ];
 
 // Installation du service worker
@@ -48,7 +49,8 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('📦 AssibaService SW: Mise en cache des ressources essentielles');
-        return cache.addAll(ESSENTIAL_RESOURCES);
+        // Une ressource absente ne doit pas bloquer toute l'installation
+        return Promise.allSettled(ESSENTIAL_RESOURCES.map(url => cache.add(url)));
       })
       .then(() => {
         console.log('✅ AssibaService SW: Installation terminée');

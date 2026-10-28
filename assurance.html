@@ -426,7 +426,7 @@
                     <a href="index.html" class="nav-link">Accueil</a>
                     <a href="index.html#services" class="nav-link">Services</a>
                     <a href="apropos.html" class="nav-link">À propos</a>
-                    <a href="assurance-optimized.html" class="nav-link active">Assurance</a>
+                    <a href="assurance.html" class="nav-link active">Assurance</a>
                     <a href="formation.html" class="nav-link">Formation</a>
                     <a href="index.html#contact" class="nav-link">Contact</a>
                 </div>
@@ -675,7 +675,7 @@
                 <h4>Services</h4>
                 <ul>
                     <li><a href="#services">Tous les services</a></li>
-                    <li><a href="assurance-optimized.html">Assurance</a></li>
+                    <li><a href="assurance.html">Assurance</a></li>
                     <li><a href="formation.html">Formation</a></li>
                     <li><a href="#marketplace">Marketplace</a></li>
                 </ul>
@@ -899,7 +899,7 @@
 
         function openAdminPanel() {
             // Vérifier les droits d'administration
-            const token = localStorage.getItem('admin_token');
+            const token = localStorage.getItem('auth_token');
             if (token) {
                 window.location.href = '/admin-advanced.html';
             } else {
