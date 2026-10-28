@@ -691,7 +691,7 @@
             try {
                 const response = await fetch('/api/admin/overview', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                     }
                 });
 
@@ -765,7 +765,7 @@
             try {
                 const response = await fetch('/api/admin/users', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                     }
                 });
 
@@ -805,7 +805,7 @@
             try {
                 const response = await fetch('/api/admin/missions', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                     }
                 });
 
@@ -885,7 +885,7 @@
             try {
                 const response = await fetch('/api/admin/users?role=prestataire&status=active', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                     }
                 });
 
@@ -913,7 +913,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                     },
                     body: JSON.stringify({
                         prestataire_id: prestataireId,

@@ -6,15 +6,15 @@
 <header class='header' role='banner'>
   <div class='container row'>
     <div class='brand' aria-label='AssibaService'>
-      <img src='/apps/web/public/assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
       <strong aria-label='Nom de la plateforme'>AssibaService</strong>
     </div>
     <nav aria-label='Navigation principale'>
       <a href='index.html'>Accueil</a>
       <a href='apropos.html'>À propos</a>
       <a href='fonctionnement.html'>Comment ça marche</a>
-      <a href='conditions.html'>CGU</a>
-      <a href='confidentialite.html'>Confidentialité</a>
+      <a href='cgu.html'>CGU</a>
+      <a href='politique-confidentialite.html'>Confidentialité</a>
     </nav>
   </div>
 </header>
@@ -22,23 +22,23 @@
 <h1>Mon espace client</h1>
   <div id="me"></div>
   <div style="margin:.5rem 0;">
-    <a href="/apps/web/public/form_client.html">Demander un service</a>
+    <a href="form_client.html">Demander un service</a>
   </div>
   <div id="wallet">Solde: —</div>
   <button id="logout">Se déconnecter</button>
   <script>
-    const API=(window.API_BASE||'http://localhost:8080');
-    const token=localStorage.getItem('TOKEN');
-    if(!token){ location.href='/apps/web/public/login.html'; }
-    fetch(API+'/me',{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(d=>{
+    const API=(window.API_BASE||'http://localhost:8081');
+    const token=localStorage.getItem('auth_token');
+    if(!token){ location.replace('login.html'); throw new Error('non connecté'); }
+    fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(d=>{
       if(d.user){
         document.getElementById('me').textContent = d.user.name + ' ('+d.user.email+')';
-        fetch(API+'/wallet/'+d.user.id).then(r=>r.json()).then(w=>{
+        fetch(API+'/wallet/'+d.user.id,{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(w=>{
           document.getElementById('wallet').textContent = 'Solde: ' + (w.user.wallet_balance||0).toFixed(2) + ' FCFA';
         });
       }
     });
-    document.getElementById('logout').onclick=function(){ localStorage.removeItem('TOKEN'); localStorage.removeItem('ME'); location.href='/apps/web/public/login.html'; };
+    document.getElementById('logout').onclick=function(){ localStorage.removeItem('auth_token'); localStorage.removeItem('user_data'); location.href='login.html'; };
   </script>
 </main>
 <footer class='footer' role='contentinfo'>

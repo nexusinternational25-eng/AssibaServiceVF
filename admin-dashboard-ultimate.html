@@ -1411,7 +1411,7 @@
                 try {
                     // Charger les tarifs actuels
                     const ratesResponse = await fetch('/api/admin/insurance/rates', {
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
                     });
                     
                     if (ratesResponse.ok) {
@@ -1422,7 +1422,7 @@
                     
                     // Charger les partenaires
                     const partnersResponse = await fetch('/api/admin/insurance/partners', {
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
                     });
                     
                     if (partnersResponse.ok) {
@@ -1496,7 +1496,7 @@
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                         },
                         body: JSON.stringify({
                             rc_pro_rate: parseFloat(rcProRate),
@@ -1530,7 +1530,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                         },
                         body: JSON.stringify(formData)
                     });
@@ -1568,7 +1568,7 @@
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                         },
                         body: JSON.stringify({ active: !currentStatus })
                     });
@@ -1594,7 +1594,7 @@
                     const response = await fetch(`/api/admin/insurance/partners/${partnerId}`, {
                         method: 'DELETE',
                         headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
                         }
                     });
                     
