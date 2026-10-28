@@ -969,9 +969,9 @@
                 try {
                     const response = await fetch('/api/subscriptions/subscribe', {
                         method: 'POST',
-                        headers: {
+                        headers: Object.assign({
                             'Content-Type': 'application/json'
-                        },
+                        }, localStorage.getItem('auth_token') ? { Authorization: 'Bearer ' + localStorage.getItem('auth_token') } : {}),
                         body: JSON.stringify(subscriptionData)
                     });
 
@@ -1059,13 +1059,11 @@
         }
 
         function showTerms() {
-            alert('Les conditions générales seront affichées dans une nouvelle fenêtre.');
-            // Implémenter l'affichage des CGV
+            window.open('cgu.html', '_blank', 'noopener');
         }
 
         function showPrivacy() {
-            alert('Les conditions d\'utilisation seront affichées dans une nouvelle fenêtre.');
-            // Implémenter l'affichage des conditions d'utilisation
+            window.open('politique-confidentialite.html', '_blank', 'noopener');
         }
 
         // Initialisation

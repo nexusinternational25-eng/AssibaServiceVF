@@ -7,6 +7,7 @@
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#006B3F">
     <link rel="stylesheet" href="assets/common.css">
+    <link rel="stylesheet" href="assets/app.css">
     <style>
         /* Styles harmonisés avec index.html */
         .hero-section {
@@ -250,7 +251,7 @@
                 <p>Pas encore de compte ?</p>
                 <a href="register_client.html">S'inscrire comme client</a>
                 <a href="register_prestataire.html">S'inscrire comme prestataire</a>
-                <a href="#" onclick="showForgotPassword()">Mot de passe oublié ?</a>
+                <a href="#" onclick="showForgotPassword(); return false;">Mot de passe oublié ?</a>
             </div>
         </div>
     </div>
@@ -274,11 +275,12 @@
         </div>
     </footer>
 
+    <script src="assets/app.js"></script>
     <script>
         // Gestionnaire de connexion
         class LoginManager {
             constructor() {
-                this.apiBase = window.API_BASE || 'http://localhost:8081';
+                this.apiBase = window.API_BASE || '';
                 this.init();
             }
 
@@ -296,6 +298,9 @@
 
             checkRegistrationSuccess() {
                 const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('expired')) {
+                    this.showError('Votre session a expiré. Reconnectez-vous.');
+                }
                 if (urlParams.get('registered') === 'true') {
                     this.showSuccess('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
                 }
@@ -324,28 +329,15 @@
                     const result = await response.json();
 
                     if (result.success) {
-                        // Sauvegarder le token
-                        localStorage.setItem('auth_token', result.token);
-                        localStorage.setItem('user_data', JSON.stringify(result.user));
-
+                        ASB.Auth.save(result.token, result.user);
                         this.showSuccess('Connexion réussie ! Redirection en cours...');
 
-                        // Redirection selon le rôle
+                        // Retour à la page demandée (même site uniquement), sinon espace selon le rôle
+                        const next = new URLSearchParams(location.search).get('next') || '';
+                        const safeNext = /^[a-z0-9_-]+\.html(\?[^#]*)?$/i.test(next) ? next : null;
                         setTimeout(() => {
-                            switch (result.user.role) {
-                                case 'client':
-                                    window.location.href = 'client_dashboard.html';
-                                    break;
-                                case 'prestataire':
-                                    window.location.href = 'prestataire_dashboard.html';
-                                    break;
-                                case 'admin':
-                                    window.location.href = 'admin-advanced.html';
-                                    break;
-                                default:
-                                    window.location.href = 'index.html';
-                            }
-                        }, 1500);
+                            window.location.href = safeNext || ASB.homeFor(result.user.role);
+                        }, 600);
 
                     } else {
                         throw new Error(result.error || 'Erreur de connexion');
@@ -378,8 +370,19 @@
         }
 
         // Fonctions globales
-        function showForgotPassword() {
-            alert('La fonctionnalité de récupération de mot de passe sera bientôt disponible. Contactez le support : +228 91 97 80 80');
+        async function showForgotPassword() {
+            const v = await ASB.dialog({
+                title: 'Mot de passe oublié',
+                submitLabel: 'Envoyer la demande',
+                html: '<p>Indiquez l’e-mail ou le téléphone de votre compte.</p><div class="field"><label for="fp-id">E-mail ou téléphone</label><input id="fp-id" name="emailOrPhone" required maxlength="200"></div>'
+            });
+            if (!v) return;
+            try {
+                const out = await ASB.api('POST', '/auth/forgot-password', v);
+                loginManager.showSuccess(out.message);
+            } catch (e) {
+                loginManager.showError(e.message);
+            }
         }
 
         // Initialisation

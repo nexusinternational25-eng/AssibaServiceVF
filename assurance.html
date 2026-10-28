@@ -565,18 +565,7 @@
         </section>
 
         <!-- Section administration -->
-        <section class="admin-section">
-            <div class="admin-content">
-                <h2 class="admin-title">🛠️ Gestion Administrative</h2>
-                <p class="admin-description">
-                    Interface dédiée aux administrateurs pour la gestion des assureurs partenaires, 
-                    des tarifs et des paramètres d'assurance.
-                </p>
-                <button class="btn-admin" onclick="openAdminPanel()">
-                    Accéder à l'Administration
-                </button>
-            </div>
-        </section>
+        
     </div>
 
     <!-- Modal de souscription -->
@@ -817,9 +806,9 @@
                 try {
                     const response = await fetch('/api/insurance/subscribe', {
                         method: 'POST',
-                        headers: {
+                        headers: Object.assign({
                             'Content-Type': 'application/json'
-                        },
+                        }, localStorage.getItem('auth_token') ? { Authorization: 'Bearer ' + localStorage.getItem('auth_token') } : {}),
                         body: JSON.stringify(subscriptionData)
                     });
 
@@ -897,19 +886,9 @@
             insuranceManager.closeSubscriptionModal();
         }
 
-        function openAdminPanel() {
-            // Vérifier les droits d'administration
-            const token = localStorage.getItem('auth_token');
-            if (token) {
-                window.location.href = '/admin-advanced.html';
-            } else {
-                window.location.href = '/admin-login.html';
-            }
-        }
 
         function showTerms() {
-            alert('Les conditions générales seront affichées dans une nouvelle fenêtre.');
-            // Implémenter l'affichage des CGV
+            window.open('cgu.html', '_blank', 'noopener');
         }
 
         // Initialisation
