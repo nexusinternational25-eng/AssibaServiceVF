@@ -1,0 +1,86 @@
+/* AssibaService : styles partagés (base, en-tête, pied de page) */
+:root{
+  --asb-green:#006B3F;
+  --asb-green-dark:#004d2c;
+  --asb-yellow:#FFD700;
+  --asb-red:#D21034;
+  --asb-bg:#F7FAF8;
+  --asb-text:#0A1E12;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--asb-text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;height:auto}
+:focus-visible{outline:3px solid var(--asb-yellow);outline-offset:2px}
+
+/* En-tête */
+.main-header{
+  position:sticky;top:0;z-index:100;
+  background:var(--asb-green);color:#fff;
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+}
+.nav-container{
+  max-width:1200px;margin:0 auto;padding:10px 16px;
+  display:flex;align-items:center;gap:16px;
+}
+.logo-container{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-container .logo{width:44px;height:44px;object-fit:cover;border-radius:10px;background:#fff}
+.logo-text{font-weight:800;font-size:1.15rem;color:#fff}
+.nav-menu{display:flex;align-items:center;gap:2px;margin-left:auto}
+.nav-link{
+  color:#fff;text-decoration:none;font-weight:600;font-size:.92rem;
+  padding:8px 9px;white-space:nowrap;border-radius:8px;transition:background .2s;
+}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.15)}
+.nav-link.active{box-shadow:inset 0 -3px 0 var(--asb-yellow)}
+.nav-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-login,.btn-register,.btn-admin{
+  display:inline-block;padding:8px 16px;border-radius:999px;
+  font:inherit;font-weight:700;font-size:.9rem;text-decoration:none;
+  cursor:pointer;border:2px solid transparent;transition:transform .1s,background .2s;
+}
+.btn-login{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.btn-login:hover,.btn-login.active{background:#fff;color:var(--asb-green)}
+.btn-register{background:var(--asb-yellow);color:#09210F}
+.btn-register:hover{background:#ffe34d}
+.btn-admin{background:var(--asb-red);color:#fff}
+.btn-login:active,.btn-register:active,.btn-admin:active{transform:translateY(1px)}
+
+.mobile-menu-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;margin-left:auto}
+.mobile-menu-toggle span{display:block;width:24px;height:3px;background:#fff;border-radius:2px}
+
+@media (max-width:1120px){
+  .nav-container{flex-wrap:wrap}
+  .mobile-menu-toggle{display:flex}
+  .nav-menu{
+    display:none;order:3;width:100%;margin-left:0;
+    flex-direction:column;align-items:stretch;padding-bottom:8px;
+  }
+  .nav-menu.active{display:flex}
+  .nav-actions{order:2}
+}
+@media (max-width:480px){
+  .logo-text{display:none}
+  .btn-login,.btn-register{padding:7px 12px;font-size:.85rem}
+}
+
+/* Pied de page */
+.main-footer{background:#0A2A18;color:#d7e6dc;margin-top:48px}
+.footer-content{
+  max-width:1200px;margin:0 auto;padding:40px 16px 24px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;
+}
+.footer-section h3,.footer-section h4{color:#fff;margin:0 0 10px}
+.footer-section p{margin:4px 0}
+.footer-section ul{list-style:none;margin:0;padding:0}
+.footer-section li{margin:6px 0}
+.footer-section a{color:#d7e6dc;text-decoration:none}
+.footer-section a:hover{color:var(--asb-yellow);text-decoration:underline}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:14px 16px;font-size:.9rem}
+.footer-bottom p{margin:0}

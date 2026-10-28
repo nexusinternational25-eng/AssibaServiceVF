@@ -81,6 +81,7 @@ section h2{color:#063A19}
 }
 .card:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.14) }
 .card img{width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:10px}
+.card .ico{height:160px;display:grid;place-items:center;font-size:3.5rem;background:#EAF4EE;border-radius:12px;margin-bottom:10px}
 .card h3{margin:.3rem 0 .6rem 0;font-size:1rem}
 /* Contact */
 .contact{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
@@ -99,7 +100,6 @@ section h2{color:#063A19}
 @keyframes fadeUp{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
 </style>
 
-<link rel="stylesheet" href="assets/styles.css">
 <script defer src="assets/pwa-install.js"></script>
 </head><body>
 
@@ -114,7 +114,7 @@ section h2{color:#063A19}
 <header class='header' role='banner'>
   <div class='container row'>
     <div class='brand' aria-label='AssibaService'>
-      <img src='assets/logo/logo_officiel.jpeg' alt='Logo AssibaService'>
+      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
       <strong aria-label='Nom de la plateforme'>AssibaService</strong>
     </div>
     <nav aria-label='Navigation principale'>
@@ -158,31 +158,31 @@ section h2{color:#063A19}
 </section>
 <section class='container' id='services' aria-label='Services populaires'>
   <h2 style='text-align:center'>Services populaires</h2>
-  <div class='grid'><div class='card'><img src='assets/services/service_1.jpg' alt='Plomberie'><h3>Plomberie</h3></div>
-<div class='card'><img src='assets/services/service_2.jpg' alt='Électricité'><h3>Électricité</h3></div>
-<div class='card'><img src='assets/services/service_3.jpg' alt='Menuiserie'><h3>Menuiserie</h3></div>
-<div class='card'><img src='assets/services/service_4.jpg' alt='Peinture'><h3>Peinture</h3></div>
-<div class='card'><img src='assets/services/service_5.jpg' alt='Coiffure'><h3>Coiffure</h3></div>
-<div class='card'><img src='assets/services/service_6.jpg' alt='Maquillage'><h3>Maquillage</h3></div>
-<div class='card'><img src='assets/services/service_7.jpg' alt='Taxi / Transport'><h3>Taxi / Transport</h3></div>
-<div class='card'><img src='assets/services/service_8.jpg' alt='Réparation Téléphone'><h3>Réparation Téléphone</h3></div>
-<div class='card'><img src='assets/services/service_9.jpg' alt='Réparation PC'><h3>Réparation PC</h3></div>
-<div class='card'><img src='assets/services/service_10.jpg' alt='Consultance'><h3>Consultance</h3></div>
-<div class='card'><img src='assets/services/service_11.jpg' alt='Services Administratifs'><h3>Services Administratifs</h3></div>
-<div class='card'><img src='assets/services/service_12.jpg' alt='Jardinage'><h3>Jardinage</h3></div>
-<div class='card'><img src='assets/services/service_13.jpg' alt='Ménage'><h3>Ménage</h3></div>
-<div class='card'><img src='assets/services/service_14.jpg' alt='Couture'><h3>Couture</h3></div>
-<div class='card'><img src='assets/services/service_15.jpg' alt='Événementiel'><h3>Événementiel</h3></div>
-<div class='card'><img src='assets/services/service_16.jpg' alt='Sécurité'><h3>Sécurité</h3></div>
-<div class='card'><img src='assets/services/service_17.jpg' alt='Informatique'><h3>Informatique</h3></div>
-<div class='card'><img src='assets/services/service_18.jpg' alt='Formation'><h3>Formation</h3></div>
-<div class='card'><img src='assets/services/service_19.jpg' alt='Construction'><h3>Construction</h3></div>
-<div class='card'><img src='assets/services/service_20.jpg' alt='Carrelage'><h3>Carrelage</h3></div>
-<div class='card'><img src='assets/services/service_21.jpg' alt='Climatisation'><h3>Climatisation</h3></div>
-<div class='card'><img src='assets/services/service_22.jpg' alt='Dépannage Auto'><h3>Dépannage Auto</h3></div>
-<div class='card'><img src='assets/services/service_23.jpg' alt='Graphisme'><h3>Graphisme</h3></div>
-<div class='card'><img src='assets/services/service_24.jpg' alt='Marketing'><h3>Marketing</h3></div>
-<div class='card'><img src='assets/services/service_25.jpg' alt='Autre (Précisez)'><h3>Autre (Précisez)</h3></div></div>
+  <div class='grid'><div class='card'><img loading='lazy' src='assets/services/service_1.jpg' alt='Plomberie'><h3>Plomberie</h3></div>
+<div class='card'><img loading='lazy' src='assets/services/service_2.jpg' alt='Électricité'><h3>Électricité</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🪚</div><h3>Menuiserie</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🎨</div><h3>Peinture</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>💇🏾</div><h3>Coiffure</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>💄</div><h3>Maquillage</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🚕</div><h3>Taxi / Transport</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>📱</div><h3>Réparation Téléphone</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>💻</div><h3>Réparation PC</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>💼</div><h3>Consultance</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>📄</div><h3>Services Administratifs</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🌿</div><h3>Jardinage</h3></div>
+<div class='card'><img loading='lazy' src='assets/services/service_13.jpg' alt='Ménage'><h3>Ménage</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🧵</div><h3>Couture</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🎉</div><h3>Événementiel</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🛡️</div><h3>Sécurité</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🖥️</div><h3>Informatique</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🎓</div><h3>Formation</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🏗️</div><h3>Construction</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🧱</div><h3>Carrelage</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>❄️</div><h3>Climatisation</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>🚗</div><h3>Dépannage Auto</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>✏️</div><h3>Graphisme</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>📣</div><h3>Marketing</h3></div>
+<div class='card'><div class='ico' aria-hidden='true'>➕</div><h3>Autre (Précisez)</h3></div></div>
   <div class='contact' aria-label='Contact'>
     <div class='box'><strong>Téléphone</strong><br>+228 91 97 80 80</div>
     <div class='box'><strong>Email</strong><br>support@assibaservice.com</div>

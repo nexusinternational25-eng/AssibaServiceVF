@@ -14,7 +14,7 @@ const ESSENTIAL_RESOURCES = [
   '/reset-password.html',
   '/assets/common.css',
   '/assets/pwa-install.js',
-  '/assets/logo/logo_officiel.jpeg',
+  '/assets/logo/logo-assiba.png',
   '/assets/icons/icon-192x192.png',
   '/assets/icons/icon-512x512.png',
   '/manifest.webmanifest',
@@ -22,10 +22,7 @@ const ESSENTIAL_RESOURCES = [
 ];
 
 // Images des services à mettre en cache
-const SERVICE_IMAGES = [];
-for (let i = 1; i <= 25; i++) {
-  SERVICE_IMAGES.push(`/assets/services/service_${i}.jpg`);
-}
+const SERVICE_IMAGES = [1, 2, 13].map(i => `/assets/services/service_${i}.jpg`);
 
 // Images des publicités
 const AD_IMAGES = [
