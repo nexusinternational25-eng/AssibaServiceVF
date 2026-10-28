@@ -1,5 +1,5 @@
 // AssibaService PWA Service Worker - Mode Offline Avancé
-const CACHE_NAME = 'assibaservice-v1.3.0';
+const CACHE_NAME = 'assibaservice-v1.4.0';
 const OFFLINE_URL = '/offline.html';
 
 // Ressources essentielles à mettre en cache

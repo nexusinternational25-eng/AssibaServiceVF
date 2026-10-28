@@ -632,8 +632,8 @@
                 <div class="form-group">
                     <label>
                         <input type="checkbox" id="terms-accept" required style="width: auto; margin-right: 10px;">
-                        J'accepte les <a href="#" onclick="showTerms()">conditions d'utilisation</a> 
-                        et la <a href="#" onclick="showPrivacy()">politique de confidentialité</a> *
+                        J'accepte les <a href="#" onclick="showTerms(); return false;">conditions d'utilisation</a> 
+                        et la <a href="#" onclick="showPrivacy(); return false;">politique de confidentialité</a> *
                     </label>
                 </div>
 
@@ -670,11 +670,12 @@
         </div>
     </footer>
 
+    <script src="assets/app.js"></script>
     <script>
         // Gestionnaire d'inscription prestataire
         class ProviderRegistrationManager {
             constructor() {
-                this.apiBase = window.API_BASE || 'http://localhost:8081';
+                this.apiBase = window.API_BASE || '';
                 this.selectedCategories = [];
                 this.selectedPlan = '';
                 this.init();
@@ -781,11 +782,26 @@
                     const result = await response.json();
 
                     if (result.success) {
-                        this.showSuccess('Compte créé avec succès ! Redirection vers la connexion...');
-                        
+                        ASB.Auth.save(result.token, result.user);
+
+                        // Pièce d'identité choisie dans le formulaire (échec non bloquant :
+                        // elle peut être renvoyée depuis l'espace prestataire)
+                        const idFile = document.getElementById('id-photo-input').files[0];
+                        if (idFile) {
+                            try {
+                                const data = await ASB.compressImage(idFile, 1600, 0.8);
+                                await ASB.api('POST', '/provider/id-document', { document: data });
+                            } catch (e) {
+                                console.warn('Pièce d’identité non envoyée :', e.message);
+                            }
+                        }
+                        this.showSuccess('Compte créé ! Dernière étape : le paiement de votre inscription…');
+
                         setTimeout(() => {
-                            window.location.href = 'login.html?registered=true';
-                        }, 2000);
+                            window.location.href = result.payment_ref
+                                ? 'paiement.html?ref=' + encodeURIComponent(result.payment_ref)
+                                : 'prestataire_dashboard.html';
+                        }, 1200);
                     } else {
                         throw new Error(result.error || 'Erreur lors de l\'inscription');
                     }
@@ -860,11 +876,11 @@
 
         // Fonctions globales
         function showTerms() {
-            alert('Les conditions d\'utilisation seront affichées dans une nouvelle fenêtre.');
+            window.open('cgu.html', '_blank', 'noopener');
         }
 
         function showPrivacy() {
-            alert('La politique de confidentialité sera affichée dans une nouvelle fenêtre.');
+            window.open('politique-confidentialite.html', '_blank', 'noopener');
         }
 
         // Initialisation

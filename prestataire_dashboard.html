@@ -1,49 +1,284 @@
 <!doctype html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Espace Prestataire</title></head>
-<body>
-<header class='header' role='banner'>
-  <div class='container row'>
-    <div class='brand' aria-label='AssibaService'>
-      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
-      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006B3F">
+<meta name="robots" content="noindex">
+<title>Mon espace prestataire | AssibaService</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+  .cats label{display:flex;gap:8px;align-items:center;font-weight:600;padding:6px 8px;border:1px solid #dfe9e2;border-radius:8px;background:#fff}
+</style>
+</head>
+<body class="app">
+<header class="main-header">
+  <div class="nav-container">
+    <a class="logo-container" href="index.html" style="text-decoration:none">
+      <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+      <span class="logo-text">AssibaService</span>
+    </a>
+    <div class="nav-actions" style="margin-left:auto">
+      <button class="btn-login" id="logout" type="button">Déconnexion</button>
     </div>
-    <nav aria-label='Navigation principale'>
-      <a href='index.html'>Accueil</a>
-      <a href='apropos.html'>À propos</a>
-      <a href='fonctionnement.html'>Comment ça marche</a>
-      <a href='cgu.html'>CGU</a>
-      <a href='politique-confidentialite.html'>Confidentialité</a>
-    </nav>
   </div>
 </header>
-<main>
-<h1>Mon espace prestataire</h1>
-  <div id="me"></div>
-  <div id="wallet">Solde: —</div>
-  <div style="margin:.5rem 0;">
-    <a href="form_prestataire.html">Voir mes missions</a>
+
+<main class="app-main">
+  <div class="app-title"><div><h1 id="hello">Mon espace prestataire</h1><p id="subtitle"></p></div></div>
+  <div id="status-box"></div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="open">Demandes disponibles</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="missions">Mes missions</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="wallet">Portefeuille</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="profile">Mon profil</button>
   </div>
-  <button id="logout">Se déconnecter</button>
-  <script>
-    const API=(window.API_BASE||'http://localhost:8081');
-    const token=localStorage.getItem('auth_token');
-    if(!token){ location.replace('login.html'); throw new Error('non connecté'); }
-    fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(d=>{
-      if(d.user){
-        document.getElementById('me').textContent = d.user.name + ' ('+d.user.email+') — statut: '+d.user.status;
-        fetch(API+'/wallet/'+d.user.id,{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(w=>{
-          document.getElementById('wallet').textContent = 'Solde: ' + (w.user.wallet_balance||0).toFixed(2) + ' FCFA';
-        });
-      }
-    });
-    document.getElementById('logout').onclick=function(){ localStorage.removeItem('auth_token'); localStorage.removeItem('user_data'); location.href='login.html'; };
-  </script>
+  <section data-panel="open"></section>
+  <section data-panel="missions" hidden></section>
+  <section data-panel="wallet" hidden></section>
+  <section data-panel="profile" hidden></section>
 </main>
-<footer class='footer' role='contentinfo'>
-  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
-  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
-</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const { api, esc, fcfa, date, dateTime, badge, Auth, toast, dialog, run, hydrateImages } = ASB;
+  if (!Auth.require(['prestataire'])) return;
+  document.getElementById('logout').onclick = () => Auth.logout();
+
+  const CATS = {};
+  let me = null;
+  const PLAN_LABEL = { standard: 'Standard', basic: 'Basic', pro: 'Pro' };
+  const panel = name => document.querySelector(`[data-panel="${name}"]`);
+
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => showTab(t.dataset.tab));
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === name));
+    document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== name; });
+    ({ open: loadOpen, missions: loadMissions, wallet: loadWallet, profile: renderProfile })[name]();
+  }
+
+  async function loadMe() {
+    me = await api('GET', '/auth/me');
+    Auth.save(Auth.token(), me.user);
+    const p = me.provider;
+    document.getElementById('hello').textContent = 'Bonjour ' + me.user.first_name;
+    document.getElementById('subtitle').textContent =
+      `Formule ${PLAN_LABEL[p.plan] || p.plan}` + (p.plan_expires_at ? ` jusqu’au ${date(p.plan_expires_at)}` : '') +
+      (p.rating_count ? ` · Note ${p.rating_avg.toFixed(1)}/5 (${p.rating_count} avis)` : '');
+    const box = document.getElementById('status-box');
+    let html = '';
+    if (me.user.status === 'suspended') {
+      html = '<div class="notice notice-bad"><strong>Compte suspendu.</strong>Contactez le support au +228 91 97 80 80.</div>';
+    } else if (me.user.status !== 'active') {
+      const steps = [];
+      steps.push(p.registration_paid
+        ? '✅ Frais d’inscription réglés'
+        : p.pending_payment && p.pending_payment.status === 'submitted'
+          ? '⏳ Paiement de l’inscription envoyé, vérification en cours'
+          : `⬜ Régler votre inscription${p.pending_payment ? ` : <a class="btn btn-primary btn-sm" href="paiement.html?ref=${encodeURIComponent(p.pending_payment.ref)}">Payer ${fcfa(p.pending_payment.amount)}</a>` : ''}`);
+      steps.push(p.id_document_uploaded
+        ? '✅ Pièce d’identité envoyée'
+        : `⬜ Envoyer votre pièce d’identité (CNI ou passeport) : <input type="file" id="id-doc" accept="image/*,application/pdf" aria-label="Pièce d’identité">`);
+      steps.push('⬜ Vérification par notre équipe (sous 48 h ouvrées)');
+      html = `<div class="notice notice-warn"><strong>Activez votre compte pour recevoir des demandes</strong>
+        <ul style="margin:6px 0 0;padding-left:18px;line-height:2">${steps.map(s => `<li style="list-style:none;margin-left:-18px">${s}</li>`).join('')}</ul></div>`;
+    } else if (p.pending_payment) {
+      html = `<div class="notice notice-info"><strong>Paiement d’abonnement en attente</strong>
+        <a class="btn btn-primary btn-sm" href="paiement.html?ref=${encodeURIComponent(p.pending_payment.ref)}">Finaliser le paiement</a></div>`;
+    } else if (p.plan_expires_at && new Date(p.plan_expires_at) < new Date()) {
+      html = `<div class="notice notice-warn"><strong>Votre abonnement ${esc(PLAN_LABEL[p.plan])} a expiré.</strong>
+        Vous restez visible, mais sans les avantages de la formule. <a href="abonnements.html">Renouveler</a></div>`;
+    }
+    box.innerHTML = html;
+    const doc = document.getElementById('id-doc');
+    if (doc) doc.onchange = async () => {
+      const f = doc.files[0];
+      if (!f) return;
+      try {
+        const data = await ASB.compressImage(f, 1600, 0.8);
+        await api('POST', '/provider/id-document', { document: data });
+        toast('Pièce d’identité envoyée');
+        loadMe();
+      } catch (e) { toast(e.message, 'bad'); }
+    };
+  }
+
+  function requestInfo(r) {
+    return `<div class="card-row"><div><h3>${esc(r.title)}</h3>
+      <div class="meta">${esc(r.category_label)}${r.other_detail ? ' (' + esc(r.other_detail) + ')' : ''} · ${esc(r.city || '')} · publiée le ${date(r.created_at)}</div></div>
+      <div>${r.is_urgent ? '<span class="badge badge-bad">Urgent</span> ' : ''}${badge(r.status)}</div></div>
+      <p style="white-space:pre-line;margin:10px 0 0">${esc(r.description)}</p>
+      <p class="meta" style="margin:8px 0 0">${r.preferred_date ? 'Date souhaitée : ' + date(r.preferred_date) + (r.preferred_time ? ' (' + esc(r.preferred_time) + ')' : '') + ' · ' : ''}${r.budget_max ? 'Budget du client : ' + fcfa(r.budget_min) + ' à ' + fcfa(r.budget_max) : 'Budget non précisé'}</p>
+      ${r.photos && r.photos.length ? `<div class="photos">${r.photos.map(p => `<img data-src="${esc(p)}" alt="Photo jointe">`).join('')}</div>` : ''}`;
+  }
+
+  async function loadOpen() {
+    const box = panel('open');
+    if (!me || me.user.status !== 'active') {
+      box.innerHTML = '<div class="card empty">Les demandes s’afficheront ici dès que votre compte sera activé.</div>';
+      return;
+    }
+    box.innerHTML = '<p class="loading">Chargement…</p>';
+    try {
+      const out = await api('GET', '/provider/requests');
+      if (!out.requests.length) {
+        box.innerHTML = '<div class="card empty">Aucune demande ouverte dans vos catégories pour le moment.</div>';
+        return;
+      }
+      box.innerHTML = out.requests.map(r => `<article class="card" data-id="${r.id}">${requestInfo(r)}
+        ${r.my_offer && r.my_offer.status === 'pending'
+          ? `<div class="notice notice-ok" style="margin:12px 0 0"><strong>Votre offre : ${fcfa(r.my_offer.amount)}</strong>Le client choisira parmi les offres reçues.</div>
+             <div class="actions"><button class="btn btn-ghost btn-sm" data-offer>Modifier mon offre</button><button class="btn btn-ghost btn-sm" data-withdraw="${r.my_offer.id}">Retirer mon offre</button></div>`
+          : `<div class="actions"><button class="btn btn-primary" data-offer>Faire une offre</button></div>`}
+      </article>`).join('');
+      hydrateImages(box);
+      box.querySelectorAll('[data-offer]').forEach(b => b.onclick = async () => {
+        const id = b.closest('[data-id]').dataset.id;
+        const v = await dialog({ title: 'Faire une offre', submitLabel: 'Envoyer mon offre', html: `
+          <div class="field"><label for="amount">Votre prix total (FCFA)</label><input id="amount" name="amount" type="number" min="500" step="100" required inputmode="numeric"></div>
+          <div class="field"><label for="message">Message au client</label><textarea id="message" name="message" rows="3" maxlength="1000" placeholder="Disponibilité, matériel compris, délai…"></textarea></div>
+          <p class="hint">Le client paie ce montant à AssibaService avant votre intervention. Vous êtes payé dès qu’il valide le travail (commission déduite selon le type de mission).</p>` });
+        if (v && await run(b, () => api('POST', `/service-requests/${id}/offers`, { amount: Number(v.amount), message: v.message }), 'Offre envoyée')) loadOpen();
+      });
+      box.querySelectorAll('[data-withdraw]').forEach(b => b.onclick = async () => {
+        if (await run(b, () => api('POST', `/offers/${b.dataset.withdraw}/withdraw`), 'Offre retirée')) loadOpen();
+      });
+    } catch (e) { box.innerHTML = `<div class="notice notice-bad"><strong>Chargement impossible</strong>${esc(e.message)}</div>`; }
+  }
+
+  async function loadMissions() {
+    const box = panel('missions');
+    box.innerHTML = '<p class="loading">Chargement…</p>';
+    try {
+      const out = await api('GET', '/provider/missions');
+      if (!out.missions.length) { box.innerHTML = '<div class="card empty">Aucune mission pour le moment. Faites des offres sur les demandes disponibles.</div>'; return; }
+      box.innerHTML = out.missions.map(m => {
+        const contact = ['in_progress', 'done', 'dispute', 'completed'].includes(m.status) && m.client;
+        let html = `<article class="card" data-id="${m.id}">${requestInfo(m)}
+          <p style="margin:10px 0 0">Prix convenu : <span class="money">${fcfa(m.agreed_amount)}</span> · Vous recevrez : <span class="money">${fcfa(m.net_amount)}</span></p>`;
+        if (m.status === 'accepted') html += '<div class="notice notice-info" style="margin:10px 0 0"><strong>Offre retenue !</strong>Le client doit maintenant payer. Vous recevrez ses coordonnées dès que le paiement sera confirmé. N’intervenez pas avant.</div>';
+        if (contact) html += `<div class="notice notice-ok" style="margin:10px 0 0"><strong>Client : ${esc(m.client.name)}</strong>
+          Téléphone : <a href="tel:${esc(m.client.phone)}">${esc(ASB.tel(m.client.phone))}</a><br>Adresse : ${esc(m.address)}</div>`;
+        if (m.status === 'done') html += '<p class="meta">En attente de la validation du client.</p>';
+        if (m.review) html += `<p>Avis du client : <span class="stars">${'★'.repeat(m.review.rating)}</span> ${esc(m.review.comment || '')}</p>`;
+        const a = [];
+        if (m.status === 'in_progress') a.push('<button class="btn btn-primary" data-act="done">J’ai terminé la mission</button>');
+        if (['in_progress', 'done'].includes(m.status)) a.push('<button class="btn btn-ghost" data-act="dispute">Signaler un problème</button>');
+        if (a.length) html += `<div class="actions">${a.join('')}</div>`;
+        return html + '</article>';
+      }).join('');
+      hydrateImages(box);
+      box.querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
+        const id = b.closest('[data-id]').dataset.id;
+        if (b.dataset.act === 'done') {
+          const ok = await dialog({ title: 'Mission terminée ?', html: '<p>Le client sera invité à vérifier le travail et à valider. Vous serez crédité dès sa validation.</p>', submitLabel: 'Confirmer' });
+          if (ok && await run(b, () => api('POST', `/service-requests/${id}/done`), 'Le client est prévenu')) loadMissions();
+        } else {
+          const v = await dialog({ title: 'Signaler un problème', danger: true, submitLabel: 'Envoyer', html: '<div class="field"><label for="reason">Que se passe-t-il ?</label><textarea id="reason" name="reason" rows="4" required maxlength="2000"></textarea></div>' });
+          if (v && await run(b, () => api('POST', `/service-requests/${id}/dispute`, v), 'Signalement envoyé')) loadMissions();
+        }
+      });
+    } catch (e) { box.innerHTML = `<div class="notice notice-bad"><strong>Chargement impossible</strong>${esc(e.message)}</div>`; }
+  }
+
+  async function loadWallet() {
+    const box = panel('wallet');
+    box.innerHTML = '<p class="loading">Chargement…</p>';
+    try {
+      const w = await api('GET', '/provider/wallet');
+      const kinds = { gain: 'Gain', retrait: 'Retrait', annulation_retrait: 'Retrait annulé', ajustement: 'Ajustement' };
+      box.innerHTML = `<div class="stats">
+          <div class="stat"><div class="v">${fcfa(w.balance)}</div><div class="l">Disponible</div></div>
+          <div class="stat"><div class="v">${fcfa(w.held)}</div><div class="l">En attente de validation client</div></div>
+        </div>
+        <form class="card" id="wd-form"><h2>Retirer mes gains</h2>
+          <div class="grid-2">
+            <div class="field"><label for="wa">Montant (FCFA)</label><input id="wa" name="amount" type="number" min="1000" step="100" max="${w.balance}" required ${w.balance < 1000 ? 'disabled' : ''}></div>
+            <div class="field"><label for="wm">Recevoir par</label><select id="wm" name="method" required><option value="tmoney">T-Money</option><option value="flooz">Flooz</option></select></div>
+            <div class="field"><label for="wp">Numéro</label><input id="wp" name="phone" type="tel" required value="${esc(me.user.phone)}"></div>
+          </div>
+          <p class="hint">Minimum 1 000 FCFA. Les retraits sont traités sous 24 h ouvrées.</p>
+          <button class="btn btn-primary" type="submit" ${w.balance < 1000 ? 'disabled' : ''}>Demander le retrait</button>
+        </form>
+        <div class="card"><h2>Mes retraits</h2>${w.withdrawals.length ? `<div class="table-wrap"><table class="data"><thead><tr><th>Date</th><th>Montant</th><th>Vers</th><th>Statut</th></tr></thead><tbody>
+          ${w.withdrawals.map(x => `<tr><td>${dateTime(x.created_at)}</td><td>${fcfa(x.amount)}</td><td>${esc(x.method === 'flooz' ? 'Flooz' : 'T-Money')} ${esc(ASB.tel(x.phone))}</td><td>${badge(x.status)}${x.external_ref ? '<div class="meta">Réf. ' + esc(x.external_ref) + '</div>' : ''}</td></tr>`).join('')}
+          </tbody></table></div>` : '<p class="meta">Aucun retrait.</p>'}</div>
+        <div class="card"><h2>Historique</h2>${w.entries.length ? `<div class="table-wrap"><table class="data"><thead><tr><th>Date</th><th>Opération</th><th>Montant</th></tr></thead><tbody>
+          ${w.entries.map(x => `<tr><td>${dateTime(x.created_at)}</td><td>${esc(kinds[x.kind] || x.kind)}<div class="meta">${esc(x.note || '')}</div></td><td class="money">${x.amount > 0 ? '+' : ''}${fcfa(x.amount)}</td></tr>`).join('')}
+          </tbody></table></div>` : '<p class="meta">Aucune opération.</p>'}</div>`;
+      box.querySelector('#wd-form').onsubmit = async e => {
+        e.preventDefault();
+        const v = Object.fromEntries(new FormData(e.target).entries());
+        if (await run(e.submitter, () => api('POST', '/provider/withdrawals', { ...v, amount: Number(v.amount) }), 'Demande de retrait envoyée')) loadWallet();
+      };
+    } catch (e) { box.innerHTML = `<div class="notice notice-bad"><strong>Chargement impossible</strong>${esc(e.message)}</div>`; }
+  }
+
+  async function renderProfile() {
+    const box = panel('profile');
+    if (!Object.keys(CATS).length) {
+      const c = await api('GET', '/categories');
+      c.categories.forEach(x => { CATS[x.id] = x.label; });
+    }
+    const u = me.user, p = me.provider;
+    box.innerHTML = `<div class="grid-2">
+      <form class="card" id="profile-form"><h2>Mon activité</h2>
+        <div class="field"><label for="bn">Nom commercial</label><input id="bn" name="business_name" maxlength="120" value="${esc(p.business_name || '')}"></div>
+        <div class="field"><label for="ds">Présentation (visible par les clients)</label><textarea id="ds" name="description" rows="4" maxlength="2000">${esc(p.description || '')}</textarea></div>
+        <fieldset class="field" style="border:0;padding:0"><legend style="font-weight:700;margin-bottom:6px">Mes catégories</legend>
+          <div class="cats">${Object.entries(CATS).map(([id, l]) => `<label><input type="checkbox" name="categories" value="${id}" ${p.categories.includes(id) ? 'checked' : ''}> ${esc(l)}</label>`).join('')}</div></fieldset>
+        <div class="field"><label for="fn">Prénom</label><input id="fn" name="first_name" required maxlength="80" value="${esc(u.first_name)}"></div>
+        <div class="field"><label for="ln">Nom</label><input id="ln" name="last_name" maxlength="80" value="${esc(u.last_name)}"></div>
+        <div class="field"><label for="em">E-mail</label><input id="em" name="email" type="email" maxlength="200" value="${esc(u.email || '')}"></div>
+        <div class="field"><label for="ad">Adresse</label><input id="ad" name="address" maxlength="300" value="${esc(u.address || '')}"></div>
+        <div class="field"><label for="ci">Ville</label><input id="ci" name="city" maxlength="80" value="${esc(u.city || '')}"></div>
+        <button class="btn btn-primary" type="submit">Enregistrer</button>
+      </form>
+      <div>
+        <div class="card"><h2>Photo de profil</h2>
+          ${u.photo_url ? `<div class="photos"><img data-src="${esc(u.photo_url)}" alt="Ma photo"></div>` : '<p class="meta">Une photo inspire confiance aux clients.</p>'}
+          <div class="field" style="margin-top:10px"><label for="photo">Changer la photo</label><input id="photo" type="file" accept="image/*"></div></div>
+        <div class="card"><h2>Ma formule</h2><p>${esc(PLAN_LABEL[p.plan] || p.plan)}${p.plan_expires_at ? ' jusqu’au ' + date(p.plan_expires_at) : ''}</p>
+          <a class="btn btn-ghost" href="abonnements.html">Voir les formules</a></div>
+        <form class="card" id="pw-form"><h2>Mot de passe</h2>
+          <div class="field"><label for="cp">Mot de passe actuel</label><input id="cp" name="current_password" type="password" required autocomplete="current-password"></div>
+          <div class="field"><label for="np">Nouveau mot de passe</label><input id="np" name="new_password" type="password" required minlength="8" autocomplete="new-password"></div>
+          <button class="btn btn-primary" type="submit">Changer le mot de passe</button></form>
+      </div></div>`;
+    hydrateImages(box);
+    box.querySelector('#profile-form').onsubmit = async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const v = Object.fromEntries(fd.entries());
+      v.categories = fd.getAll('categories');
+      if (!v.categories.length) { toast('Choisissez au moins une catégorie', 'bad'); return; }
+      if (await run(e.submitter, () => api('PUT', '/auth/me', v), 'Profil enregistré')) await loadMe();
+    };
+    box.querySelector('#pw-form').onsubmit = async e => {
+      e.preventDefault();
+      const out = await run(e.submitter, () => api('POST', '/auth/change-password', Object.fromEntries(new FormData(e.target).entries())), 'Mot de passe changé');
+      if (out) { Auth.save(out.token, Auth.user()); e.target.reset(); }
+    };
+    box.querySelector('#photo').onchange = async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      try {
+        await api('POST', '/users/upload-photo', { photo: await ASB.compressImage(f, 600, 0.8) });
+        toast('Photo mise à jour');
+        await loadMe(); renderProfile();
+      } catch (err) { toast(err.message, 'bad'); }
+    };
+  }
+
+  loadMe().then(() => showTab('open')).catch(e => {
+    document.getElementById('status-box').innerHTML = `<div class="notice notice-bad"><strong>Chargement impossible</strong>${esc(e.message)}</div>`;
+  });
+})();
+</script>
 </body>
 </html>

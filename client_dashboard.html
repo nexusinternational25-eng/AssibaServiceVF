@@ -1,49 +1,233 @@
 <!doctype html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Espace Client</title></head>
-<body>
-<header class='header' role='banner'>
-  <div class='container row'>
-    <div class='brand' aria-label='AssibaService'>
-      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
-      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006B3F">
+<meta name="robots" content="noindex">
+<title>Mon espace client | AssibaService</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body class="app">
+<header class="main-header">
+  <div class="nav-container">
+    <a class="logo-container" href="index.html" style="text-decoration:none">
+      <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+      <span class="logo-text">AssibaService</span>
+    </a>
+    <div class="nav-actions" style="margin-left:auto">
+      <a class="btn-register" href="form_client.html">+ Demande</a>
+      <button class="btn-login" id="logout" type="button">Déconnexion</button>
     </div>
-    <nav aria-label='Navigation principale'>
-      <a href='index.html'>Accueil</a>
-      <a href='apropos.html'>À propos</a>
-      <a href='fonctionnement.html'>Comment ça marche</a>
-      <a href='cgu.html'>CGU</a>
-      <a href='politique-confidentialite.html'>Confidentialité</a>
-    </nav>
   </div>
 </header>
-<main>
-<h1>Mon espace client</h1>
-  <div id="me"></div>
-  <div style="margin:.5rem 0;">
-    <a href="form_client.html">Demander un service</a>
+
+<main class="app-main">
+  <div class="app-title">
+    <div><h1 id="hello">Mon espace</h1><p>Suivez vos demandes et vos paiements</p></div>
+    <a class="btn btn-primary" href="form_client.html">Demander un service</a>
   </div>
-  <div id="wallet">Solde: —</div>
-  <button id="logout">Se déconnecter</button>
-  <script>
-    const API=(window.API_BASE||'http://localhost:8081');
-    const token=localStorage.getItem('auth_token');
-    if(!token){ location.replace('login.html'); throw new Error('non connecté'); }
-    fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(d=>{
-      if(d.user){
-        document.getElementById('me').textContent = d.user.name + ' ('+d.user.email+')';
-        fetch(API+'/wallet/'+d.user.id,{headers:{'Authorization':'Bearer '+token}}).then(r=>r.json()).then(w=>{
-          document.getElementById('wallet').textContent = 'Solde: ' + (w.user.wallet_balance||0).toFixed(2) + ' FCFA';
-        });
-      }
-    });
-    document.getElementById('logout').onclick=function(){ localStorage.removeItem('auth_token'); localStorage.removeItem('user_data'); location.href='login.html'; };
-  </script>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="requests">Mes demandes</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="profile">Mon profil</button>
+  </div>
+
+  <section id="tab-requests"><p class="loading">Chargement…</p></section>
+  <section id="tab-profile" hidden></section>
 </main>
-<footer class='footer' role='contentinfo'>
-  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
-  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
-</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const { api, esc, fcfa, date, badge, Auth, toast, dialog, run, hydrateImages } = ASB;
+  if (!Auth.require(['client'])) return;
+  document.getElementById('logout').onclick = () => Auth.logout();
+  const user = Auth.user();
+  document.getElementById('hello').textContent = 'Bonjour ' + user.first_name;
+
+  // Onglets
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+    document.getElementById('tab-requests').hidden = t.dataset.tab !== 'requests';
+    document.getElementById('tab-profile').hidden = t.dataset.tab !== 'profile';
+    if (t.dataset.tab === 'profile') renderProfile();
+  });
+
+  const STEP_HELP = {
+    awaiting_payment: 'Réglez les frais de mise en relation pour que votre demande soit diffusée aux prestataires.',
+    open: 'Les prestataires vérifiés de cette catégorie peuvent vous faire des offres. Choisissez celle qui vous convient.',
+    accepted: "Payez la prestation : l'argent reste bloqué par AssibaService jusqu'à ce que vous validiez le travail.",
+    in_progress: 'Le prestataire va vous contacter. Une fois le travail fini, il le signale et vous validez.',
+    done: 'Le prestataire indique avoir terminé. Vérifiez le travail puis validez pour lui verser son paiement.',
+    dispute: "Un conseiller AssibaService étudie le litige et vous contacte. Le paiement reste bloqué d'ici là.",
+  };
+
+  async function goPay(id, btn) {
+    const out = await run(btn, () => api('POST', `/service-requests/${id}/payment`));
+    if (out) location.href = 'paiement.html?ref=' + encodeURIComponent(out.payment_ref);
+  }
+
+  function stars(n) { return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n); }
+
+  function card(r) {
+    const prov = r.provider;
+    let html = `<article class="card" data-id="${r.id}">
+      <div class="card-row">
+        <div><h3>${esc(r.title)}</h3>
+          <div class="meta">${esc(r.category_label)} · demande n°${r.id} du ${date(r.created_at)}${r.is_urgent ? ' · <strong>Urgent</strong>' : ''}</div></div>
+        <div>${badge(r.status)}</div>
+      </div>`;
+    if (STEP_HELP[r.status]) html += `<p class="meta" style="margin:10px 0 0">${esc(STEP_HELP[r.status])}</p>`;
+    if (r.agreed_amount) html += `<p style="margin:10px 0 0">Montant convenu : <span class="money">${fcfa(r.agreed_amount)}</span></p>`;
+    else if (r.budget_min || r.budget_max) html += `<p class="meta" style="margin:8px 0 0">Budget indiqué : ${fcfa(r.budget_min)} à ${fcfa(r.budget_max)}</p>`;
+    if (prov) {
+      html += `<div class="notice notice-info" style="margin:12px 0 0"><strong>Votre prestataire : ${esc(prov.name)}${prov.business_name ? ' (' + esc(prov.business_name) + ')' : ''}</strong>
+        ${prov.rating_count ? `<span class="stars">${stars(Math.round(prov.rating_avg))}</span> ${prov.rating_avg.toFixed(1)} (${prov.rating_count} avis) · ` : ''}
+        ${['in_progress', 'done', 'dispute', 'completed'].includes(r.status) ? `Téléphone : <a href="tel:${esc(prov.phone)}">${esc(ASB.tel(prov.phone))}</a>` : 'Ses coordonnées s’affichent après le paiement.'}</div>`;
+    }
+    if (r.photos && r.photos.length) html += `<div class="photos">${r.photos.map(p => `<img data-src="${esc(p)}" alt="Photo de la demande">`).join('')}</div>`;
+    if (r.review) html += `<p style="margin:10px 0 0">Votre avis : <span class="stars">${stars(r.review.rating)}</span> ${esc(r.review.comment || '')}</p>`;
+    if (r.dispute && r.dispute.status === 'resolved') html += `<p class="meta">Décision : ${esc(r.dispute.resolution)}</p>`;
+
+    const a = [];
+    if (r.status === 'awaiting_payment') a.push(`<button class="btn btn-primary" data-act="pay">Payer les frais (${fcfa(2000)})</button>`);
+    if (r.status === 'open') a.push(`<button class="btn btn-primary" data-act="offers">Voir les offres (${r.offers_count})</button>`);
+    if (r.status === 'accepted') a.push(`<button class="btn btn-primary" data-act="pay">Payer la prestation (${fcfa(r.agreed_amount)})</button>`);
+    if (r.status === 'done') a.push(`<button class="btn btn-primary" data-act="confirm">Valider la fin de mission</button>`);
+    if (['in_progress', 'done'].includes(r.status)) a.push(`<button class="btn btn-ghost" data-act="dispute">Signaler un problème</button>`);
+    if (r.status === 'completed' && !r.review) a.push(`<button class="btn btn-ghost" data-act="review">Noter le prestataire</button>`);
+    if (['awaiting_payment', 'open', 'accepted'].includes(r.status)) a.push(`<button class="btn btn-ghost" data-act="cancel">Annuler la demande</button>`);
+    if (a.length) html += `<div class="actions">${a.join('')}</div>`;
+    html += `<div class="offers"></div></article>`;
+    return html;
+  }
+
+  async function showOffers(el, id) {
+    const box = el.querySelector('.offers');
+    box.innerHTML = '<p class="loading">Chargement des offres…</p>';
+    try {
+      const out = await api('GET', `/service-requests/${id}/offers`);
+      if (!out.offers.length) {
+        box.innerHTML = '<p class="meta" style="margin-top:12px">Pas encore d’offre. Les prestataires sont prévenus, revenez un peu plus tard.</p>';
+        return;
+      }
+      box.innerHTML = '<h3 style="margin:16px 0 8px">Offres reçues</h3>' + out.offers.map(o => `
+        <div class="card" style="background:#F8FBF9;box-shadow:none;border:1px solid #e1ebe4">
+          <div class="card-row"><div>
+            <strong>${esc(o.provider.name)}</strong>${o.provider.business_name ? ' · ' + esc(o.provider.business_name) : ''}
+            <div class="meta">${o.provider.rating_count ? `<span class="stars">${stars(Math.round(o.provider.rating_avg))}</span> ${o.provider.rating_avg.toFixed(1)} · ` : 'Nouveau sur AssibaService · '}${o.provider.missions_done} mission(s) réalisée(s)${o.provider.experience_years ? ' · ' + esc(o.provider.experience_years) + ' d’expérience' : ''}</div>
+          </div><div class="money">${fcfa(o.amount)}</div></div>
+          ${o.message ? `<p style="margin:8px 0 0">${esc(o.message)}</p>` : ''}
+          <div class="actions"><button class="btn btn-primary btn-sm" data-accept="${o.id}" data-amount="${o.amount}">Choisir cette offre</button></div>
+        </div>`).join('');
+      box.querySelectorAll('[data-accept]').forEach(b => b.onclick = async () => {
+        const ok = await dialog({ title: 'Confirmer ce choix ?', html: `<p>Vous choisissez cette offre à <strong>${fcfa(b.dataset.amount)}</strong>. Vous allez ensuite payer ce montant ; il reste bloqué par AssibaService jusqu’à ce que vous validiez le travail.</p>`, submitLabel: 'Choisir et payer' });
+        if (!ok) return;
+        const out = await run(b, () => api('POST', `/offers/${b.dataset.accept}/accept`));
+        if (out) location.href = 'paiement.html?ref=' + encodeURIComponent(out.payment_ref);
+      });
+    } catch (e) { box.innerHTML = `<p class="meta">${esc(e.message)}</p>`; }
+  }
+
+  const ratingField = `<div class="field"><label for="rating">Votre note</label>
+    <select id="rating" name="rating" required><option value="">Choisir</option>
+    <option value="5">5 : excellent</option><option value="4">4 : très bien</option><option value="3">3 : correct</option>
+    <option value="2">2 : décevant</option><option value="1">1 : mauvais</option></select></div>
+    <div class="field"><label for="comment">Commentaire (facultatif)</label><textarea id="comment" name="comment" rows="3" maxlength="1000"></textarea></div>`;
+
+  async function onAction(el, id, act, btn) {
+    if (act === 'pay') return goPay(id, btn);
+    if (act === 'offers') return showOffers(el, id);
+    if (act === 'cancel') {
+      const ok = await dialog({ title: 'Annuler la demande ?', html: '<p>Les frais de mise en relation déjà réglés ne sont pas remboursés.</p>', submitLabel: 'Annuler la demande', danger: true });
+      if (ok && await run(btn, () => api('POST', `/service-requests/${id}/cancel`), 'Demande annulée')) load();
+    }
+    if (act === 'confirm') {
+      const v = await dialog({ title: 'Valider la fin de mission', html: '<p>En validant, vous confirmez que le travail est bien fait. Le paiement est alors versé au prestataire.</p>' + ratingField, submitLabel: 'Valider et payer le prestataire' });
+      if (v && await run(btn, () => api('POST', `/service-requests/${id}/confirm`, { rating: Number(v.rating), comment: v.comment }), 'Merci ! Mission validée.')) load();
+    }
+    if (act === 'review') {
+      const v = await dialog({ title: 'Noter le prestataire', html: ratingField, submitLabel: 'Envoyer' });
+      if (v && await run(btn, () => api('POST', `/service-requests/${id}/review`, { rating: Number(v.rating), comment: v.comment }), 'Merci pour votre avis')) load();
+    }
+    if (act === 'dispute') {
+      const v = await dialog({ title: 'Signaler un problème', html: '<p>Le paiement reste bloqué et un conseiller vous contacte.</p><div class="field"><label for="reason">Que se passe-t-il ?</label><textarea id="reason" name="reason" rows="4" required maxlength="2000"></textarea></div>', submitLabel: 'Envoyer', danger: true });
+      if (v && await run(btn, () => api('POST', `/service-requests/${id}/dispute`, v), 'Signalement envoyé')) load();
+    }
+  }
+
+  async function load() {
+    const box = document.getElementById('tab-requests');
+    try {
+      const out = await api('GET', '/service-requests/mine');
+      if (!out.requests.length) {
+        box.innerHTML = `<div class="card empty"><p>Vous n’avez pas encore de demande.</p><a class="btn btn-primary" href="form_client.html">Demander un service</a></div>`;
+        return;
+      }
+      box.innerHTML = out.requests.map(card).join('');
+      hydrateImages(box);
+      box.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
+        const el = b.closest('[data-id]');
+        onAction(el, el.dataset.id, b.dataset.act, b);
+      });
+    } catch (e) {
+      box.innerHTML = `<div class="notice notice-bad"><strong>Chargement impossible</strong>${esc(e.message)}</div>`;
+    }
+  }
+
+  async function renderProfile() {
+    const box = document.getElementById('tab-profile');
+    box.innerHTML = '<p class="loading">Chargement…</p>';
+    const { user: u } = await api('GET', '/auth/me');
+    box.innerHTML = `<div class="grid-2">
+      <form class="card" id="profile-form"><h2>Mes informations</h2>
+        <div class="field"><label for="fn">Prénom</label><input id="fn" name="first_name" required maxlength="80" value="${esc(u.first_name)}"></div>
+        <div class="field"><label for="ln">Nom</label><input id="ln" name="last_name" maxlength="80" value="${esc(u.last_name)}"></div>
+        <div class="field"><label>Téléphone</label><input value="${esc(u.phone)}" disabled><div class="hint">Pour changer de numéro, contactez le support.</div></div>
+        <div class="field"><label for="em">E-mail</label><input id="em" name="email" type="email" maxlength="200" value="${esc(u.email || '')}"></div>
+        <div class="field"><label for="ad">Adresse</label><input id="ad" name="address" maxlength="300" value="${esc(u.address || '')}"></div>
+        <div class="field"><label for="ci">Ville</label><input id="ci" name="city" maxlength="80" value="${esc(u.city || '')}"></div>
+        <button class="btn btn-primary" type="submit">Enregistrer</button>
+      </form>
+      <div>
+        <div class="card"><h2>Photo de profil</h2>
+          ${u.photo_url ? `<div class="photos"><img data-src="${esc(u.photo_url)}" alt="Ma photo"></div>` : '<p class="meta">Aucune photo.</p>'}
+          <div class="field" style="margin-top:10px"><label for="photo">Changer la photo</label><input id="photo" type="file" accept="image/*"></div>
+        </div>
+        <form class="card" id="pw-form"><h2>Mot de passe</h2>
+          <div class="field"><label for="cp">Mot de passe actuel</label><input id="cp" name="current_password" type="password" required autocomplete="current-password"></div>
+          <div class="field"><label for="np">Nouveau mot de passe</label><input id="np" name="new_password" type="password" required minlength="8" autocomplete="new-password"></div>
+          <button class="btn btn-primary" type="submit">Changer le mot de passe</button>
+        </form>
+      </div></div>`;
+    hydrateImages(box);
+    box.querySelector('#profile-form').onsubmit = async e => {
+      e.preventDefault();
+      const out = await run(e.submitter, () => api('PUT', '/auth/me', Object.fromEntries(new FormData(e.target).entries())), 'Informations enregistrées');
+      if (out) { Auth.save(Auth.token(), out.user); document.getElementById('hello').textContent = 'Bonjour ' + out.user.first_name; }
+    };
+    box.querySelector('#pw-form').onsubmit = async e => {
+      e.preventDefault();
+      const out = await run(e.submitter, () => api('POST', '/auth/change-password', Object.fromEntries(new FormData(e.target).entries())), 'Mot de passe changé');
+      if (out) { Auth.save(out.token, Auth.user()); e.target.reset(); }
+    };
+    box.querySelector('#photo').onchange = async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      try {
+        const data = await ASB.compressImage(f, 600, 0.8);
+        await api('POST', '/users/upload-photo', { photo: data });
+        toast('Photo mise à jour');
+        renderProfile();
+      } catch (err) { toast(err.message, 'bad'); }
+    };
+  }
+
+  load();
+})();
+</script>
 </body>
 </html>

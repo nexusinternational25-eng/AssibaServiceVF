@@ -80,6 +80,7 @@ section h2{color:#063A19}
   display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform .15s ease, box-shadow .2s
 }
 .card:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.14) }
+a.card{color:inherit;text-decoration:none}
 .card img{width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:10px}
 .card .ico{height:160px;display:grid;place-items:center;font-size:3.5rem;background:#EAF4EE;border-radius:12px;margin-bottom:10px}
 .card h3{margin:.3rem 0 .6rem 0;font-size:1rem}
@@ -123,6 +124,7 @@ section h2{color:#063A19}
       <a href='fonctionnement.html'>Comment ça marche</a>
       <a href='cgu.html'>CGU</a>
       <a href='politique-confidentialite.html'>Confidentialité</a>
+      <a href='login.html' id='nav-account'>Connexion</a>
     </nav>
   </div>
 </header>
@@ -140,8 +142,8 @@ section h2{color:#063A19}
     <h1>AssibaService — Votre satisfaction, notre priorité</h1>
     <p>Paiement sécurisé (en attente jusqu’à validation du service), prestataires vérifiés, géolocalisation intelligente.</p>
     <div class='cta-wrap'>
-      <a class='btn btn-primary' href='#services' role='button'>🛠️ Demander un service</a>
-      <a class='btn btn-danger' href='fonctionnement.html#prestataire' role='button'>🤝 Devenir prestataire</a>
+      <a class='btn btn-primary' href='form_client.html'>🛠️ Demander un service</a>
+      <a class='btn btn-danger' href='register_prestataire.html'>🤝 Devenir prestataire</a>
       <button class='btn btn-install' onclick='window.installPWA && installPWA()' aria-label='Installer AssibaService'>📲 Installer AssibaService</button>
     </div>
   </div>
@@ -158,31 +160,31 @@ section h2{color:#063A19}
 </section>
 <section class='container' id='services' aria-label='Services populaires'>
   <h2 style='text-align:center'>Services populaires</h2>
-  <div class='grid'><div class='card'><img loading='lazy' src='assets/services/service_1.jpg' alt='Plomberie'><h3>Plomberie</h3></div>
-<div class='card'><img loading='lazy' src='assets/services/service_2.jpg' alt='Électricité'><h3>Électricité</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🪚</div><h3>Menuiserie</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🎨</div><h3>Peinture</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>💇🏾</div><h3>Coiffure</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>💄</div><h3>Maquillage</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🚕</div><h3>Taxi / Transport</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>📱</div><h3>Réparation Téléphone</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>💻</div><h3>Réparation PC</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>💼</div><h3>Consultance</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>📄</div><h3>Services Administratifs</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🌿</div><h3>Jardinage</h3></div>
-<div class='card'><img loading='lazy' src='assets/services/service_13.jpg' alt='Ménage'><h3>Ménage</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🧵</div><h3>Couture</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🎉</div><h3>Événementiel</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🛡️</div><h3>Sécurité</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🖥️</div><h3>Informatique</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🎓</div><h3>Formation</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🏗️</div><h3>Construction</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🧱</div><h3>Carrelage</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>❄️</div><h3>Climatisation</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>🚗</div><h3>Dépannage Auto</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>✏️</div><h3>Graphisme</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>📣</div><h3>Marketing</h3></div>
-<div class='card'><div class='ico' aria-hidden='true'>➕</div><h3>Autre (Précisez)</h3></div></div>
+  <div class='grid'><a class='card' href='form_client.html?category=plomberie'><img loading='lazy' src='assets/services/service_1.jpg' alt='Plomberie'><h3>Plomberie</h3></a>
+<a class='card' href='form_client.html?category=electricite'><img loading='lazy' src='assets/services/service_2.jpg' alt='Électricité'><h3>Électricité</h3></a>
+<a class='card' href='form_client.html?category=menuiserie'><div class='ico' aria-hidden='true'>🪚</div><h3>Menuiserie</h3></a>
+<a class='card' href='form_client.html?category=peinture'><div class='ico' aria-hidden='true'>🎨</div><h3>Peinture</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>💇🏾</div><h3>Coiffure</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>💄</div><h3>Maquillage</h3></a>
+<a class='card' href='form_client.html?category=transport'><div class='ico' aria-hidden='true'>🚕</div><h3>Taxi / Transport</h3></a>
+<a class='card' href='form_client.html?category=informatique'><div class='ico' aria-hidden='true'>📱</div><h3>Réparation Téléphone</h3></a>
+<a class='card' href='form_client.html?category=informatique'><div class='ico' aria-hidden='true'>💻</div><h3>Réparation PC</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>💼</div><h3>Consultance</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>📄</div><h3>Services Administratifs</h3></a>
+<a class='card' href='form_client.html?category=jardinage'><div class='ico' aria-hidden='true'>🌿</div><h3>Jardinage</h3></a>
+<a class='card' href='form_client.html?category=menage'><img loading='lazy' src='assets/services/service_13.jpg' alt='Ménage'><h3>Ménage</h3></a>
+<a class='card' href='form_client.html?category=artisanat'><div class='ico' aria-hidden='true'>🧵</div><h3>Couture</h3></a>
+<a class='card' href='form_client.html?category=evenements'><div class='ico' aria-hidden='true'>🎉</div><h3>Événementiel</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>🛡️</div><h3>Sécurité</h3></a>
+<a class='card' href='form_client.html?category=informatique'><div class='ico' aria-hidden='true'>🖥️</div><h3>Informatique</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>🎓</div><h3>Formation</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>🏗️</div><h3>Construction</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>🧱</div><h3>Carrelage</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>❄️</div><h3>Climatisation</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>🚗</div><h3>Dépannage Auto</h3></a>
+<a class='card' href='form_client.html?category=informatique'><div class='ico' aria-hidden='true'>✏️</div><h3>Graphisme</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>📣</div><h3>Marketing</h3></a>
+<a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>➕</div><h3>Autre (Précisez)</h3></a></div>
   <div class='contact' aria-label='Contact'>
     <div class='box'><strong>Téléphone</strong><br>+228 91 97 80 80</div>
     <div class='box'><strong>Email</strong><br>support@assibaservice.com</div>
@@ -203,4 +205,14 @@ section h2{color:#063A19}
   </nav>
 </footer>
 
+<script>
+try {
+  var u = JSON.parse(localStorage.getItem('user_data') || 'null');
+  if (u && localStorage.getItem('auth_token')) {
+    var a = document.getElementById('nav-account');
+    a.textContent = 'Mon espace';
+    a.href = u.role === 'admin' ? 'admin.html' : u.role === 'prestataire' ? 'prestataire_dashboard.html' : 'client_dashboard.html';
+  }
+} catch (e) {}
+</script>
 </body></html>

@@ -1067,36 +1067,11 @@
                     <h3>Paiement des frais de mise en relation</h3>
 
                     <div class="payment-section">
-                        <h4>Montant à payer : 2,000 FCFA</h4>
-                        <p>Choisissez votre méthode de paiement :</p>
-
-                        <div class="payment-methods">
-                            <div class="payment-method" data-method="tmoney">
-                                <span class="icon">📱</span>
-                                <span class="name">T-Money</span>
-                            </div>
-                            <div class="payment-method" data-method="flooz">
-                                <span class="icon">💳</span>
-                                <span class="name">Flooz</span>
-                            </div>
-                            <div class="payment-method" data-method="paygate">
-                                <span class="icon">🏦</span>
-                                <span class="name">PayGate</span>
-                            </div>
-                            <div class="payment-method" data-method="cash">
-                                <span class="icon">💵</span>
-                                <span class="name">Espèces</span>
-                            </div>
-                        </div>
-                        <input type="hidden" id="selected-payment-method" name="payment_method">
-
-                        <div id="payment-details" style="display: none; margin-top: 20px;">
-                            <div class="form-group">
-                                <label for="payment-phone">Numéro de téléphone pour le paiement</label>
-                                <input type="tel" id="payment-phone" name="payment_phone" 
-                                       placeholder="+228 XX XX XX XX">
-                            </div>
-                        </div>
+                        <h4>Montant : 2 000 FCFA</h4>
+                        <p>Ces frais permettent de diffuser votre demande aux prestataires vérifiés de la catégorie.
+                        Vous les réglerez par <strong>T-Money</strong> ou <strong>Flooz</strong> juste après avoir validé le récapitulatif.</p>
+                        <p>Le prix de la prestation elle-même sera fixé avec le prestataire que vous choisirez.
+                        Vous le paierez à AssibaService, qui le garde de côté jusqu'à ce que vous validiez le travail.</p>
                     </div>
                 </div>
 
@@ -1204,11 +1179,17 @@
         </div>
     </footer>
 
+    <script src="assets/app.js"></script>
     <script>
+        // Réservé aux clients connectés
+        if (!ASB.Auth.token()) {
+            location.replace('login.html?next=' + encodeURIComponent('form_client.html' + location.search));
+        }
+
         // Gestionnaire de demande de service avec paiement
         class ServiceRequestManager {
             constructor() {
-                this.apiBase = window.API_BASE || 'http://localhost:8081';
+                this.apiBase = window.API_BASE || '';
                 this.currentStep = 1;
                 this.maxStep = 6;
                 this.selectedPhotos = [];
@@ -1546,18 +1527,6 @@
                         return true;
 
                     case 5:
-                        if (!this.selectedPaymentMethod) {
-                            this.showError('Veuillez choisir une méthode de paiement');
-                            return false;
-                        }
-                        
-                        if (['tmoney', 'flooz'].includes(this.selectedPaymentMethod)) {
-                            const paymentPhone = document.getElementById('payment-phone').value;
-                            if (!paymentPhone.trim()) {
-                                this.showError('Veuillez saisir votre numéro de téléphone pour le paiement');
-                                return false;
-                            }
-                        }
                         return true;
 
                     case 6:
@@ -1617,17 +1586,17 @@
 
             generateSummary() {
                 const summaryCard = document.getElementById('summary-card');
-                const category = document.getElementById('selected-category').value;
-                const title = document.getElementById('title').value;
-                const description = document.getElementById('description').value;
-                const address = document.getElementById('address').value;
-                const serviceType = this.selectedServiceType;
+                const category = ASB.esc(document.getElementById('selected-category').value);
+                const title = ASB.esc(document.getElementById('title').value);
+                const description = ASB.esc(document.getElementById('description').value);
+                const address = ASB.esc(document.getElementById('address').value);
+                const serviceType = ASB.esc(this.selectedServiceType);
                 const paymentMethod = this.selectedPaymentMethod;
-                const preferredDate = document.getElementById('preferred-date').value;
-                const preferredTime = document.getElementById('preferred-time').value;
+                const preferredDate = ASB.esc(document.getElementById('preferred-date').value);
+                const preferredTime = ASB.esc(document.getElementById('preferred-time').value);
                 const isUrgent = document.getElementById('is-urgent').checked;
-                const budgetMin = document.getElementById('budget-min').value;
-                const budgetMax = document.getElementById('budget-max').value;
+                const budgetMin = ASB.esc(document.getElementById('budget-min').value);
+                const budgetMax = ASB.esc(document.getElementById('budget-max').value);
 
                 let summaryHTML = `
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
@@ -1661,7 +1630,7 @@
                         </div>
 
                         <div style="margin-bottom: 15px;">
-                            <strong>Méthode de paiement:</strong> ${paymentMethod}
+                            <strong>Frais de mise en relation :</strong> 2 000 FCFA, à régler par T-Money ou Flooz à l'étape suivante
                         </div>
                 `;
 
@@ -1721,73 +1690,43 @@
                 loading.style.display = 'block';
 
                 try {
-                    // Étape 1: Traiter le paiement
-                    const paymentResult = await this.processPayment();
-                    
-                    if (!paymentResult.success) {
-                        throw new Error(paymentResult.error || 'Erreur lors du paiement');
+                    // Photos réduites avant envoi (limite de taille des requêtes)
+                    const photos = [];
+                    for (const photo of this.selectedPhotos) {
+                        photos.push(await ASB.compressImage(photo));
                     }
 
-                    // Étape 2: Créer la demande de service
-                    const formData = new FormData();
-                    
-                    // Données de base
-                    formData.append('category', document.getElementById('selected-category').value);
-                    formData.append('title', document.getElementById('title').value);
-                    formData.append('description', document.getElementById('description').value);
-                    formData.append('address', document.getElementById('address').value);
-                    formData.append('service_type', this.selectedServiceType);
-                    formData.append('preferred_date', document.getElementById('preferred-date').value);
-                    formData.append('preferred_time', document.getElementById('preferred-time').value);
-                    formData.append('is_urgent', document.getElementById('is-urgent').checked);
-                    formData.append('budget_min', document.getElementById('budget-min').value);
-                    formData.append('budget_max', document.getElementById('budget-max').value);
-                    formData.append('payment_method', this.selectedPaymentMethod);
-                    formData.append('payment_transaction_id', paymentResult.transaction_id);
+                    const payload = {
+                        category: document.getElementById('selected-category').value,
+                        title: document.getElementById('title').value,
+                        description: document.getElementById('description').value,
+                        address: document.getElementById('address').value,
+                        service_type: this.selectedServiceType,
+                        preferred_date: document.getElementById('preferred-date').value,
+                        preferred_time: document.getElementById('preferred-time').value,
+                        is_urgent: document.getElementById('is-urgent').checked,
+                        budget_min: document.getElementById('budget-min').value,
+                        budget_max: document.getElementById('budget-max').value,
+                        other_service_detail: document.getElementById('other-service-detail').value,
+                        photos
+                    };
 
-                    // Service "Autres"
-                    const otherDetail = document.getElementById('other-service-detail').value;
-                    if (otherDetail) {
-                        formData.append('other_service_detail', otherDetail);
-                    }
-
-                    // Photos
-                    this.selectedPhotos.forEach((photo, index) => {
-                        formData.append('photos', photo);
-                    });
-
-                    // Géolocalisation (si disponible)
+                    // Géolocalisation (si l'utilisateur l'accepte)
                     if (navigator.geolocation) {
                         try {
                             const position = await this.getCurrentPosition();
-                            formData.append('latitude', position.coords.latitude);
-                            formData.append('longitude', position.coords.longitude);
+                            payload.latitude = position.coords.latitude;
+                            payload.longitude = position.coords.longitude;
                         } catch (error) {
                             console.log('Géolocalisation non disponible');
                         }
                     }
 
-                    // Envoyer la demande
-                    const token = localStorage.getItem('auth_token');
-                    const response = await fetch(`${this.apiBase}/api/service-requests`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        this.showSuccess('Votre demande a été publiée avec succès ! Le paiement a été traité. Les prestataires vont pouvoir vous proposer leurs services.');
-                        
-                        setTimeout(() => {
-                            window.location.href = 'client_dashboard.html';
-                        }, 3000);
-                    } else {
-                        throw new Error(result.error || 'Erreur lors de la publication');
-                    }
+                    const result = await ASB.api('POST', '/service-requests', payload);
+                    this.showSuccess('Demande enregistrée ! Redirection vers le paiement des frais de mise en relation…');
+                    setTimeout(() => {
+                        window.location.href = 'paiement.html?ref=' + encodeURIComponent(result.payment_ref);
+                    }, 1200);
 
                 } catch (error) {
                     console.error('Erreur soumission:', error);
@@ -1798,37 +1737,11 @@
                 }
             }
 
-            async processPayment() {
-                try {
-                    const paymentData = {
-                        amount: 2000,
-                        method: this.selectedPaymentMethod,
-                        phone: document.getElementById('payment-phone').value,
-                        description: 'Frais de mise en relation AssibaService'
-                    };
-
-                    const response = await fetch(`${this.apiBase}/api/payments/process`, {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-                        },
-                        body: JSON.stringify(paymentData)
-                    });
-
-                    return await response.json();
-
-                } catch (error) {
-                    console.error('Erreur paiement:', error);
-                    return { success: false, error: 'Erreur lors du traitement du paiement' };
-                }
-            }
-
             getCurrentPosition() {
                 return new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        timeout: 10000,
-                        enableHighAccuracy: true
+                        timeout: 5000,
+                        maximumAge: 600000
                     });
                 });
             }
@@ -1954,6 +1867,13 @@
 
         // Initialisation
         const serviceManager = new ServiceRequestManager();
+
+        // Catégorie présélectionnée depuis l'accueil (?category=plomberie)
+        (function () {
+            const cat = new URLSearchParams(location.search).get('category');
+            const opt = cat && document.querySelector('.service-option[data-category="' + CSS.escape(cat) + '"]');
+            if (opt) opt.click();
+        })();
 
         // Navigation mobile
         document.getElementById('mobile-menu-toggle').addEventListener('click', function() {

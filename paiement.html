@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006B3F">
+<meta name="robots" content="noindex">
+<title>Paiement | AssibaService</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .pay-box{max-width:560px;margin:0 auto}
+  .amount{font-size:2rem;font-weight:800;color:#063A19;margin:4px 0 2px}
+  .steps{margin:10px 0 0;padding-left:20px}
+  .steps li{margin:6px 0}
+  .num{font-weight:800;font-size:1.1rem;color:#006B3F;white-space:nowrap}
+  .methods{display:flex;gap:10px;margin-bottom:12px}
+  .methods label{flex:1;border:2px solid #cfdcd3;border-radius:12px;padding:12px;text-align:center;font-weight:800;cursor:pointer;background:#fff}
+  .methods input{position:absolute;opacity:0}
+  .methods input:checked + span{color:#006B3F}
+  .methods label:has(input:checked){border-color:#006B3F;background:#EAF5EE}
+  .methods label:focus-within{box-shadow:0 0 0 3px rgba(0,107,63,.2)}
+</style>
+</head>
+<body class="app">
+<header class="main-header">
+  <div class="nav-container">
+    <a class="logo-container" href="index.html" style="text-decoration:none">
+      <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+      <span class="logo-text">AssibaService</span>
+    </a>
+    <div class="nav-actions" style="margin-left:auto"><a id="space-link" class="btn-login" href="login.html">Mon espace</a></div>
+  </div>
+</header>
+
+<main class="app-main">
+  <div class="pay-box">
+    <div class="app-title"><div><h1>Paiement sécurisé</h1><p>TMoney ou Flooz</p></div></div>
+    <div id="content"><p class="loading">Chargement du paiement…</p></div>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const { api, esc, fcfa, badge, Auth, homeFor } = ASB;
+  const ref = new URLSearchParams(location.search).get('ref') || '';
+  const box = document.getElementById('content');
+  const user = Auth.user();
+  if (user) {
+    const l = document.getElementById('space-link');
+    l.href = homeFor(user.role);
+  }
+  let polling = null;
+
+  function nextLink(p) {
+    if (p.purpose === 'assurance') return ['index.html', "Retour à l'accueil"];
+    if (user) return [homeFor(user.role), 'Aller à mon espace'];
+    return ['login.html', 'Se connecter'];
+  }
+
+  function render(p) {
+    const [href, label] = nextLink(p);
+    let html = `<div class="card">
+      <div class="card-row"><div><div class="meta">${esc(p.purpose_label)}</div>
+      <div class="amount">${fcfa(p.amount)}</div><div class="meta">Référence : <strong>${esc(p.ref)}</strong></div></div>
+      <div>${badge(p.status)}</div></div></div>`;
+
+    if (p.status === 'confirmed') {
+      html += `<div class="notice notice-ok"><strong>Paiement confirmé, merci !</strong>Votre opération est validée.</div>
+        <a class="btn btn-primary" href="${href}">${label}</a>`;
+      box.innerHTML = html;
+      return;
+    }
+    if (p.status === 'refunded' || p.status === 'rejected') {
+      html += `<div class="notice notice-bad"><strong>Ce paiement n'est plus actif.</strong>${esc(p.note || '')}</div>
+        <a class="btn btn-ghost" href="${href}">${label}</a>`;
+      box.innerHTML = html;
+      return;
+    }
+    if (p.status === 'submitted') {
+      html += `<div class="notice notice-info"><strong>Référence bien reçue.</strong>
+        Notre équipe vérifie votre paiement auprès de l'opérateur, en général en moins de 2 heures (8 h à 20 h).
+        Vous pouvez fermer cette page, le statut se met à jour dans votre espace.</div>`;
+    }
+    if (p.status === 'processing') {
+      html += `<div class="notice notice-info"><strong>Validez le paiement sur votre téléphone.</strong>
+        Un message de votre opérateur vous demande votre code secret Mobile Money. Cette page se met à jour toute seule.</div>`;
+    }
+    if (p.note && p.status === 'pending') {
+      html += `<div class="notice notice-warn"><strong>Attention</strong>${esc(p.note)}</div>`;
+    }
+
+    if (p.gateway === 'paygate' && p.status !== 'submitted') {
+      html += `<form class="card" id="pay-form">
+        <h3>Payer maintenant</h3>
+        <div class="methods" role="radiogroup" aria-label="Moyen de paiement">
+          <label><input type="radio" name="method" value="tmoney" required><span>T-Money</span></label>
+          <label><input type="radio" name="method" value="flooz"><span>Flooz</span></label>
+        </div>
+        <div class="field"><label for="phone">Numéro Mobile Money</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" required placeholder="90 00 00 00" value="${esc(user ? user.phone : '')}"></div>
+        <button class="btn btn-primary" type="submit" style="width:100%">Payer ${fcfa(p.amount)}</button>
+      </form>`;
+    } else if (p.status === 'pending' || p.status === 'submitted') {
+      const ins = p.instructions || {};
+      if (!ins.tmoney && !ins.flooz) {
+        html += `<div class="notice notice-warn"><strong>Paiement Mobile Money en cours d'activation.</strong>
+          Pour régler maintenant, appelez ou écrivez sur WhatsApp au <span class="num">+228 91 97 80 80</span>
+          en donnant la référence <strong>${esc(p.ref)}</strong>.</div>`;
+      } else {
+        html += `<div class="card"><h3>1. Envoyez ${fcfa(p.amount)}</h3><ul class="steps">`;
+        if (ins.tmoney) html += `<li><strong>T-Money</strong> : composez <strong>*145#</strong>, choisissez « Transfert d'argent » vers le <span class="num">${esc(ins.tmoney)}</span></li>`;
+        if (ins.flooz) html += `<li><strong>Flooz</strong> : composez <strong>*155#</strong>, choisissez « Transfert » vers le <span class="num">${esc(ins.flooz)}</span></li>`;
+        html += `</ul><p class="meta">Bénéficiaire : ${esc(ins.beneficiary)}. Envoyez exactement ${fcfa(p.amount)}.</p></div>
+        <form class="card" id="ref-form">
+          <h3>2. Indiquez la référence reçue par SMS</h3>
+          <div class="methods" role="radiogroup" aria-label="Opérateur utilisé">
+            <label><input type="radio" name="method" value="tmoney" required ${ins.tmoney ? '' : 'disabled'}><span>T-Money</span></label>
+            <label><input type="radio" name="method" value="flooz" ${ins.flooz ? '' : 'disabled'}><span>Flooz</span></label>
+          </div>
+          <div class="field"><label for="phone">Numéro qui a payé</label>
+            <input id="phone" name="phone" type="tel" inputmode="tel" required placeholder="90 00 00 00" value="${esc(user ? user.phone : '')}"></div>
+          <div class="field"><label for="txn">Référence de la transaction</label>
+            <input id="txn" name="transaction_id" required maxlength="60" autocomplete="off" placeholder="Ex. : TM241028.1530.A12345">
+            <div class="hint">Elle figure dans le SMS de confirmation de votre opérateur.</div></div>
+          <button class="btn btn-primary" type="submit" style="width:100%">${p.status === 'submitted' ? 'Corriger la référence' : 'Envoyer la référence'}</button>
+        </form>`;
+      }
+    }
+    box.innerHTML = html;
+
+    const refForm = document.getElementById('ref-form');
+    if (refForm) refForm.onsubmit = async e => {
+      e.preventDefault();
+      const btn = refForm.querySelector('button[type=submit]');
+      const data = Object.fromEntries(new FormData(refForm).entries());
+      const out = await ASB.run(btn, () => api('POST', `/payments/${encodeURIComponent(ref)}/submit`, data), 'Référence envoyée');
+      if (out) render(out.payment);
+    };
+    const payForm = document.getElementById('pay-form');
+    if (payForm) payForm.onsubmit = async e => {
+      e.preventDefault();
+      const btn = payForm.querySelector('button[type=submit]');
+      const data = Object.fromEntries(new FormData(payForm).entries());
+      const out = await ASB.run(btn, () => api('POST', `/payments/${encodeURIComponent(ref)}/initiate`, data));
+      if (out) { render(out.payment); startPolling(); }
+    };
+    if (p.status === 'processing') startPolling();
+  }
+
+  function startPolling() {
+    if (polling) return;
+    let n = 0;
+    polling = setInterval(async () => {
+      n++;
+      try {
+        const out = await api('POST', `/payments/${encodeURIComponent(ref)}/check`);
+        if (out.payment.status !== 'processing' || n > 36) { clearInterval(polling); polling = null; }
+        render(out.payment);
+      } catch (_) {}
+    }, 5000);
+  }
+
+  async function load() {
+    if (!/^ASB-[A-Z0-9]{10}$/.test(ref)) {
+      box.innerHTML = '<div class="notice notice-bad"><strong>Lien de paiement invalide.</strong>Vérifiez le lien reçu.</div>';
+      return;
+    }
+    try {
+      const out = await api('GET', `/payments/${encodeURIComponent(ref)}`);
+      render(out.payment);
+    } catch (e) {
+      if (/connecter/i.test(e.message)) {
+        location.replace('login.html?next=' + encodeURIComponent('paiement.html?ref=' + ref));
+        return;
+      }
+      box.innerHTML = `<div class="notice notice-bad"><strong>Paiement indisponible.</strong>${esc(e.message)}</div>`;
+    }
+  }
+  load();
+})();
+</script>
+</body>
+</html>

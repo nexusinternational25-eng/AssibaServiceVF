@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006B3F">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration | AssibaService</title>
+<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .app-main{max-width:1280px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .filters select,.filters input{padding:8px 10px;border:1.5px solid #cfdcd3;border-radius:8px;font:inherit}
+  td .btn{margin:2px 0}
+  .nowrap{white-space:nowrap}
+</style>
+</head>
+<body class="app">
+<header class="main-header">
+  <div class="nav-container">
+    <a class="logo-container" href="index.html" style="text-decoration:none">
+      <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+      <span class="logo-text">AssibaService · Admin</span>
+    </a>
+    <div class="nav-actions" style="margin-left:auto"><button class="btn-login" id="logout" type="button">Déconnexion</button></div>
+  </div>
+</header>
+
+<main class="app-main">
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <section id="panel"><p class="loading">Chargement…</p></section>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const { api, esc, fcfa, date, dateTime, badge, Auth, toast, dialog, run } = ASB;
+  if (!Auth.require(['admin'])) return;
+  document.getElementById('logout').onclick = () => Auth.logout();
+
+  const PURPOSE = { mise_en_relation: 'Mise en relation', prestation: 'Prestation (séquestre)', inscription: 'Inscription', abonnement: 'Abonnement', assurance: 'Assurance' };
+  const PLAN = { standard: 'Standard', basic: 'Basic', pro: 'Pro' };
+  const TABS = [
+    ['home', 'Tableau de bord', 'todo_total'],
+    ['payments', 'Paiements', 'payments_to_check'],
+    ['providers', 'Prestataires', 'providers_to_validate'],
+    ['users', 'Utilisateurs'],
+    ['requests', 'Demandes'],
+    ['disputes', 'Litiges', 'disputes_open'],
+    ['withdrawals', 'Retraits', 'withdrawals_pending'],
+    ['passwords', 'Mots de passe', 'password_requests'],
+    ['subs', 'Abonnements et assurance'],
+    ['partners', 'Partenaires assurance'],
+    ['account', 'Mon compte'],
+  ];
+  let todo = {};
+  let current = 'home';
+  const panel = document.getElementById('panel');
+
+  function renderTabs() {
+    document.getElementById('tabs').innerHTML = TABS.map(([id, label, k]) =>
+      `<button class="tab" role="tab" aria-selected="${id === current}" data-tab="${id}">${label}${k && todo[k] ? `<span class="count">${todo[k]}</span>` : ''}</button>`).join('');
+    document.querySelectorAll('.tab').forEach(t => t.onclick = () => go(t.dataset.tab));
+  }
+
+  async function refreshTodo() {
+    const o = await api('GET', '/admin/overview');
+    todo = o.todo;
+    todo.todo_total = o.todo.payments_to_check + o.todo.providers_to_validate + o.todo.disputes_open + o.todo.withdrawals_pending + o.todo.password_requests;
+    renderTabs();
+    return o;
+  }
+
+  async function go(tab) {
+    current = tab;
+    renderTabs();
+    panel.innerHTML = '<p class="loading">Chargement…</p>';
+    try { await VIEWS[tab](); } catch (e) { panel.innerHTML = `<div class="notice notice-bad"><strong>Erreur</strong>${esc(e.message)}</div>`; }
+  }
+  const reload = () => { refreshTodo().catch(() => {}); go(current); };
+
+  const table = (head, rows) => rows.length
+    ? `<div class="table-wrap"><table class="data"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`
+    : '<div class="card empty">Rien à afficher.</div>';
+
+  const VIEWS = {
+    async home() {
+      const o = await refreshTodo();
+      const sum = (arr, f) => arr.filter(f).reduce((s, x) => s + x.n, 0);
+      const t = o.todo;
+      panel.innerHTML = `
+        <div class="stats">
+          <div class="stat"><div class="v">${fcfa(o.revenue.fees)}</div><div class="l">Frais encaissés (mise en relation, inscriptions, abonnements, assurance)</div></div>
+          <div class="stat"><div class="v">${fcfa(o.revenue.commissions)}</div><div class="l">Commissions sur missions</div></div>
+          <div class="stat"><div class="v">${fcfa(o.revenue.escrow)}</div><div class="l">Argent clients en séquestre</div></div>
+          <div class="stat"><div class="v">${sum(o.users, x => x.role === 'client')}</div><div class="l">Clients</div></div>
+          <div class="stat"><div class="v">${sum(o.users, x => x.role === 'prestataire' && x.status === 'active')}</div><div class="l">Prestataires actifs</div></div>
+          <div class="stat"><div class="v">${sum(o.requests, x => x.status === 'completed')}</div><div class="l">Missions terminées</div></div>
+        </div>
+        <div class="card"><h2>À traiter</h2>
+          <div class="actions">
+            <button class="btn ${t.payments_to_check ? 'btn-primary' : 'btn-ghost'}" data-go="payments">${t.payments_to_check} paiement(s) à vérifier</button>
+            <button class="btn ${t.providers_to_validate ? 'btn-primary' : 'btn-ghost'}" data-go="providers">${t.providers_to_validate} prestataire(s) à valider</button>
+            <button class="btn ${t.disputes_open ? 'btn-danger' : 'btn-ghost'}" data-go="disputes">${t.disputes_open} litige(s)</button>
+            <button class="btn ${t.withdrawals_pending ? 'btn-primary' : 'btn-ghost'}" data-go="withdrawals">${t.withdrawals_pending} retrait(s) à payer</button>
+            <button class="btn ${t.password_requests ? 'btn-primary' : 'btn-ghost'}" data-go="passwords">${t.password_requests} mot(s) de passe oublié(s)</button>
+          </div></div>
+        <div class="card"><h2>Demandes par statut</h2><div class="actions">${o.requests.map(r => `${badge(r.status)} <strong>${r.n}</strong>`).join(' &nbsp; ') || '<span class="meta">Aucune demande</span>'}</div></div>`;
+      panel.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+    },
+
+    async payments() {
+      const status = panel.dataset.payStatus || 'submitted';
+      const out = await api('GET', '/admin/payments' + (status === 'all' ? '' : '?status=' + status));
+      panel.innerHTML = `<div class="notice notice-info"><strong>Vérification des paiements manuels</strong>
+        Avant de confirmer, vérifiez dans l'historique T-Money ou Flooz du numéro marchand que la référence et le montant correspondent.</div>
+        <div class="filters"><select id="ps" aria-label="Filtrer par statut">
+          ${[['submitted', 'À vérifier'], ['pending', 'Non payés'], ['processing', 'En cours (PayGate)'], ['confirmed', 'Confirmés'], ['refunded', 'À rembourser / remboursés'], ['all', 'Tous']].map(([v, l]) => `<option value="${v}" ${v === status ? 'selected' : ''}>${l}</option>`).join('')}
+        </select></div>` +
+        table(['Date', 'Référence', 'Objet', 'Montant', 'Payeur', 'Transaction', 'Statut', ''], out.payments.map(p => `<tr>
+          <td class="nowrap">${dateTime(p.submitted_at || p.created_at)}</td><td class="nowrap">${esc(p.ref)}</td>
+          <td>${esc(PURPOSE[p.purpose])}</td><td class="money nowrap">${fcfa(p.amount)}</td>
+          <td>${esc(p.user_name || '')}<div class="meta">${esc(ASB.tel(p.payer_phone || p.user_phone || ''))}</div></td>
+          <td>${p.method ? esc(p.method === 'flooz' ? 'Flooz' : 'T-Money') : ''}<div><strong>${esc(p.external_ref || '')}</strong></div>${p.note ? `<div class="meta">${esc(p.note)}</div>` : ''}</td>
+          <td>${badge(p.status)}</td>
+          <td>${['submitted', 'processing', 'pending'].includes(p.status) ? `<button class="btn btn-primary btn-sm" data-confirm="${p.id}" data-amount="${p.amount}" data-ref="${esc(p.external_ref || '')}">Confirmer</button>` : ''}
+              ${['submitted', 'processing'].includes(p.status) ? `<button class="btn btn-ghost btn-sm" data-reject="${p.id}">Refuser</button>` : ''}</td></tr>`));
+      panel.querySelector('#ps').onchange = e => { panel.dataset.payStatus = e.target.value; go('payments'); };
+      panel.querySelectorAll('[data-confirm]').forEach(b => b.onclick = async () => {
+        const ok = await dialog({ title: 'Confirmer le paiement ?', html: `<p>Vous confirmez avoir reçu <strong>${fcfa(b.dataset.amount)}</strong>${b.dataset.ref ? ` avec la référence <strong>${esc(b.dataset.ref)}</strong>` : ''}. Cette action débloque la suite (diffusion de la demande, activation de l'abonnement…).</p>`, submitLabel: 'Confirmer' });
+        if (ok && await run(b, () => api('POST', `/admin/payments/${b.dataset.confirm}/confirm`), 'Paiement confirmé')) reload();
+      });
+      panel.querySelectorAll('[data-reject]').forEach(b => b.onclick = async () => {
+        const v = await dialog({ title: 'Refuser la référence', danger: true, submitLabel: 'Refuser', html: '<p>Le client pourra saisir une autre référence.</p><div class="field"><label for="note">Message affiché au client</label><input id="note" name="note" maxlength="300" value="Référence introuvable chez l’opérateur. Vérifiez votre SMS."></div>' });
+        if (v && await run(b, () => api('POST', `/admin/payments/${b.dataset.reject}/reject`, v), 'Référence refusée')) reload();
+      });
+    },
+
+    async providers() { await usersView('prestataire', 'pending'); },
+    async users() { await usersView('', ''); },
+
+    async requests() {
+      const status = panel.dataset.reqStatus || '';
+      const out = await api('GET', '/admin/requests' + (status ? '?status=' + status : ''));
+      panel.innerHTML = `<div class="filters"><select id="rs" aria-label="Filtrer par statut"><option value="">Tous les statuts</option>
+        ${['awaiting_payment', 'open', 'accepted', 'in_progress', 'done', 'completed', 'dispute', 'refunded', 'cancelled'].map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>` +
+        table(['N°', 'Demande', 'Client', 'Prestataire', 'Montant', 'Statut', ''], out.requests.map(r => `<tr>
+          <td>${r.id}</td><td><strong>${esc(r.title)}</strong><div class="meta">${esc(r.category_label)} · ${esc(r.city || '')} · ${date(r.created_at)} · ${r.offers_count} offre(s)</div></td>
+          <td>${esc(r.client_name)}<div class=\"meta\">${esc(ASB.tel(r.client_phone))}</div></td>
+          <td>${esc(r.provider_name || '')}<div class=\"meta\">${esc(ASB.tel(r.provider_phone || ''))}</div></td>
+          <td class="money nowrap">${r.agreed_amount ? fcfa(r.agreed_amount) : ''}</td><td>${badge(r.status)}</td>
+          <td>${r.status === 'done' ? `<button class="btn btn-ghost btn-sm" data-release="${r.id}">Libérer le paiement</button>` : ''}</td></tr>`));
+      panel.querySelector('#rs').onchange = e => { panel.dataset.reqStatus = e.target.value; go('requests'); };
+      panel.querySelectorAll('[data-release]').forEach(b => b.onclick = async () => {
+        const ok = await dialog({ title: 'Libérer le paiement ?', html: '<p>À utiliser si le client ne valide pas une mission terminée (après l’avoir contacté). Le prestataire est crédité.</p>', submitLabel: 'Libérer' });
+        if (ok && await run(b, () => api('POST', `/admin/requests/${b.dataset.release}/release`), 'Paiement libéré')) reload();
+      });
+    },
+
+    async disputes() {
+      const out = await api('GET', '/admin/disputes');
+      panel.innerHTML = out.disputes.length ? out.disputes.map(d => `<article class="card">
+        <div class="card-row"><div><h3>Mission n°${d.request_id} : ${esc(d.title)}</h3>
+          <div class="meta">Ouvert par ${esc(d.opened_by_name)} le ${dateTime(d.created_at)} · Montant en jeu : ${fcfa(d.agreed_amount)}</div></div>
+          <div>${badge(d.status === 'open' ? 'open_dispute' : 'resolved')}</div></div>
+        <p style="white-space:pre-line">${esc(d.reason)}</p>
+        <p class="meta">Client : ${esc(d.client_name)} (${esc(ASB.tel(d.client_phone))}) · Prestataire : ${esc(d.provider_name || '')} (${esc(d.provider_phone || '')})</p>
+        ${d.status === 'resolved' ? `<p><strong>Décision :</strong> ${d.decision === 'release' ? 'payé au prestataire' : 'remboursement du client'}. ${esc(d.resolution)}</p>` :
+          `<div class="actions"><button class="btn btn-primary btn-sm" data-resolve="${d.id}" data-d="release">Payer le prestataire</button>
+           <button class="btn btn-danger btn-sm" data-resolve="${d.id}" data-d="refund">Rembourser le client</button></div>`}
+      </article>`).join('') : '<div class="card empty">Aucun litige.</div>';
+      panel.querySelectorAll('[data-resolve]').forEach(b => b.onclick = async () => {
+        const refund = b.dataset.d === 'refund';
+        const v = await dialog({ title: refund ? 'Rembourser le client' : 'Payer le prestataire', danger: refund, submitLabel: 'Valider la décision',
+          html: `${refund ? '<p>Le paiement passe en « à rembourser ». Effectuez le transfert au client puis gardez la trace.</p>' : '<p>Le prestataire est crédité (commission déduite).</p>'}
+          <div class="field"><label for="res">Explication (visible par le client)</label><textarea id="res" name="resolution" rows="3" required maxlength="2000"></textarea></div>` });
+        if (v && await run(b, () => api('POST', `/admin/disputes/${b.dataset.resolve}/resolve`, { decision: b.dataset.d, resolution: v.resolution }), 'Litige résolu')) reload();
+      });
+    },
+
+    async withdrawals() {
+      const out = await api('GET', '/admin/withdrawals');
+      panel.innerHTML = table(['Date', 'Prestataire', 'Montant', 'Vers', 'Statut', ''], out.withdrawals.map(w => `<tr>
+        <td class="nowrap">${dateTime(w.created_at)}</td><td>${esc(w.provider_name)}</td><td class="money nowrap">${fcfa(w.amount)}</td>
+        <td>${esc(w.method === 'flooz' ? 'Flooz' : 'T-Money')}<div><strong>${esc(ASB.tel(w.phone))}</strong></div></td>
+        <td>${badge(w.status)}${w.external_ref ? `<div class="meta">Réf. ${esc(w.external_ref)}</div>` : ''}${w.note ? `<div class="meta">${esc(w.note)}</div>` : ''}</td>
+        <td>${w.status === 'pending' ? `<button class="btn btn-primary btn-sm" data-paid="${w.id}" data-amount="${w.amount}" data-phone="${esc(w.phone)}">Marquer payé</button>
+          <button class="btn btn-ghost btn-sm" data-refuse="${w.id}">Refuser</button>` : ''}</td></tr>`));
+      panel.querySelectorAll('[data-paid]').forEach(b => b.onclick = async () => {
+        const v = await dialog({ title: 'Retrait effectué', submitLabel: 'Enregistrer', html: `<p>Envoyez <strong>${fcfa(b.dataset.amount)}</strong> au <strong>${esc(ASB.tel(b.dataset.phone))}</strong>, puis notez la référence du transfert.</p>
+          <div class="field"><label for="er">Référence du transfert</label><input id="er" name="external_ref" required maxlength="60"></div>` });
+        if (v && await run(b, () => api('POST', `/admin/withdrawals/${b.dataset.paid}/paid`, v), 'Retrait enregistré')) reload();
+      });
+      panel.querySelectorAll('[data-refuse]').forEach(b => b.onclick = async () => {
+        const v = await dialog({ title: 'Refuser le retrait', danger: true, submitLabel: 'Refuser', html: '<p>Le montant revient sur le solde du prestataire.</p><div class="field"><label for="nt">Motif</label><input id="nt" name="note" required maxlength="300"></div>' });
+        if (v && await run(b, () => api('POST', `/admin/withdrawals/${b.dataset.refuse}/reject`, v), 'Retrait refusé')) reload();
+      });
+    },
+
+    async passwords() {
+      const out = await api('GET', '/admin/password-requests');
+      panel.innerHTML = `<div class="notice notice-info"><strong>Mots de passe oubliés</strong>Vérifiez l'identité de la personne (appel au numéro du compte), générez le lien puis envoyez-le par WhatsApp ou SMS. Le lien est valable 24 heures et ne sert qu'une fois.</div>` +
+        table(['Date', 'Personne', 'Contact', ''], out.requests.map(r => `<tr><td>${dateTime(r.created_at)}</td>
+          <td>${esc(r.first_name)} ${esc(r.last_name)}</td><td>${esc(ASB.tel(r.phone))}<div class="meta">${esc(r.email || '')}</div></td>
+          <td><button class="btn btn-primary btn-sm" data-link="${r.user_id}">Générer le lien</button></td></tr>`));
+      panel.querySelectorAll('[data-link]').forEach(b => b.onclick = () => resetLink(b, b.dataset.link));
+    },
+
+    async subs() {
+      const out = await api('GET', '/admin/subscriptions');
+      const ins = { rc_professionnelle: 'RC Professionnelle', accident_travail: 'Accident de travail', pack_complet: 'Pack complet' };
+      panel.innerHTML = '<h2>Abonnements prestataires</h2>' +
+        table(['Date', 'Formule', 'Nom', 'Contact', 'Paiement', 'Validité'], out.subscriptions.map(s => `<tr>
+          <td class="nowrap">${date(s.created_at)}</td><td>${esc(PLAN[s.plan] || s.plan)}</td><td>${esc(s.name)}${s.user_id ? '' : '<div class="meta">sans compte</div>'}</td>
+          <td>${esc(ASB.tel(s.phone))}<div class="meta">${esc(s.email || '')}</div></td><td>${badge(s.payment_status || s.status)}<div class="meta">${esc(s.payment_ref || '')}</div></td>
+          <td>${s.ends_at ? 'jusqu’au ' + date(s.ends_at) : (s.status === 'active' ? 'définitif' : '')}</td></tr>`)) +
+        '<h2 style="margin-top:24px">Assurances</h2>' +
+        table(['Date', 'Produit', 'Nom', 'Contact', 'Montant', 'Paiement', 'Validité'], out.insurance.map(s => `<tr>
+          <td class="nowrap">${date(s.created_at)}</td><td>${esc(ins[s.insurance_type] || s.insurance_type)}</td><td>${esc(s.name)}<div class="meta">${esc(s.business_type || '')}</div></td>
+          <td>${esc(ASB.tel(s.phone))}<div class="meta">${esc(s.email || '')}</div></td><td class="money">${fcfa(s.amount)}</td>
+          <td>${badge(s.payment_status || s.status)}<div class="meta">${esc(s.payment_ref || '')}</div></td><td>${s.ends_at ? 'jusqu’au ' + date(s.ends_at) : ''}</td></tr>`));
+    },
+
+    async partners() {
+      const out = await api('GET', '/admin/insurance/partners');
+      panel.innerHTML = table(['Identifiant', 'Nom', 'Description', 'Actif', ''], out.partners.map(p => `<tr>
+        <td>${esc(p.id)}</td><td>${esc(p.name)}</td><td>${esc(p.description || '')}</td><td>${p.active ? 'Oui' : 'Non'}</td>
+        <td><button class="btn btn-ghost btn-sm" data-edit='${esc(JSON.stringify(p))}'>Modifier</button>
+            <button class="btn btn-ghost btn-sm" data-del="${esc(p.id)}">Supprimer</button></td></tr>`)) +
+        '<div class="actions"><button class="btn btn-primary" id="add-partner">Ajouter un partenaire</button></div>';
+      const form = p => `<div class="field"><label for="pid">Identifiant</label><input id="pid" name="id" required maxlength="40" value="${esc(p.id || '')}" ${p.id ? 'readonly' : ''}></div>
+        <div class="field"><label for="pn">Nom</label><input id="pn" name="name" required maxlength="120" value="${esc(p.name || '')}"></div>
+        <div class="field"><label for="pl">Sigle</label><input id="pl" name="logo" maxlength="20" value="${esc(p.logo || '')}"></div>
+        <div class="field"><label for="pd">Description</label><input id="pd" name="description" maxlength="300" value="${esc(p.description || '')}"></div>
+        <div class="field"><label for="pa">Actif</label><select id="pa" name="active"><option value="1">Oui</option><option value="0" ${p.active === false ? 'selected' : ''}>Non</option></select></div>`;
+      const save = async (p, btn) => {
+        const v = await dialog({ title: p.id ? 'Modifier le partenaire' : 'Nouveau partenaire', html: form(p), submitLabel: 'Enregistrer' });
+        if (!v) return;
+        const body = { ...v, active: v.active === '1' };
+        if (await run(btn, () => p.id ? api('PUT', `/admin/insurance/partners/${encodeURIComponent(p.id)}`, body) : api('POST', '/admin/insurance/partners', body), 'Partenaire enregistré')) go('partners');
+      };
+      panel.querySelector('#add-partner').onclick = e => save({}, e.target);
+      panel.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => save(JSON.parse(b.dataset.edit), b));
+      panel.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+        const ok = await dialog({ title: 'Supprimer ce partenaire ?', danger: true, submitLabel: 'Supprimer' });
+        if (ok && await run(b, () => api('DELETE', `/admin/insurance/partners/${encodeURIComponent(b.dataset.del)}`), 'Partenaire supprimé')) go('partners');
+      });
+    },
+  };
+
+  VIEWS.account = async function () {
+    const { user: u } = await api('GET', '/auth/me');
+    panel.innerHTML = `<form class="card" id="pw-form" style="max-width:480px"><h2>Mon mot de passe</h2>
+      <p class="meta">Compte : ${esc(ASB.tel(u.phone))}${u.email ? ' · ' + esc(u.email) : ''}</p>
+      <div class="field"><label for="cp">Mot de passe actuel</label><input id="cp" name="current_password" type="password" required autocomplete="current-password"></div>
+      <div class="field"><label for="np">Nouveau mot de passe (12 caractères conseillés)</label><input id="np" name="new_password" type="password" required minlength="8" autocomplete="new-password"></div>
+      <button class="btn btn-primary" type="submit">Changer le mot de passe</button></form>`;
+    panel.querySelector('#pw-form').onsubmit = async e => {
+      e.preventDefault();
+      const out = await run(e.submitter, () => api('POST', '/auth/change-password', Object.fromEntries(new FormData(e.target).entries())), 'Mot de passe changé');
+      if (out) { Auth.save(out.token, Auth.user()); e.target.reset(); }
+    };
+  };
+
+  async function resetLink(btn, userId) {
+    const out = await run(btn, () => api('POST', `/admin/users/${userId}/reset-link`));
+    if (!out) return;
+    await dialog({ title: 'Lien de réinitialisation', submitLabel: 'Fermer', html: `<p>Envoyez ce lien à la personne (valable 24 h, usage unique) :</p>
+      <div class="field"><input readonly value="${esc(out.link)}" onfocus="this.select()"></div>
+      <a class="btn btn-accent btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Votre lien pour choisir un nouveau mot de passe AssibaService : ' + out.link)}">Envoyer par WhatsApp</a>` });
+    reload();
+  }
+
+  async function usersView(role, defaultStatus) {
+    const key = role || 'all';
+    const st = panel.dataset['st' + key] !== undefined ? panel.dataset['st' + key] : defaultStatus;
+    const q = panel.dataset['q' + key] || '';
+    const params = new URLSearchParams();
+    if (role) params.set('role', role);
+    if (st) params.set('status', st);
+    if (q) params.set('q', q);
+    const out = await api('GET', '/admin/users?' + params);
+    panel.innerHTML = `${role ? `<div class="notice notice-info"><strong>Validation des prestataires</strong>Vérifiez que l'inscription est payée, que la pièce d'identité est lisible et correspond au nom, puis appelez la personne avant d'activer son compte.</div>` : ''}
+      <form class="filters" id="uf"><select name="status" aria-label="Statut"><option value="">Tous les statuts</option>
+        ${[['pending', 'En attente'], ['active', 'Actifs'], ['suspended', 'Suspendus']].map(([v, l]) => `<option value="${v}" ${v === st ? 'selected' : ''}>${l}</option>`).join('')}</select>
+        <input name="q" placeholder="Nom, téléphone, e-mail" value="${esc(q)}" aria-label="Recherche"><button class="btn btn-ghost btn-sm">Filtrer</button></form>` +
+      table(['Personne', 'Contact', role ? 'Activité' : 'Rôle', 'Statut', 'Actions'], out.users.map(u => {
+        const p = u.provider;
+        return `<tr><td><strong>${esc(u.name)}</strong><div class="meta">inscrit le ${date(u.created_at)}</div></td>
+          <td>${esc(ASB.tel(u.phone))}<div class="meta">${esc(u.email || '')}</div></td>
+          <td>${p ? `${esc(p.business_name || '')}<div class="meta">${esc(p.categories.join(', '))}</div>
+              <div class="meta">Formule ${esc(PLAN[p.plan] || p.plan)} · inscription ${p.registration_paid ? '<strong>payée</strong>' : 'non payée'}${p.rating_count ? ' · ' + p.rating_avg.toFixed(1) + '/5' : ''}${u.balance ? ' · solde ' + fcfa(u.balance) : ''}</div>
+              ${p.id_document_url ? `<button class="btn btn-ghost btn-sm" data-doc="${esc(p.id_document_url)}">Voir la pièce d'identité</button>` : '<div class="meta">Pièce d’identité non envoyée</div>'}`
+            : esc(u.role)}</td>
+          <td>${badge(u.status)}</td>
+          <td>${u.role !== 'admin' ? `
+            ${u.status !== 'active' ? `<button class="btn btn-primary btn-sm" data-status="active" data-id="${u.id}" data-paid="${p ? p.registration_paid : true}">Activer</button>` : ''}
+            ${u.status !== 'suspended' ? `<button class="btn btn-ghost btn-sm" data-status="suspended" data-id="${u.id}">Suspendre</button>` : ''}
+            <button class="btn btn-ghost btn-sm" data-link="${u.id}">Lien mot de passe</button>` : ''}</td></tr>`;
+      }));
+    panel.querySelector('#uf').onsubmit = e => {
+      e.preventDefault();
+      const v = Object.fromEntries(new FormData(e.target).entries());
+      panel.dataset['st' + key] = v.status; panel.dataset['q' + key] = v.q;
+      go(current);
+    };
+    panel.querySelectorAll('[data-doc]').forEach(b => b.onclick = async () => {
+      try {
+        const url = await ASB.protectedImage(b.dataset.doc);
+        window.open(url, '_blank', 'noopener');
+      } catch (e) { toast(e.message, 'bad'); }
+    });
+    panel.querySelectorAll('[data-status]').forEach(b => b.onclick = async () => {
+      const activate = b.dataset.status === 'active';
+      let force = false;
+      if (activate && b.dataset.paid === 'false') {
+        const ok = await dialog({ title: 'Inscription non payée', danger: true, submitLabel: 'Activer quand même', html: "<p>Les frais d'inscription de ce prestataire ne sont pas réglés. L'activer quand même ?</p>" });
+        if (!ok) return;
+        force = true;
+      } else {
+        const ok = await dialog({ title: activate ? 'Activer ce compte ?' : 'Suspendre ce compte ?', danger: !activate, submitLabel: activate ? 'Activer' : 'Suspendre',
+          html: activate ? '' : '<p>La personne est déconnectée immédiatement et ne peut plus se connecter.</p>' });
+        if (!ok) return;
+      }
+      if (await run(b, () => api('POST', `/admin/users/${b.dataset.id}/status`, { status: b.dataset.status, force }), activate ? 'Compte activé' : 'Compte suspendu')) reload();
+    });
+    panel.querySelectorAll('[data-link]').forEach(b => b.onclick = () => resetLink(b, b.dataset.link));
+  }
+
+  refreshTodo().then(() => go('home')).catch(e => { panel.innerHTML = `<div class="notice notice-bad"><strong>Erreur</strong>${esc(e.message)}</div>`; });
+})();
+</script>
+</body>
+</html>
