@@ -72,12 +72,13 @@ jobs:
             adb install -r /tmp/app.apk
             adb logcat -c
             adb shell am start -W -n com.assibaservice.app/.MainActivity
-            sleep 40
-            adb shell pidof com.assibaservice.app && echo "APPLICATION EN COURS : OK" || echo "APPLICATION ARRETEE"
             mkdir -p android/dist/test
-            adb exec-out screencap -p > android/dist/test/accueil.png
-            adb shell input keyevent 82 || true
-            adb logcat -d -s AndroidRuntime:E chromium:E > android/dist/test/erreurs.txt || true
+            sleep 30; adb exec-out screencap -p > android/dist/test/accueil-30s.png
+            sleep 45; adb exec-out screencap -p > android/dist/test/accueil-75s.png
+            sleep 45; adb exec-out screencap -p > android/dist/test/accueil.png
+            adb shell pidof com.assibaservice.app && echo "APPLICATION EN COURS : OK" || echo "APPLICATION ARRETEE"
+            adb logcat -d -s AndroidRuntime:E chromium:V cr_Console:V > android/dist/test/journal.txt || true
+            adb logcat -d -s AndroidRuntime:E > android/dist/test/erreurs.txt || true
             grep -c "FATAL EXCEPTION" android/dist/test/erreurs.txt && exit 1 || echo "Aucun plantage"
       - name: Enregistrement de la capture
         if: always()
