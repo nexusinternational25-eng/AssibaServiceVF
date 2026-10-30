@@ -48,6 +48,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
+        // Barres système aux couleurs AssibaService, icônes claires
+        getWindow().setStatusBarColor(Color.parseColor("#006B3F"));
+        getWindow().setNavigationBarColor(Color.parseColor("#004D2C"));
+        getWindow().getDecorView().setSystemUiVisibility(0);
 
         FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(Color.WHITE);
