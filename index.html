@@ -102,31 +102,32 @@ a.card{color:inherit;text-decoration:none}
 </style>
 
 <script defer src="assets/pwa-install.js"></script>
+<link rel="stylesheet" href="assets/common.css">
 </head><body>
 
-<div class="asb-legal-topbar" style="background:#f6f7f9;border-bottom:1px solid #e6e7eb;padding:.5rem 1rem;font-size:.9rem;text-align:center;">
-  En utilisant cette plateforme, vous acceptez nos 
-  <a href="cgu.html" target="_blank" rel="noopener">CGU</a> et notre 
-  <a href="politique-confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a>. 
-  <a href="assets/docs/CGU_AssibaService.pdf" download style="margin-left:.75rem;">Télécharger les CGU (PDF)</a>
-  <a href="assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Politique (PDF)</a>
-</div>
 
-<header class='header' role='banner'>
-  <div class='container row'>
-    <div class='brand' aria-label='AssibaService'>
-      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
-      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+<header class="main-header">
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="nav-container">
+      <a class="logo-container" href="index.html" style="text-decoration:none">
+        <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+        <span class="logo-text">AssibaService</span>
+      </a>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="fonctionnement.html" class="nav-link">Comment ça marche</a>
+        <a href="apropos.html" class="nav-link">À propos</a>
+        <a href="assurance.html" class="nav-link">Assurance</a>
+        <a href="formation.html" class="nav-link">Formation</a>
+        <a href="abonnements.html" class="nav-link">Abonnements</a>
+      </div>
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn-login">Connexion</a>
+        <a href="register_client.html" class="btn-register">Inscription</a>
+      </div>
+      <div class="mobile-menu-toggle" id="mobile-menu-toggle" data-site-nav><span></span><span></span><span></span></div>
     </div>
-    <nav aria-label='Navigation principale'>
-      <a href='index.html'>Accueil</a>
-      <a href='apropos.html'>À propos</a>
-      <a href='fonctionnement.html'>Comment ça marche</a>
-      <a href='cgu.html'>CGU</a>
-      <a href='politique-confidentialite.html'>Confidentialité</a>
-      <a href='login.html' id='nav-account'>Connexion</a>
-    </nav>
-  </div>
+  </nav>
 </header>
 <div id="pwaInstallBar" style="display:none;position:sticky;top:0;z-index:999;background:#0e5f0e;color:#fff;padding:10px 14px;align-items:center;gap:12px;justify-content:space-between">
   <div style="font-weight:700">Installer AssibaService</div>
@@ -140,15 +141,15 @@ a.card{color:inherit;text-decoration:none}
   <div class='container inner'>
     <div class='kicker'>🇹🇬 Plateforme 100% togolaise</div>
     <h1>AssibaService — Votre satisfaction, notre priorité</h1>
-    <p>Paiement sécurisé (en attente jusqu’à validation du service), prestataires vérifiés, géolocalisation intelligente.</p>
+    <p>Paiement sécurisé (en attente jusqu’à validation du service), prestataires vérifiés, suivi de chaque demande depuis votre téléphone.</p>
     <div class='cta-wrap'>
       <a class='btn btn-primary' href='form_client.html'>🛠️ Demander un service</a>
       <a class='btn btn-danger' href='register_prestataire.html'>🤝 Devenir prestataire</a>
-      <button class='btn btn-install' onclick='window.installPWA && installPWA()' aria-label='Installer AssibaService'>📲 Installer AssibaService</button>
+      <a data-install class='btn btn-install' href='app.html'>📲 Application Android</a>
     </div>
   </div>
 </section>
-<div class='install-fab'><button class='btn btn-install' onclick='window.installPWA && installPWA()' aria-label='Installer AssibaService'>📲 Installer</button></div>
+<div class='install-fab'><button data-install class='btn btn-install' onclick='window.installPWA && installPWA()' aria-label='Installer AssibaService'>📲 Installer</button></div>
 
 <section class='adbar'>
   <div class='container track' aria-label='Publicités internes'>
@@ -185,34 +186,23 @@ a.card{color:inherit;text-decoration:none}
 <a class='card' href='form_client.html?category=informatique'><div class='ico' aria-hidden='true'>✏️</div><h3>Graphisme</h3></a>
 <a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>📣</div><h3>Marketing</h3></a>
 <a class='card' href='form_client.html?category=autres'><div class='ico' aria-hidden='true'>➕</div><h3>Autre (Précisez)</h3></a></div>
-  <div class='contact' aria-label='Contact'>
+  <div class='contact' id='contact' aria-label='Contact'>
     <div class='box'><strong>Téléphone</strong><br>+228 91 97 80 80</div>
     <div class='box'><strong>Email</strong><br>support@assibaservice.com</div>
   </div>
 </section>
 
-<footer class='footer' role='contentinfo'>
-  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
-  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
-</footer>
 
-<footer class="asb-footer-legal" style="border-top:1px solid #e6e7eb;margin-top:2rem;padding-top:1rem;">
-  <nav>
-    <a href="cgu.html" target="_blank" rel="noopener">CGU</a> • 
-    <a href="politique-confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a> • 
-    <a href="assets/docs/CGU_AssibaService.pdf" download>Télécharger les CGU (PDF)</a> • 
-    <a href="assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Télécharger la Politique (PDF)</a>
+
+<footer class="site-footer">
+  <nav aria-label="Liens utiles">
+    <a href="cgu.html">CGU</a>
+    <a href="politique-confidentialite.html">Confidentialité</a>
+    <a href="assets/docs/CGU_AssibaService.pdf" download>CGU (PDF)</a>
+    <a href="app.html">Application Android</a>
   </nav>
+  <div>© <span data-year>2026</span> AssibaService · Contact : +228 91 97 80 80 · support@assibaservice.com</div>
+  <div><a href="mailto:nexusinternational25@gmail.com">Développé par NEXUS International</a></div>
 </footer>
-
-<script>
-try {
-  var u = JSON.parse(localStorage.getItem('user_data') || 'null');
-  if (u && localStorage.getItem('auth_token')) {
-    var a = document.getElementById('nav-account');
-    a.textContent = 'Mon espace';
-    a.href = u.role === 'admin' ? 'admin.html' : u.role === 'prestataire' ? 'prestataire_dashboard.html' : 'client_dashboard.html';
-  }
-} catch (e) {}
-</script>
+<script src="assets/site.js"></script>
 </body></html>

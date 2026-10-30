@@ -519,33 +519,28 @@
 <body>
     <!-- Header Navigation (identique à index.html) -->
     <header class="main-header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo-container">
-                    <img src="assets/logo/logo-assiba.png" alt="AssibaService" class="logo">
-                    <span class="logo-text">AssibaService</span>
-                </div>
-                <div class="nav-menu" id="nav-menu">
-                    <a href="index.html" class="nav-link">Accueil</a>
-                    <a href="index.html#services" class="nav-link">Services</a>
-                    <a href="apropos.html" class="nav-link">À propos</a>
-                    <a href="assurance.html" class="nav-link">Assurance</a>
-                    <a href="formation.html" class="nav-link">Formation</a>
-                    <a href="abonnements.html" class="nav-link active">Abonnements</a>
-                    <a href="index.html#contact" class="nav-link">Contact</a>
-                </div>
-                <div class="nav-actions">
-                    <a href="login.html" class="btn-login">Connexion</a>
-                    <a href="register_client.html" class="btn-register">Inscription</a>
-                </div>
-                <div class="mobile-menu-toggle" id="mobile-menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-        </nav>
-    </header>
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="nav-container">
+      <a class="logo-container" href="index.html" style="text-decoration:none">
+        <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+        <span class="logo-text">AssibaService</span>
+      </a>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="fonctionnement.html" class="nav-link">Comment ça marche</a>
+        <a href="apropos.html" class="nav-link">À propos</a>
+        <a href="assurance.html" class="nav-link">Assurance</a>
+        <a href="formation.html" class="nav-link">Formation</a>
+        <a href="abonnements.html" class="nav-link">Abonnements</a>
+      </div>
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn-login">Connexion</a>
+        <a href="register_client.html" class="btn-register">Inscription</a>
+      </div>
+      <div class="mobile-menu-toggle" id="mobile-menu-toggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+</header>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -911,7 +906,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 AssibaService. Tous droits réservés.</p>
+            <p>© <span data-year>2026</span> AssibaService. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -1075,6 +1070,7 @@
             navMenu.classList.toggle('active');
         });
     </script>
+<script src="assets/site.js"></script>
 </body>
 </html>
 

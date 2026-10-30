@@ -118,7 +118,7 @@
         <div class="card" style="background:#F8FBF9;box-shadow:none;border:1px solid #e1ebe4">
           <div class="card-row"><div>
             <strong>${esc(o.provider.name)}</strong>${o.provider.business_name ? ' · ' + esc(o.provider.business_name) : ''}
-            <div class="meta">${o.provider.rating_count ? `<span class="stars">${stars(Math.round(o.provider.rating_avg))}</span> ${o.provider.rating_avg.toFixed(1)} · ` : 'Nouveau sur AssibaService · '}${o.provider.missions_done} mission(s) réalisée(s)${o.provider.experience_years ? ' · ' + esc(o.provider.experience_years) + ' d’expérience' : ''}</div>
+            <div class="meta">${o.provider.rating_count ? `<span class="stars">${stars(Math.round(o.provider.rating_avg))}</span> ${o.provider.rating_avg.toFixed(1)} · ` : 'Nouveau sur AssibaService · '}${o.provider.missions_done} mission(s) réalisée(s)${o.provider.certificates ? ' · 🎓 ' + o.provider.certificates + ' certificat(s) AssibaService' : ''}${o.provider.experience_years ? ' · ' + esc(o.provider.experience_years) + ' d’expérience' : ''}</div>
           </div><div class="money">${fcfa(o.amount)}</div></div>
           ${o.message ? `<p style="margin:8px 0 0">${esc(o.message)}</p>` : ''}
           <div class="actions"><button class="btn btn-primary btn-sm" data-accept="${o.id}" data-amount="${o.amount}">Choisir cette offre</button></div>

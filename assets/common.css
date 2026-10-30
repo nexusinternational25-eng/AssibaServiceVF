@@ -84,3 +84,18 @@ img{max-width:100%;height:auto}
 .footer-section a:hover{color:var(--asb-yellow);text-decoration:underline}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:14px 16px;font-size:.9rem}
 .footer-bottom p{margin:0}
+
+/* Application Android : pas de bouton d'installation */
+.in-app .install-fab,.in-app .btn-install,.in-app #pwaInstallBar,.in-app [data-install]{display:none!important}
+
+/* Pied de page simple des pages publiques */
+.site-footer{background:#0A2A18;color:#d7e6dc;margin-top:48px;padding:28px 16px;text-align:center;font-size:.92rem}
+.site-footer a{color:#FFD700;text-decoration:none}
+.site-footer nav{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.site-footer nav a{color:#d7e6dc}
+
+/* L'en-tête garde la même taille quelle que soit la taille de texte de la page */
+.main-header .nav-link{font-size:15px;margin:0}
+.main-header .btn-login,.main-header .btn-register{font-size:14px}
+.main-header .logo-text{font-size:18px}
+.site-footer nav a{font-weight:400;margin:0;letter-spacing:0}

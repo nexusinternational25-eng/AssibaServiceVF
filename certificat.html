@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006B3F">
+<title>Certificat | AssibaService</title>
+<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .cert{max-width:760px;margin:0 auto;background:#fff;border:10px solid #006B3F;outline:3px solid #FFD700;outline-offset:-18px;
+    padding:48px 36px;text-align:center;border-radius:6px}
+  .cert img{width:84px;height:84px;border-radius:12px}
+  .cert .kicker{letter-spacing:3px;text-transform:uppercase;color:#5f7066;font-size:.85rem;margin-top:14px}
+  .cert h1{font-size:clamp(1.5rem,4vw,2.2rem);color:#063A19;margin:6px 0 22px}
+  .cert .name{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;border-bottom:2px solid #FFD700;display:inline-block;padding:0 18px 6px;margin:8px 0 18px}
+  .cert .course{font-size:1.15rem;font-weight:700;color:#006B3F}
+  .cert .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:34px;color:#4b5d52;font-size:.9rem;text-align:left}
+  @media print{ .no-print{display:none!important} body{background:#fff} .app-main{padding:0} }
+</style>
+</head>
+<body class="app">
+<main class="app-main">
+  <div class="no-print actions" style="justify-content:space-between;margin-bottom:16px">
+    <a class="btn btn-ghost" href="formation.html">← Formations</a>
+    <button class="btn btn-primary" type="button" onclick="window.print()">Imprimer ou enregistrer en PDF</button>
+  </div>
+  <div id="box"><p class="loading">Vérification du certificat…</p></div>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(async function () {
+  const { api, esc, date } = ASB;
+  const box = document.getElementById('box');
+  const code = new URLSearchParams(location.search).get('code') || '';
+  try {
+    const { certificate: c } = await api('GET', '/training/certificates/' + encodeURIComponent(code));
+    document.title = `Certificat ${c.name} | AssibaService`;
+    box.innerHTML = `<article class="cert">
+      <img src="assets/logo/logo-assiba.png" alt="AssibaService">
+      <div class="kicker">AssibaService · Formation</div>
+      <h1>Certificat de réussite</h1>
+      <p>Ce certificat atteste que</p>
+      <div class="name">${esc(c.name)}</div>
+      <p>a suivi et réussi la formation</p>
+      <p class="course">${esc(c.course)}</p>
+      <p class="meta">Score au quiz final : ${Math.round(c.score * 100)} %</p>
+      <div class="foot"><div>Délivré le ${date(c.completed_at)}</div>
+        <div>Code de vérification : <strong>${esc(c.code)}</strong><br>${esc(location.origin)}/certificat.html?code=${esc(c.code)}</div></div>
+    </article>`;
+  } catch (e) {
+    box.innerHTML = `<div class="notice notice-bad"><strong>Certificat introuvable.</strong>Vérifiez le code ${code ? '« ' + esc(code) + ' »' : ''}.</div>`;
+  }
+})();
+</script>
+</body>
+</html>
