@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.assibaservice.app",
+      "sha256_cert_fingerprints": ["74:65:E4:44:EB:31:71:4F:4D:5D:95:C2:14:81:A0:E6:E8:49:67:30:38:48:1C:DB:A6:14:1A:64:C2:00:E5:38"]
+    }
+  }
+]

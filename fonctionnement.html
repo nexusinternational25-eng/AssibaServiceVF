@@ -44,6 +44,8 @@ nav a:focus, nav a:hover{outline:none;text-decoration:underline}
 .hero h1{margin:.2rem 0 0.6rem 0;font-size:clamp(1.6rem,3vw,2.2rem);color:#063A19}
 .hero p{max-width:800px;margin:0 auto 1rem auto}
 .cta-wrap{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-accent{background:var(--accent);color:#09210F}
+p > .btn{margin:6px;text-decoration:none}
 .btn{
   display:inline-block;padding:14px 20px;border-radius:12px;border:0;cursor:pointer;
   font-weight:800;letter-spacing:.2px;transition:transform .05s ease, box-shadow .2s;
@@ -83,65 +85,76 @@ section h2{color:#063A19}
 /* Ensure images never overflow */
 img{max-width:100%}
 </style>
+<link rel="stylesheet" href="assets/common.css">
 </head><body>
-<header class='header' role='banner'>
-  <div class='container row'>
-    <div class='brand' aria-label='AssibaService'>
-      <img src='assets/logo/logo-assiba.png' alt='Logo AssibaService'>
-      <strong aria-label='Nom de la plateforme'>AssibaService</strong>
+<header class="main-header">
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="nav-container">
+      <a class="logo-container" href="index.html" style="text-decoration:none">
+        <img src="assets/logo/logo-assiba.png" alt="" class="logo">
+        <span class="logo-text">AssibaService</span>
+      </a>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="fonctionnement.html" class="nav-link">Comment ça marche</a>
+        <a href="apropos.html" class="nav-link">À propos</a>
+        <a href="assurance.html" class="nav-link">Assurance</a>
+        <a href="formation.html" class="nav-link">Formation</a>
+        <a href="abonnements.html" class="nav-link">Abonnements</a>
+      </div>
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn-login">Connexion</a>
+        <a href="register_client.html" class="btn-register">Inscription</a>
+      </div>
+      <div class="mobile-menu-toggle" id="mobile-menu-toggle" data-site-nav><span></span><span></span><span></span></div>
     </div>
-    <nav aria-label='Navigation principale'>
-      <a href='index.html'>Accueil</a>
-      <a href='apropos.html'>À propos</a>
-      <a href='fonctionnement.html'>Comment ça marche</a>
-      <a href='cgu.html'>CGU</a>
-      <a href='politique-confidentialite.html'>Confidentialité</a>
-    </nav>
-  </div>
+  </nav>
 </header>
 <main>
-<div class="asb-legal-topbar" style="background:#f6f7f9;border-bottom:1px solid #e6e7eb;padding:.5rem 1rem;font-size:.9rem;text-align:center;">
-  En utilisant cette plateforme, vous acceptez nos 
-  <a href="cgu.html" target="_blank" rel="noopener">CGU</a> et notre 
-  <a href="politique-confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a>. 
-  <a href="assets/docs/CGU_AssibaService.pdf" download style="margin-left:.75rem;">Télécharger les CGU (PDF)</a>
-  <a href="assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Politique (PDF)</a>
-</div>
 
 <section class='container'>
   <h1 style='text-align:center'>Comment ça marche</h1>
-  <div class='contact' style='max-width:900px;margin-inline:auto'>
+  <p style='text-align:center;max-width:760px;margin:0 auto 18px'>Votre argent est protégé : vous payez AssibaService, qui ne verse le prestataire qu’après votre validation du travail.</p>
+  <div class='contact' style='max-width:960px;margin-inline:auto'>
     <div class='box'>
-      <h2>Côté Client</h2>
+      <h2>Côté client</h2>
       <ol>
-        <li>Choisissez un service et répondez à 2–3 questions guidées</li>
-        <li>Paiement sécurisé (en attente jusqu’à validation du service) via TMoney/Flooz</li>
-        <li>Libération des fonds après validation de la prestation</li>
+        <li>Créez votre compte gratuitement avec votre numéro de téléphone.</li>
+        <li>Décrivez votre besoin : catégorie, photos, adresse, date et budget. Réglez 2 000 FCFA de mise en relation par T-Money ou Flooz.</li>
+        <li>Les prestataires vérifiés de la catégorie vous font leurs offres. Comparez prix, notes et certificats, puis choisissez.</li>
+        <li>Payez le prix convenu à AssibaService : l’argent est mis de côté, le prestataire vous contacte et intervient.</li>
+        <li>Travail terminé ? Validez et notez le prestataire : il est alors payé. Un souci ? « Signaler un problème » bloque le paiement et un conseiller arbitre.</li>
       </ol>
     </div>
     <div class='box' id='prestataire'>
-      <h2>Côté Prestataire</h2>
+      <h2>Côté prestataire</h2>
       <ol>
-        <li>Inscription (CNI, photo en action) et badge assurance</li>
-        <li>Demandes proches (géolocalisation intelligente)</li>
-        <li>Encaissement après validation, commissions adaptées</li>
+        <li>Inscrivez-vous, choisissez vos catégories et votre formule (Standard 3 000 FCFA, Basic 8 000 FCFA/mois, Pro 30 000 FCFA/mois).</li>
+        <li>Envoyez votre pièce d’identité. Notre équipe vérifie votre dossier puis active votre compte.</li>
+        <li>Consultez les demandes de vos catégories et proposez votre prix.</li>
+        <li>Offre retenue et payée par le client : vous recevez ses coordonnées et intervenez.</li>
+        <li>Le client valide : votre portefeuille est crédité (aucune commission en dépannage, 5 % sur chantiers, contrats et consultance). Retrait par T-Money ou Flooz.</li>
       </ol>
+      <p><a href='formation.html'>Formations gratuites</a> : obtenez des certificats visibles par les clients.</p>
     </div>
   </div>
+  <p style='text-align:center;margin-top:22px'>
+    <a class='btn btn-primary' href='form_client.html'>Demander un service</a>
+    <a class='btn btn-accent' href='register_prestataire.html'>Devenir prestataire</a>
+  </p>
 </section>
 
 
-<footer class="asb-footer-legal" style="border-top:1px solid #e6e7eb;margin-top:2rem;padding-top:1rem;">
-  <nav>
-    <a href="cgu.html" target="_blank" rel="noopener">CGU</a> • 
-    <a href="politique-confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a> • 
-    <a href="assets/docs/CGU_AssibaService.pdf" download>Télécharger les CGU (PDF)</a> • 
-    <a href="assets/docs/Politique_Confidentialite_AssibaService.pdf" download>Télécharger la Politique (PDF)</a>
-  </nav>
-</footer>
 </main>
-<footer class='footer' role='contentinfo'>
-  © 2025 AssibaService — <a href='mailto:nexusinternational25@gmail.com'>Développé par NEXUS International</a>
-  <div class='small'>Contact : +228 91 97 80 80 — support@assibaservice.com</div>
+<footer class="site-footer">
+  <nav aria-label="Liens utiles">
+    <a href="cgu.html">CGU</a>
+    <a href="politique-confidentialite.html">Confidentialité</a>
+    <a href="assets/docs/CGU_AssibaService.pdf" download>CGU (PDF)</a>
+    <a href="app.html">Application Android</a>
+  </nav>
+  <div>© <span data-year>2026</span> AssibaService · Contact : +228 91 97 80 80 · support@assibaservice.com</div>
+  <div><a href="mailto:nexusinternational25@gmail.com">Développé par NEXUS International</a></div>
 </footer>
+<script src="assets/site.js"></script>
 </body></html>

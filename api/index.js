@@ -10,6 +10,7 @@ const modules = [
   require('../lib/routes/payments'),
   require('../lib/routes/catalog'),
   require('../lib/routes/admin'),
+  require('../lib/routes/training'),
 ];
 
 // Compile les chemins "/a/:id/b" en expressions régulières

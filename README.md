@@ -48,3 +48,13 @@ DATABASE_URL=postgres://user:mdp@localhost:5432/asb ADMIN_PHONE=90000000 ADMIN_P
 # puis, dans un autre terminal :
 BASE=http://localhost:3000 ADMIN_PHONE=90000000 ADMIN_PASSWORD=motdepasse node scripts/test-api.js
 ```
+
+## Application Android
+
+- Code : `android/` (une vue web plein écran sur le site, avec envoi de photos, géolocalisation, liens téléphone et WhatsApp, page hors ligne).
+- Compilation : GitHub Actions (`.github/workflows/android.yml`) produit un APK aligné **non signé** dans `android/dist/`, puis le teste sur un émulateur Android 14 (capture dans `android/dist/test/`).
+- Signature : sur le poste qui détient la clé, jamais dans la CI :
+  `java --add-exports java.base/sun.security.x509=ALL-UNNAMED --add-exports java.base/sun.security.pkcs=ALL-UNNAMED --add-exports java.base/sun.security.util=ALL-UNNAMED -cp apksig-2.3.0.jar:android/sign SignApk android/dist/AssibaService-X-unsigned.apk downloads/AssibaService.apk assibaservice-release.jks store.pass`
+- Nouvelle version : augmenter `VERSION` dans `android/src/com/assibaservice/app/BuildInfo.java` et le nombre dans `android/version-code`, pousser, signer, remplacer `downloads/AssibaService.apk`.
+- **La clé de signature (`assibaservice-release.jks`) et son mot de passe ne sont pas dans le dépôt.** Sans elle, impossible de publier une mise à jour que les téléphones acceptent : gardez-en deux copies en lieu sûr.
+- `/.well-known/assetlinks.json` contient l'empreinte de la clé : les liens du site s'ouvrent directement dans l'application.
