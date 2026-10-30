@@ -37,3 +37,53 @@ jobs:
           git add android/dist
           git commit -m "APK Android non signé (compilation automatique)" || exit 0
           git push
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - run: git pull --ff-only origin "${GITHUB_REF_NAME}" || true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Accès KVM pour l'émulateur
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Signature de test (clé jetable, uniquement pour l'émulateur)
+        run: |
+          APK=$(ls android/dist/*-unsigned.apk | head -1)
+          keytool -genkeypair -keystore /tmp/test.jks -alias test -keyalg RSA -keysize 2048 -validity 1 -storepass testtest -keypass testtest -dname "CN=Test" > /dev/null
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" sign --ks /tmp/test.jks --ks-pass pass:testtest --out /tmp/app.apk "$APK"
+          "$ANDROID_HOME/build-tools/34.0.0/aapt2" dump badging /tmp/app.apk | head -5
+      - name: Lancement sur émulateur Android 14
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            adb install -r /tmp/app.apk
+            adb logcat -c
+            adb shell am start -W -n com.assibaservice.app/.MainActivity
+            sleep 40
+            adb shell pidof com.assibaservice.app && echo "APPLICATION EN COURS : OK" || echo "APPLICATION ARRETEE"
+            mkdir -p android/dist/test
+            adb exec-out screencap -p > android/dist/test/accueil.png
+            adb shell input keyevent 82 || true
+            adb logcat -d -s AndroidRuntime:E chromium:E > android/dist/test/erreurs.txt || true
+            grep -c "FATAL EXCEPTION" android/dist/test/erreurs.txt && exit 1 || echo "Aucun plantage"
+      - name: Enregistrement de la capture
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android/dist/test || true
+          git commit -m "Test de l'APK sur émulateur Android 14" || exit 0
+          git pull --rebase origin "${GITHUB_REF_NAME}" && git push
