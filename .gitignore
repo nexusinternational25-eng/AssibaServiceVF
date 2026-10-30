@@ -1,3 +1,7 @@
 node_modules/
 .env
 .vercel/
+android/build/
+*.jks
+*.keystore
+store.pass
