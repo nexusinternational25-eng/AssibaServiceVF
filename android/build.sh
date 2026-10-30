@@ -28,6 +28,14 @@ test -f "$OUT/classes/com/assibaservice/app/MainActivity.class"
 (cd "$OUT/dex" && zip -q -u "$OUT/unsigned.apk" classes.dex)
 
 "$BT/zipalign" -p -f 4 "$OUT/unsigned.apk" "$OUT/aligned.apk"
+"$BT/zipalign" -c -p 4 "$OUT/aligned.apk"
+
+# Sans clé : on s'arrête à l'APK aligné, signé ensuite hors de la CI
+if [ -z "${KEYSTORE:-}" ]; then
+  cp "$OUT/aligned.apk" "$OUT/AssibaService-$VERSION_NAME-unsigned.apk"
+  echo "APK non signé : $OUT/AssibaService-$VERSION_NAME-unsigned.apk"
+  exit 0
+fi
 "$BT/apksigner" sign --ks "${KEYSTORE:?KEYSTORE manquant}" --ks-key-alias assibaservice \
   --ks-pass "file:${KEYSTORE_PASS_FILE:?}" --key-pass "file:${KEYSTORE_PASS_FILE}" \
   --out "$OUT/AssibaService-$VERSION_NAME.apk" "$OUT/aligned.apk"
