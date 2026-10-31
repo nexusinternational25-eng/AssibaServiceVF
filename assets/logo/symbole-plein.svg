@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AssibaService">
+  <rect width="512" height="512" fill="#006B3F"/>
+  <g transform="translate(256 256) scale(0.8) translate(-256 -256)">
+  <!-- Maison -->
+  <path d="M256 92 L420 222 a14 14 0 0 1 -17 22 L384 229 V392 a28 28 0 0 1 -28 28 H156 a28 28 0 0 1 -28 -28 V229 L109 244 a14 14 0 0 1 -17 -22 Z"
+        fill="#FFFFFF"/>
+  <!-- Coche : service rendu et validé -->
+  <path d="M188 304 L236 352 L330 250" fill="none" stroke="#F2B705" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

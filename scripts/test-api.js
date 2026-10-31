@@ -143,7 +143,7 @@ const JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP/////////
   check(r.status === 200 && r.data.payment_ref, 'offre acceptée', r.data);
   const escrowRef = r.data.payment_ref;
   r = await call('GET', `/payments/${escrowRef}`, null, clientToken);
-  check(r.data.payment.amount === 20000, 'montant de la prestation = offre', r.data);
+  check(r.data.payment.amount === 21000, 'client paie le prix + 5 % de commission (21 000)', r.data);
   r = await call('POST', `/service-requests/${reqId}/done`, null, providerToken);
   check(r.status === 400, 'impossible de terminer avant paiement', r.data);
   await call('POST', `/payments/${escrowRef}/submit`, { method: 'tmoney', phone: cPhone, transaction_id: 'TX' + stamp }, clientToken);
@@ -154,13 +154,13 @@ const JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP/////////
   r = await call('POST', `/service-requests/${reqId}/done`, null, providerToken);
   check(r.status === 200, 'mission déclarée terminée', r.data);
   r = await call('POST', `/service-requests/${reqId}/confirm`, { rating: 5, comment: 'Très bien' }, clientToken);
-  check(r.status === 200 && r.data.commission === 1000 && r.data.net === 19000, 'validation : commission 5 % (1 000), net 19 000', r.data);
+  check(r.status === 200 && r.data.commission === 1000 && r.data.net === 20000, 'validation : prestataire payé de son prix entier (20 000)', r.data);
   r = await call('POST', `/service-requests/${reqId}/confirm`, null, clientToken);
   check(r.status === 400, 'double validation impossible', r.data);
 
   console.log('Portefeuille et retrait');
   r = await call('GET', '/provider/wallet', null, providerToken);
-  check(r.data.balance === 19000, 'solde 19 000', r.data);
+  check(r.data.balance === 20000, 'solde 20 000', r.data);
   r = await call('POST', '/provider/withdrawals', { amount: 50000, method: 'tmoney' }, providerToken);
   check(r.status === 400, 'retrait supérieur au solde refusé', r.data);
   const [w1, w2] = await Promise.all([
@@ -169,12 +169,12 @@ const JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP/////////
   ]);
   check([w1.status, w2.status].sort().join() === '200,400', 'deux retraits simultanés : un seul accepté', [w1.data, w2.data]);
   r = await call('GET', '/provider/wallet', null, providerToken);
-  check(r.data.balance === 4000, 'solde après retrait 4 000', r.data.balance);
+  check(r.data.balance === 5000, 'solde après retrait 5 000', r.data.balance);
   const ws = await call('GET', '/admin/withdrawals', null, adminToken);
   const wid = ws.data.withdrawals.find(w => w.status === 'pending').id;
   r = await call('POST', `/admin/withdrawals/${wid}/reject`, { note: 'Numéro erroné' }, adminToken);
   r = await call('GET', '/provider/wallet', null, providerToken);
-  check(r.data.balance === 19000, 'retrait refusé : montant recrédité', r.data.balance);
+  check(r.data.balance === 20000, 'retrait refusé : montant recrédité', r.data.balance);
   r = await call('GET', '/auth/me', null, providerToken);
   check(r.data.provider.rating_avg === 5 && r.data.provider.rating_count === 1, 'note du prestataire enregistrée', r.data.provider);
 
@@ -200,7 +200,7 @@ const JPEG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP/////////
   r = await call('GET', `/service-requests/${req2}`, null, clientToken);
   check(r.data.request.status === 'refunded', 'demande remboursée', r.data.request.status);
   r = await call('GET', '/provider/wallet', null, providerToken);
-  check(r.data.balance === 19000, 'solde prestataire inchangé après remboursement', r.data.balance);
+  check(r.data.balance === 20000, 'solde prestataire inchangé après remboursement', r.data.balance);
 
   console.log('Accès croisés');
   r = await call('POST', '/auth/register', { role: 'client', firstName: 'Autre', lastName: 'Client', phone: '94' + stamp, password: 'motdepasse3' });

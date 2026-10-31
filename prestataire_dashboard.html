@@ -142,7 +142,7 @@
         const v = await dialog({ title: 'Faire une offre', submitLabel: 'Envoyer mon offre', html: `
           <div class="field"><label for="amount">Votre prix total (FCFA)</label><input id="amount" name="amount" type="number" min="500" step="100" required inputmode="numeric"></div>
           <div class="field"><label for="message">Message au client</label><textarea id="message" name="message" rows="3" maxlength="1000" placeholder="Disponibilité, matériel compris, délai…"></textarea></div>
-          <p class="hint">Le client paie ce montant à AssibaService avant votre intervention. Vous êtes payé dès qu’il valide le travail (commission déduite selon le type de mission).</p>` });
+          <p class="hint">Le client paie ce montant à AssibaService avant votre intervention. Vous recevez l’intégralité de votre prix dès qu’il valide le travail : la commission éventuelle (5 % hors dépannage) est payée par le client.</p>` });
         if (v && await run(b, () => api('POST', `/service-requests/${id}/offers`, { amount: Number(v.amount), message: v.message }), 'Offre envoyée')) loadOpen();
       });
       box.querySelectorAll('[data-withdraw]').forEach(b => b.onclick = async () => {
@@ -160,7 +160,7 @@
       box.innerHTML = out.missions.map(m => {
         const contact = ['in_progress', 'done', 'dispute', 'completed'].includes(m.status) && m.client;
         let html = `<article class="card" data-id="${m.id}">${requestInfo(m)}
-          <p style="margin:10px 0 0">Prix convenu : <span class="money">${fcfa(m.agreed_amount)}</span> · Vous recevrez : <span class="money">${fcfa(m.net_amount)}</span></p>`;
+          <p style="margin:10px 0 0">Prix convenu : <span class="money">${fcfa(m.agreed_amount)}</span> · Vous recevrez l’intégralité de ce montant</p>`;
         if (m.status === 'accepted') html += '<div class="notice notice-info" style="margin:10px 0 0"><strong>Offre retenue !</strong>Le client doit maintenant payer. Vous recevrez ses coordonnées dès que le paiement sera confirmé. N’intervenez pas avant.</div>';
         if (contact) html += `<div class="notice notice-ok" style="margin:10px 0 0"><strong>Client : ${esc(m.client.name)}</strong>
           Téléphone : <a href="tel:${esc(m.client.phone)}">${esc(ASB.tel(m.client.phone))}</a><br>Adresse : ${esc(m.address)}</div>`;

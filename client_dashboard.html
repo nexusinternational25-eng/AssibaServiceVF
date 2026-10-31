@@ -74,14 +74,14 @@
 
   function card(r) {
     const prov = r.provider;
-    let html = `<article class="card" data-id="${r.id}">
+    let html = `<article class="card" data-id="${r.id}" data-rate="${Number(r.commission_rate) || 0}">
       <div class="card-row">
         <div><h3>${esc(r.title)}</h3>
           <div class="meta">${esc(r.category_label)} · demande n°${r.id} du ${date(r.created_at)}${r.is_urgent ? ' · <strong>Urgent</strong>' : ''}</div></div>
         <div>${badge(r.status)}</div>
       </div>`;
     if (STEP_HELP[r.status]) html += `<p class="meta" style="margin:10px 0 0">${esc(STEP_HELP[r.status])}</p>`;
-    if (r.agreed_amount) html += `<p style="margin:10px 0 0">Montant convenu : <span class="money">${fcfa(r.agreed_amount)}</span></p>`;
+    if (r.agreed_amount) html += `<p style="margin:10px 0 0">Prix du prestataire : <span class="money">${fcfa(r.agreed_amount)}</span>${r.commission ? ` + commission AssibaService ${fcfa(r.commission)} = <span class="money">${fcfa(r.total_amount)}</span>` : ''}</p>`;
     else if (r.budget_min || r.budget_max) html += `<p class="meta" style="margin:8px 0 0">Budget indiqué : ${fcfa(r.budget_min)} à ${fcfa(r.budget_max)}</p>`;
     if (prov) {
       html += `<div class="notice notice-info" style="margin:12px 0 0"><strong>Votre prestataire : ${esc(prov.name)}${prov.business_name ? ' (' + esc(prov.business_name) + ')' : ''}</strong>
@@ -95,7 +95,7 @@
     const a = [];
     if (r.status === 'awaiting_payment') a.push(`<button class="btn btn-primary" data-act="pay">Payer les frais (${fcfa(2000)})</button>`);
     if (r.status === 'open') a.push(`<button class="btn btn-primary" data-act="offers">Voir les offres (${r.offers_count})</button>`);
-    if (r.status === 'accepted') a.push(`<button class="btn btn-primary" data-act="pay">Payer la prestation (${fcfa(r.agreed_amount)})</button>`);
+    if (r.status === 'accepted') a.push(`<button class="btn btn-primary" data-act="pay">Payer la prestation (${fcfa(r.total_amount)})</button>`);
     if (r.status === 'done') a.push(`<button class="btn btn-primary" data-act="confirm">Valider la fin de mission</button>`);
     if (['in_progress', 'done'].includes(r.status)) a.push(`<button class="btn btn-ghost" data-act="dispute">Signaler un problème</button>`);
     if (r.status === 'completed' && !r.review) a.push(`<button class="btn btn-ghost" data-act="review">Noter le prestataire</button>`);
@@ -124,7 +124,10 @@
           <div class="actions"><button class="btn btn-primary btn-sm" data-accept="${o.id}" data-amount="${o.amount}">Choisir cette offre</button></div>
         </div>`).join('');
       box.querySelectorAll('[data-accept]').forEach(b => b.onclick = async () => {
-        const ok = await dialog({ title: 'Confirmer ce choix ?', html: `<p>Vous choisissez cette offre à <strong>${fcfa(b.dataset.amount)}</strong>. Vous allez ensuite payer ce montant ; il reste bloqué par AssibaService jusqu’à ce que vous validiez le travail.</p>`, submitLabel: 'Choisir et payer' });
+        const rate = Number(el.dataset.rate) || 0;
+        const price = Number(b.dataset.amount);
+        const commission = Math.round(price * rate);
+        const ok = await dialog({ title: 'Confirmer ce choix ?', submitLabel: 'Choisir et payer', html: `<p>Prix du prestataire : <strong>${fcfa(price)}</strong>${commission ? `<br>Commission AssibaService (${Math.round(rate * 100)} %) : <strong>${fcfa(commission)}</strong><br>Total à payer : <strong>${fcfa(price + commission)}</strong>` : '<br>Aucune commission pour un dépannage.'}</p><p>Ce montant reste bloqué par AssibaService jusqu’à ce que vous validiez le travail.</p>` });
         if (!ok) return;
         const out = await run(b, () => api('POST', `/offers/${b.dataset.accept}/accept`));
         if (out) location.href = 'paiement.html?ref=' + encodeURIComponent(out.payment_ref);

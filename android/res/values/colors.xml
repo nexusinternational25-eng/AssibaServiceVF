@@ -2,5 +2,5 @@
 <resources>
     <color name="green">#006B3F</color>
     <color name="green_dark">#004D2C</color>
-    <color name="icon_bg">#F6F4F0</color>
+    <color name="icon_bg">#006B3F</color>
 </resources>
