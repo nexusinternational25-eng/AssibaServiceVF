@@ -1,8 +1,7 @@
 --------- beginning of main
-10-30 23:45:48.622  2697  2984 W chromium: [WARNING:dns_config_service_android.cc(115)] Failed to read DnsConfig.
-10-30 23:46:03.439  2697  2697 I chromium: [INFO:CONSOLE(328)] "🚀 AssibaService Service Worker chargé - Version: assibaservice-v1.5.0", source: https://assiba-service-vf.vercel.app/sw.js (328)
-10-30 23:46:03.445  2697  2697 I chromium: [INFO:CONSOLE(44)] "🔧 AssibaService SW: Installation en cours...", source: https://assiba-service-vf.vercel.app/sw.js (44)
-10-30 23:46:03.454  2697  2697 I chromium: [INFO:CONSOLE(48)] "📦 AssibaService SW: Mise en cache des ressources essentielles", source: https://assiba-service-vf.vercel.app/sw.js (48)
-10-30 23:46:03.663  2697  2697 I chromium: [INFO:CONSOLE(53)] "✅ AssibaService SW: Installation terminée", source: https://assiba-service-vf.vercel.app/sw.js (53)
-10-30 23:46:03.667  2697  2697 I chromium: [INFO:CONSOLE(64)] "🚀 AssibaService SW: Activation en cours...", source: https://assiba-service-vf.vercel.app/sw.js (64)
-10-30 23:46:03.667  2697  2697 I chromium: [INFO:CONSOLE(78)] "✅ AssibaService SW: Activation terminée", source: https://assiba-service-vf.vercel.app/sw.js (78)
+10-31 00:08:36.232  2715  2715 I chromium: [INFO:CONSOLE(328)] "🚀 AssibaService Service Worker chargé - Version: assibaservice-v1.5.0", source: https://assiba-service-vf.vercel.app/sw.js (328)
+10-31 00:08:36.235  2715  2715 I chromium: [INFO:CONSOLE(44)] "🔧 AssibaService SW: Installation en cours...", source: https://assiba-service-vf.vercel.app/sw.js (44)
+10-31 00:08:36.243  2715  2715 I chromium: [INFO:CONSOLE(48)] "📦 AssibaService SW: Mise en cache des ressources essentielles", source: https://assiba-service-vf.vercel.app/sw.js (48)
+10-31 00:08:36.598  2715  2715 I chromium: [INFO:CONSOLE(53)] "✅ AssibaService SW: Installation terminée", source: https://assiba-service-vf.vercel.app/sw.js (53)
+10-31 00:08:36.599  2715  2715 I chromium: [INFO:CONSOLE(64)] "🚀 AssibaService SW: Activation en cours...", source: https://assiba-service-vf.vercel.app/sw.js (64)
+10-31 00:08:36.600  2715  2715 I chromium: [INFO:CONSOLE(78)] "✅ AssibaService SW: Activation terminée", source: https://assiba-service-vf.vercel.app/sw.js (78)

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 320" role="img" aria-label="AssibaService">
+  <g transform="translate(0 0) scale(0.625)">
+    <rect width="512" height="512" rx="112" fill="#006B3F"/>
+    <path d="M256 92 L420 222 a14 14 0 0 1 -17 22 L384 229 V392 a28 28 0 0 1 -28 28 H156 a28 28 0 0 1 -28 -28 V229 L109 244 a14 14 0 0 1 -17 -22 Z" fill="#FFFFFF"/>
+    <path d="M188 304 L236 352 L330 250" fill="none" stroke="#F2B705" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="360" y="205" font-family="DejaVu Sans, Arial, sans-serif" font-weight="700" font-size="138" letter-spacing="-3">
+    <tspan fill="#006B3F">Assiba</tspan><tspan fill="#D9A300">Service</tspan>
+  </text>
+</svg>

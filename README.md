@@ -27,9 +27,9 @@ Plateforme togolaise de mise en relation entre clients et prestataires de servic
 
 1. Le client publie une demande et paie 2 000 FCFA de mise en relation.
 2. Les prestataires validés de la catégorie font des offres.
-3. Le client choisit une offre et paie le montant à AssibaService (séquestre).
+3. Le client choisit une offre et paie à AssibaService le prix plus la commission éventuelle (séquestre).
 4. Le prestataire intervient puis déclare la mission terminée.
-5. Le client valide : le prestataire est crédité du montant moins la commission (0 % en dépannage, 5 % sinon).
+5. Le client valide : le prestataire est crédité de l'intégralité de son prix. La commission (0 % en dépannage, 5 % sinon) est payée par le client en plus du prix (CGU, article 5.2).
 6. Le prestataire demande un retrait ; l'administrateur effectue le transfert et note la référence.
 
 En cas de problème, client ou prestataire ouvre un litige ; l'administrateur décide (paiement du prestataire ou remboursement du client).

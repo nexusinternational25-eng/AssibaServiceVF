@@ -30,7 +30,7 @@ img{max-width:100%;height:auto}
   display:flex;align-items:center;gap:16px;
 }
 .logo-container{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-container .logo{width:44px;height:44px;object-fit:cover;border-radius:10px;background:#fff}
+.logo-container .logo{width:44px;height:44px;object-fit:contain;border-radius:10px;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
 .logo-text{font-weight:800;font-size:1.15rem;color:#fff}
 .nav-menu{display:flex;align-items:center;gap:2px;margin-left:auto}
 .nav-link{
